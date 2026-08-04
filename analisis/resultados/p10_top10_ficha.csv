@@ -1,0 +1,11 @@
+id,campus,capa,intermediacion_norm,es_articulacion,participacion_corte,daño_cascada,indice_compuesto
+INTERNET-MPLS,Nube MPLS,wan,0.818,true,0,0.056,0.6819
+BAL-AUL2-D1,Campus Balzay,agregacion,0.248,true,10,0.006,0.5847
+DATCC-2A-C3,Campus Central,core,1.0,false,3,0.051,0.5295
+CPAR-C10,Campus Paraiso,core,0.905,true,1,0.006,0.524
+ROUTER-CAMPUS-HUAYNA-CAPAC,Campus Paraiso,wan,0.82,true,1,0.006,0.5027
+BAL-CENTEC-D2,Campus Balzay,agregacion,0.126,true,5,0.006,0.4292
+BAL-AUL1-D4,Campus Balzay,agregacion,0.101,true,4,0.006,0.3979
+HOS-0A-D05,Campus Hospitalidad,agregacion,0.101,true,4,0.006,0.3979
+CB-EADMI-D6,Campus Balzay,agregacion,0.15,true,3,0.006,0.3852
+FORTIGATE-1800F-CENTRAL,Campus Central,interconexion,0.417,false,2,0.056,0.3815
