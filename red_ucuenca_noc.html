@@ -1,0 +1,631 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NOC · Red de datos Universidad de Cuenca</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0a1016;
+    --panel: #111a23;
+    --panel-2: #0d151d;
+    --line: #1d2a37;
+    --ink: #e8eef4;
+    --ink-2: #8fa3b5;
+    --ink-3: #5d7185;
+    --ok: #0ca30c;
+    --ok-soft: #22c55e;
+    --warn: #fab219;
+    --crit: #e05252;
+    --c-central: #3987e5;
+    --c-balzay: #d95926;
+    --c-paraiso: #199e70;
+    --c-yanuncay: #c98500;
+    --c-hospitalidad: #d55181;
+    --c-mpls: #9085e9;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .lbl {
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 600;
+  }
+  /* ---------- topbar ---------- */
+  header {
+    position: sticky; top: 0; z-index: 40;
+    display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+    padding: 10px 20px;
+    background: color-mix(in srgb, var(--panel) 92%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--ok-soft);
+    box-shadow: 0 0 8px var(--ok-soft);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { opacity: .35; } }
+  @media (prefers-reduced-motion: reduce) { .brand .dot { animation: none; } }
+  .brand h1 { font-size: 15px; margin: 0; font-weight: 700; letter-spacing: .02em; }
+  .brand .sub { font-size: 11.5px; color: var(--ink-2); }
+  .kpis { display: flex; gap: 26px; flex-wrap: wrap; margin-left: auto; }
+  .kpi { text-align: right; }
+  .kpi b {
+    display: block; font-family: var(--mono); font-size: 19px;
+    font-variant-numeric: tabular-nums; font-weight: 600; line-height: 1.15;
+  }
+  .kpi b.warn-n { color: var(--warn); }
+  /* ---------- layout ---------- */
+  .wrap { display: grid; grid-template-columns: 1fr 330px; gap: 14px; padding: 14px 20px 8px; }
+  @media (max-width: 980px) { .wrap { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+  /* ---------- map ---------- */
+  #mapPanel { position: relative; overflow: hidden; min-height: 560px; height: calc(100vh - 130px); }
+  #svgMap { width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
+  #svgMap.panning { cursor: grabbing; }
+  .map-hud {
+    position: absolute; top: 10px; left: 12px; display: flex; gap: 8px; align-items: center;
+  }
+  .map-hud button {
+    width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--line);
+    background: var(--panel-2); color: var(--ink); font-size: 15px; cursor: pointer;
+  }
+  .map-hud button:hover { border-color: var(--ink-3); }
+  .map-hud button:focus-visible, .chip:focus-visible, input:focus-visible,
+  th button:focus-visible, .linkrow:focus-visible {
+    outline: 2px solid var(--c-central); outline-offset: 2px;
+  }
+  .hint { font-size: 11px; color: var(--ink-3); }
+  #tooltip {
+    position: fixed; z-index: 60; pointer-events: none; display: none;
+    background: #060b10; border: 1px solid var(--line); border-radius: 6px;
+    padding: 8px 10px; max-width: 320px; font-size: 12px; box-shadow: 0 6px 24px rgba(0,0,0,.5);
+  }
+  #tooltip .t-name { font-family: var(--mono); font-weight: 700; font-size: 12.5px; }
+  #tooltip .t-sub { color: var(--ink-2); margin-top: 2px; }
+  /* svg */
+  .edge { stroke-linecap: round; }
+  .edge.principal { stroke: var(--ok); opacity: .55; }
+  .edge.secundario { stroke: #7fa8c9; stroke-dasharray: 7 3; opacity: .55; }
+  .edge.respaldo { stroke: #55606a; stroke-dasharray: 5 4; opacity: .5; }
+  .edge.wan { stroke: #9085e9; stroke-dasharray: 9 3; opacity: .6; }
+  .edge.inferido { stroke: var(--ink-2); stroke-dasharray: 1.5 4; opacity: .7; }
+  .edge.hl { opacity: 1; stroke: var(--ok-soft); }
+  .edge.hidden, .node.hidden { display: none; }
+  .node { cursor: pointer; }
+  .node .shape { stroke: var(--bg); stroke-width: 1.4; }
+  .node text {
+    font-family: var(--mono); fill: var(--ink-2); paint-order: stroke;
+    stroke: var(--bg); stroke-width: 2.6px; pointer-events: none;
+  }
+  .node.major text { fill: var(--ink); font-weight: 700; }
+  .node.dim, .edge.dim { opacity: .07; }
+  .node.sel .shape { stroke: #fff; stroke-width: 2.2; }
+  .node .ring { fill: none; stroke-width: 2; }
+  /* ---------- sidebar ---------- */
+  aside { display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 130px); overflow-y: auto; }
+  .side-sec { padding: 12px 14px; }
+  .side-sec h2 { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 9px; }
+  #q {
+    width: 100%; padding: 7px 10px; border-radius: 6px;
+    border: 1px solid var(--line); background: var(--panel-2);
+    color: var(--ink); font-family: var(--mono); font-size: 13px;
+  }
+  #q::placeholder { color: var(--ink-3); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 4px 10px; border-radius: 20px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--panel-2);
+    font-size: 12px; color: var(--ink-2); user-select: none;
+  }
+  .chip .sw { width: 9px; height: 9px; border-radius: 50%; background: var(--sw); }
+  .chip[aria-pressed="true"] { color: var(--ink); border-color: var(--sw); }
+  .chip[aria-pressed="false"] { opacity: .45; }
+  .chip.linetype .sw { border-radius: 1px; height: 3px; width: 14px; }
+  .alert {
+    display: flex; gap: 9px; padding: 8px 9px; border-radius: 6px;
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-left: 3px solid var(--warn); margin-bottom: 7px; cursor: pointer;
+  }
+  .alert.critical { border-left-color: var(--crit); }
+  .alert .ic { font-size: 13px; line-height: 1.2; }
+  .alert b { font-family: var(--mono); font-size: 12px; display: block; }
+  .alert span { font-size: 11.5px; color: var(--ink-2); }
+  /* detail */
+  #detailEmpty { color: var(--ink-3); font-size: 12.5px; }
+  .d-head { display: flex; align-items: center; gap: 9px; margin-bottom: 4px; }
+  .d-head .sw { width: 11px; height: 11px; border-radius: 3px; }
+  .d-head b { font-family: var(--mono); font-size: 14px; }
+  .d-meta { font-size: 12px; color: var(--ink-2); margin-bottom: 10px; }
+  .d-alert { font-size: 12px; padding: 6px 8px; border-radius: 5px; margin-bottom: 9px;
+    background: color-mix(in srgb, var(--warn) 12%, transparent); color: var(--warn); }
+  .d-alert.critical { background: color-mix(in srgb, var(--crit) 14%, transparent); color: var(--crit); }
+  .linkrow {
+    display: grid; grid-template-columns: 1fr 74px; gap: 4px 10px;
+    padding: 7px 0; border-top: 1px solid var(--line); cursor: pointer;
+  }
+  .linkrow:hover { background: var(--panel-2); }
+  .linkrow .peer { font-family: var(--mono); font-size: 12px; }
+  .linkrow .meta { grid-column: 1 / -1; font-size: 11px; color: var(--ink-3); }
+  .bwcell { text-align: right; font-family: var(--mono); font-size: 11.5px;
+    font-variant-numeric: tabular-nums; color: var(--ink-2); }
+  .bwbar { grid-column: 1 / -1; height: 3px; border-radius: 2px; background: var(--line); overflow: hidden; }
+  .bwbar i { display: block; height: 100%; background: var(--ok); }
+  /* ---------- campus cards ---------- */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 12px; padding: 6px 20px 8px; }
+  .card { padding: 12px 14px; border-top: 3px solid var(--cc); }
+  .card h3 { margin: 0 0 2px; font-size: 13px; }
+  .card .stats { display: flex; gap: 16px; margin-top: 8px; }
+  .card .stats b { display: block; font-family: var(--mono); font-size: 16px; font-variant-numeric: tabular-nums; }
+  .card .hub { margin-top: 8px; font-size: 11.5px; color: var(--ink-2); }
+  .card .hub code { font-family: var(--mono); color: var(--ink); }
+  /* ---------- table ---------- */
+  .tbl-sec { margin: 8px 20px 20px; }
+  .tbl-head { display: flex; align-items: center; gap: 14px; padding: 12px 14px; flex-wrap: wrap; }
+  .tbl-head h2 { font-size: 13px; margin: 0; }
+  #tq { flex: 0 1 300px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line);
+    background: var(--panel-2); color: var(--ink); font-family: var(--mono); font-size: 12.5px; }
+  .tbl-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  th, td { text-align: left; padding: 6px 14px; border-top: 1px solid var(--line); white-space: nowrap; }
+  th { position: sticky; top: 0; background: var(--panel); }
+  th button { all: unset; cursor: pointer; font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  th button:hover { color: var(--ink); }
+  td.mono, td .devlink { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  td .devlink { color: var(--ink); text-decoration: none; cursor: pointer; }
+  td .devlink:hover { text-decoration: underline; }
+  td.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .minibar { display: inline-block; width: 90px; height: 4px; border-radius: 2px;
+    background: var(--line); vertical-align: middle; margin-left: 8px; overflow: hidden; }
+  .minibar i { display: block; height: 100%; background: var(--ok); }
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; }
+  .tag.principal { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok-soft); }
+  .tag.secundario { background: #1d2b38; color: #9cc3de; }
+  .tag.respaldo { background: #222b34; color: var(--ink-2); }
+  .tag.wan { background: color-mix(in srgb, #9085e9 16%, transparent); color: #b3abf2; }
+  .tag.inferido { background: color-mix(in srgb, var(--c-mpls) 16%, transparent); color: var(--c-mpls); }
+  footer { padding: 0 20px 26px; font-size: 11.5px; color: var(--ink-3); max-width: 70ch; }
+</style>
+
+<header>
+  <div class="brand">
+    <div class="dot" aria-hidden="true"></div>
+    <div>
+      <h1>NOC · Red de datos — Universidad de Cuenca</h1>
+      <div class="sub">Topología reconstruida de “Diagramas de red final.docx” · corte 2026-07-22</div>
+    </div>
+  </div>
+  <div class="kpis" id="kpis"></div>
+</header>
+
+<div class="wrap">
+  <div class="panel" id="mapPanel">
+    <svg id="svgMap" role="img" aria-label="Mapa topológico de la red"></svg>
+    <div class="map-hud">
+      <button id="zin" aria-label="Acercar">+</button>
+      <button id="zout" aria-label="Alejar">−</button>
+      <button id="zfit" aria-label="Ajustar vista" title="Ajustar vista">⤢</button>
+      <span class="hint">rueda = zoom · arrastrar = mover · clic en equipo = detalle</span>
+    </div>
+    <div id="tooltip"></div>
+  </div>
+
+  <aside>
+    <div class="panel side-sec">
+      <h2>Buscar equipo</h2>
+      <input id="q" type="search" placeholder="p. ej. DATCC, lag207, AUL2…" autocomplete="off">
+    </div>
+    <div class="panel side-sec">
+      <h2>Campus</h2>
+      <div class="chips" id="campusChips"></div>
+    </div>
+    <div class="panel side-sec">
+      <h2>Tipo de enlace</h2>
+      <div class="chips" id="typeChips"></div>
+    </div>
+    <div class="panel side-sec">
+      <h2>Alertas activas</h2>
+      <div id="alerts"></div>
+    </div>
+    <div class="panel side-sec">
+      <h2>Detalle del equipo</h2>
+      <div id="detail"><div id="detailEmpty">Selecciona un nodo en el mapa o en la tabla.</div></div>
+    </div>
+  </aside>
+</div>
+
+<div class="cards" id="cards"></div>
+
+<div class="panel tbl-sec">
+  <div class="tbl-head">
+    <h2>Enlaces (<span id="tcount"></span>)</h2>
+    <input id="tq" type="search" placeholder="filtrar enlaces…" autocomplete="off">
+    <span class="hint">clic en encabezado para ordenar · clic en un equipo para verlo en el mapa</span>
+  </div>
+  <div class="tbl-wrap">
+    <table id="tbl">
+      <thead><tr>
+        <th><button data-k="s">Origen</button></th>
+        <th><button data-k="t">Destino</button></th>
+        <th><button data-k="label">Puerto / etiqueta</button></th>
+        <th style="text-align:right"><button data-k="bw">Tráfico (Mbps)</button></th>
+        <th style="text-align:right"><button data-k="cap">Capacidad (Mbps)</button></th>
+        <th><button data-k="rol">Tipo</button></th>
+        <th><button data-k="diag">Diagrama</button></th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  Fuente: informe técnico “Topologías y conexiones de red — Universidad de Cuenca”
+  (34 diagramas). El tráfico corresponde al instante de captura de los weathermaps,
+  no a monitoreo en vivo. La capacidad nominal solo está documentada en los enlaces
+  del diagrama MPLS. Los enlaces marcados <em>inferido</em> los describe el texto del
+  informe pero no aparecen dibujados en ningún diagrama. Forma del nodo:
+  ◆ core · ■ distribución · ● acceso · ⬢ interconexión/MPLS. Tamaño = número de
+  enlaces. Grosor del enlace = tráfico medido, o capacidad si no hay medición.
+</footer>
+
+<script>
+const DATA = {"nodes": [{"id": "AETUC-0A-A76", "label": "AETUC-0A-A76", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 2, "x": 947.5, "y": 532.4, "status": "ok", "alert": "", "diagrams": "3"}, {"id": "AETUC-0A-A97", "label": "AETUC-0A-A97", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 859.4, "y": 533.8, "status": "ok", "alert": "", "diagrams": "3"}, {"id": "AETUCCF-2A-A79", "label": "AETUCCF-2A-A79", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1035.6, "y": 516.3, "status": "ok", "alert": "", "diagrams": "3"}, {"id": "AGRPRI-1A-A19", "label": "AGRPRI-1A-A19", "campus": "Campus Yanuncay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1076.3, "y": 906.4, "status": "ok", "alert": "", "diagrams": "25"}, {"id": "AGRPRI-1A-D10", "label": "AGRPRI-1A-D10", "campus": "Campus Yanuncay", "role": "dist", "capa": "agregacion", "deg": 12, "x": 1097.6, "y": 967.5, "status": "ok", "alert": "", "diagrams": "0;25"}, {"id": "ANF-0A-A14", "label": "ANF-0A-A14", "campus": "Campus Yanuncay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1339.8, "y": 1012.9, "status": "ok", "alert": "", "diagrams": "25"}, {"id": "ARQ-0A-A84", "label": "ARQ-0A-A84", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 181.1, "y": 154.2, "status": "ok", "alert": "", "diagrams": "10"}, {"id": "ARQ-0A-A85", "label": "ARQ-0A-A85", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 2, "x": 312.7, "y": 218.1, "status": "ok", "alert": "", "diagrams": "10"}, {"id": "ARQ-0B-A87", "label": "ARQ-0B-A87", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 467.8, "y": 248.3, "status": "ok", "alert": "", "diagrams": "10"}, {"id": "ARQ-0D-A88", "label": "ARQ-0D-A88", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 2, "x": 158.1, "y": 344.0, "status": "ok", "alert": "", "diagrams": "10"}, {"id": "ARQ-0D-A89", "label": "ARQ-0D-A89", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 70.0, "y": 330.4, "status": "ok", "alert": "", "diagrams": "10"}, {"id": "ARQ-0D-A90", "label": "ARQ-0D-A90", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 246.3, "y": 289.7, "status": "ok", "alert": "", "diagrams": "10"}, {"id": "ARQ-0G-A93-CEPAUC", "label": "ARQ-0G-A93-CEPAUC", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 246.4, "y": 346.5, "status": "ok", "alert": "", "diagrams": "10"}, {"id": "ARQ-1C-A86", "label": "ARQ-1C-A86", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 395.0, "y": 305.2, "status": "ok", "alert": "", "diagrams": "10"}, {"id": "ARQ-1C-A96", "label": "ARQ-1C-A96", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 194.0, "y": 417.9, "status": "ok", "alert": "", "diagrams": "10"}, {"id": "ARQ-1E-A91", "label": "ARQ-1E-A91", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 2, "x": 157.9, "y": 256.0, "status": "ok", "alert": "", "diagrams": "10"}, {"id": "ARQ-1E-A92", "label": "ARQ-1E-A92", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 70.5, "y": 199.1, "status": "ok", "alert": "", "diagrams": "10"}, {"id": "ART-0A-A15", "label": "ART-0A-A15", "campus": "Campus Yanuncay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1161.8, "y": 1105.8, "status": "ok", "alert": "", "diagrams": "25"}, {"id": "AUL1-2A-A110", "label": "AUL1-2A-A110", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 731.2, "y": 1176.0, "status": "ok", "alert": "", "diagrams": "18"}, {"id": "AUL1-2A-A111", "label": "AUL1-2A-A111", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 776.1, "y": 1119.1, "status": "ok", "alert": "", "diagrams": "18"}, {"id": "AUL1-3A-A104", "label": "AUL1-3A-A104", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 678.1, "y": 1100.6, "status": "ok", "alert": "", "diagrams": "18"}, {"id": "AUL1-3A-A112", "label": "AUL1-3A-A112", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 643.1, "y": 1157.5, "status": "ok", "alert": "", "diagrams": "18"}, {"id": "AUL2-01A-A124-SUBLAB2", "label": "AUL2-01A-A124-SUBLAB2", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 275.1, "y": 1087.2, "status": "ok", "alert": "", "diagrams": "19"}, {"id": "AUL2-01A-A24-SUB", "label": "AUL2-01A-A24-SUB", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 556.3, "y": 1100.3, "status": "ok", "alert": "", "diagrams": "19"}, {"id": "AUL2-0A-A106", "label": "AUL2-0A-A106", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 466.3, "y": 1156.6, "status": "ok", "alert": "", "diagrams": "19"}, {"id": "AUL2-0A-A118", "label": "AUL2-0A-A118", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 311.8, "y": 1026.3, "status": "ok", "alert": "", "diagrams": "19"}, {"id": "AUL2-0A-A119", "label": "AUL2-0A-A119", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 368.0, "y": 1208.3, "status": "ok", "alert": "", "diagrams": "19"}, {"id": "AUL2-0A-A120", "label": "AUL2-0A-A120", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 316.1, "y": 1150.8, "status": "ok", "alert": "", "diagrams": "19"}, {"id": "AUL2-0A-A121", "label": "AUL2-0A-A121", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 402.9, "y": 986.0, "status": "ok", "alert": "", "diagrams": "19"}, {"id": "AUL2-0A-A122", "label": "AUL2-0A-A122", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 394.4, "y": 1094.0, "status": "ok", "alert": "", "diagrams": "19"}, {"id": "AUL2-0A-A123", "label": "AUL2-0A-A123", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 555.0, "y": 1173.1, "status": "ok", "alert": "", "diagrams": "19"}, {"id": "BAL-AUL1-D4", "label": "BAL-AUL1-D4", "campus": "Campus Balzay", "role": "dist", "capa": "agregacion", "deg": 6, "x": 641.7, "y": 1015.7, "status": "ok", "alert": "", "diagrams": "17;18"}, {"id": "BAL-AUL2-D1", "label": "BAL-AUL2-D1", "campus": "Campus Balzay", "role": "dist", "capa": "agregacion", "deg": 12, "x": 482.6, "y": 1043.0, "status": "ok", "alert": "", "diagrams": "17;19;22"}, {"id": "BAL-CENTEC-D2", "label": "BAL-CENTEC-D2", "campus": "Campus Balzay", "role": "dist", "capa": "agregacion", "deg": 7, "x": 715.5, "y": 949.6, "status": "ok", "alert": "", "diagrams": "17;20;24"}, {"id": "BAL-EADM-D3", "label": "BAL-EADM-D3", "campus": "Campus Balzay", "role": "dist", "capa": "agregacion", "deg": 2, "x": 260.0, "y": 947.8, "status": "ok", "alert": "", "diagrams": "17;23"}, {"id": "BIB-2A-A16", "label": "BIB-2A-A16", "campus": "Campus Yanuncay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1002.6, "y": 1052.5, "status": "ok", "alert": "", "diagrams": "25"}, {"id": "BLOQUED-0A-A21", "label": "BLOQUED-0A-A21", "campus": "Campus Yanuncay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1095.7, "y": 1044.7, "status": "ok", "alert": "", "diagrams": "25"}, {"id": "CB-EADMI-D6", "label": "CB-EADMI-D6", "campus": "Campus Balzay", "role": "dist", "capa": "agregacion", "deg": 6, "x": 436.3, "y": 884.3, "status": "ok", "alert": "", "diagrams": "17;21"}, {"id": "CC-ADM-D40", "label": "CC-ADM-D40", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 7, "x": 515.2, "y": 638.4, "status": "ok", "alert": "", "diagrams": "1;2"}, {"id": "CC-AETUC-D30", "label": "CC-AETUC-D30", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 4, "x": 771.0, "y": 500.7, "status": "ok", "alert": "", "diagrams": "1;3"}, {"id": "CC-ARQUITECTURA-D107", "label": "CC-ARQUITECTURA-D107", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 10, "x": 374.8, "y": 363.0, "status": "ok", "alert": "", "diagrams": "1;10"}, {"id": "CC-BIBLIOTECA-D112", "label": "CC-BIBLIOTECA-D112", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 4, "x": 723.7, "y": 586.2, "status": "ok", "alert": "", "diagrams": "1;13"}, {"id": "CC-BLOQUE-IQ", "label": "CC-BLOQUE-IQ", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 2, "x": 612.0, "y": 586.2, "status": "ok", "alert": "", "diagrams": "1"}, {"id": "CC-ECONOMIA-D51", "label": "CC-ECONOMIA-D51", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 6, "x": 814.1, "y": 443.8, "status": "ok", "alert": "", "diagrams": "1;4;15"}, {"id": "CC-FILOSOFIA-A-D108", "label": "CC-FILOSOFIA-A-D108", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 5, "x": 795.1, "y": 386.9, "status": "ok", "alert": "", "diagrams": "1;5;9"}, {"id": "CC-FILOSOFIA-B-D111", "label": "CC-FILOSOFIA-B-D111", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 4, "x": 506.6, "y": 476.8, "status": "ok", "alert": "", "diagrams": "1;6"}, {"id": "CC-JURISPRUDENCIA-D110", "label": "CC-JURISPRUDENCIA-D110", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 6, "x": 418.5, "y": 485.6, "status": "ok", "alert": "", "diagrams": "1;7"}, {"id": "CC-MONJAS-D126", "label": "CC-MONJAS-D126", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 8, "x": 667.9, "y": 300.4, "status": "ok", "alert": "", "diagrams": "1;14"}, {"id": "CC-PROMAS-D31", "label": "CC-PROMAS-D31", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 4, "x": 528.0, "y": 414.2, "status": "ok", "alert": "", "diagrams": "1;12"}, {"id": "CC-PSICOLOGIA-D125", "label": "CC-PSICOLOGIA-D125", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 4, "x": 645.3, "y": 425.6, "status": "ok", "alert": "", "diagrams": "1;8"}, {"id": "CC-QUIMICA-D109", "label": "CC-QUIMICA-D109", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 5, "x": 428.6, "y": 581.5, "status": "ok", "alert": "", "diagrams": "1;11"}, {"id": "CCADM-2A-A43", "label": "CCADM-2A-A43", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 389.6, "y": 687.4, "status": "ok", "alert": "", "diagrams": "2"}, {"id": "CCADM-2A-A44", "label": "CCADM-2A-A44", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 410.9, "y": 748.0, "status": "ok", "alert": "", "diagrams": "2"}, {"id": "CCADM-2A-A45", "label": "CCADM-2A-A45", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 322.7, "y": 755.9, "status": "ok", "alert": "", "diagrams": "2"}, {"id": "CCBIB-1A-A71", "label": "CCBIB-1A-A71", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 748.0, "y": 643.1, "status": "ok", "alert": "", "diagrams": "13"}, {"id": "CCJ-1A-A10", "label": "CCJ-1A-A10", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1195.3, "y": 792.6, "status": "ok", "alert": "", "diagrams": "16"}, {"id": "CCJ-1A-A11", "label": "CCJ-1A-A11", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1114.4, "y": 849.5, "status": "ok", "alert": "", "diagrams": "16"}, {"id": "CCJ-CJURIDICO-D4", "label": "CCJ-CJURIDICO-D4", "campus": "Campus Central", "role": "dist", "capa": "agregacion", "deg": 3, "x": 1053.4, "y": 792.6, "status": "ok", "alert": "", "diagrams": "0;16"}, {"id": "CEA-0A-A108", "label": "CEA-0A-A108", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 914.5, "y": 1005.3, "status": "ok", "alert": "", "diagrams": "17;24"}, {"id": "CEN-1A-A20", "label": "CEN-1A-A20", "campus": "Campus Yanuncay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1202.6, "y": 905.7, "status": "ok", "alert": "", "diagrams": "25"}, {"id": "CENDIA-0A-A19", "label": "CENDIA-0A-A19", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1284.2, "y": 831.6, "status": "ok", "alert": "", "diagrams": "29"}, {"id": "CMED-0A-A42", "label": "CMED-0A-A42", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 285.9, "y": 699.0, "status": "ok", "alert": "", "diagrams": "2"}, {"id": "CP-EADMINA1-D6", "label": "CP-EADMINA1-D6", "campus": "Campus Paraiso", "role": "dist", "capa": "agregacion", "deg": 9, "x": 1449.5, "y": 494.4, "status": "ok", "alert": "", "diagrams": "27;28"}, {"id": "CP-ENFERMERIA-D1", "label": "CP-ENFERMERIA-D1", "campus": "Campus Paraiso", "role": "dist", "capa": "agregacion", "deg": 3, "x": 1470.3, "y": 731.5, "status": "ok", "alert": "", "diagrams": "27;33"}, {"id": "CP-INVESTIGACION-D5", "label": "CP-INVESTIGACION-D5", "campus": "Campus Paraiso", "role": "dist", "capa": "agregacion", "deg": 5, "x": 1390.4, "y": 790.1, "status": "ok", "alert": "", "diagrams": "27;29"}, {"id": "CP-ODONTOLOGIA-D4", "label": "CP-ODONTOLOGIA-D4", "campus": "Campus Paraiso", "role": "dist", "capa": "agregacion", "deg": 6, "x": 1330.8, "y": 548.5, "status": "ok", "alert": "", "diagrams": "27;30"}, {"id": "CP-POSGRADO-D2", "label": "CP-POSGRADO-D2", "campus": "Campus Paraiso", "role": "dist", "capa": "agregacion", "deg": 6, "x": 1654.4, "y": 668.8, "status": "ok", "alert": "", "diagrams": "27;32"}, {"id": "CP-TECMEDICO-D3", "label": "CP-TECMEDICO-D3", "campus": "Campus Paraiso", "role": "dist", "capa": "agregacion", "deg": 5, "x": 1274.2, "y": 361.5, "status": "ok", "alert": "", "diagrams": "27;31"}, {"id": "CPAR-C10", "label": "CPAR-C10", "campus": "Campus Paraiso", "role": "core", "capa": "core", "deg": 7, "x": 1419.0, "y": 565.4, "status": "ok", "alert": "", "diagrams": "27"}, {"id": "CREDU-0B-A94", "label": "CREDU-0B-A94", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 517.8, "y": 337.4, "status": "ok", "alert": "", "diagrams": "12"}, {"id": "CTBLOQ1-0A-A101", "label": "CTBLOQ1-0A-A101", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 827.5, "y": 1062.2, "status": "ok", "alert": "", "diagrams": "20"}, {"id": "CTBLOQ2-0A-A102", "label": "CTBLOQ2-0A-A102", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 738.9, "y": 1009.9, "status": "ok", "alert": "", "diagrams": "20"}, {"id": "CTBLOQ3-0A-A103", "label": "CTBLOQ3-0A-A103", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 868.9, "y": 948.5, "status": "ok", "alert": "", "diagrams": "20"}, {"id": "DAN-1A-A11", "label": "DAN-1A-A11", "campus": "Campus Yanuncay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1290.7, "y": 956.0, "status": "ok", "alert": "", "diagrams": "25"}, {"id": "DATCC-2A-C2", "label": "DATCC-2A-C2", "campus": "Campus Central", "role": "core", "capa": "core", "deg": 16, "x": 594.7, "y": 482.4, "status": "ok", "alert": "", "diagrams": "1;34"}, {"id": "DATCC-2A-C3", "label": "DATCC-2A-C3", "campus": "Campus Central", "role": "core", "capa": "core", "deg": 17, "x": 682.8, "y": 529.3, "status": "ok", "alert": "", "diagrams": "1;34"}, {"id": "DT-0A-C12", "label": "DT-0A-C12", "campus": "Campus Balzay", "role": "core", "capa": "core", "deg": 7, "x": 617.1, "y": 914.8, "status": "ok", "alert": "", "diagrams": "17;34"}, {"id": "DT-0A-C13", "label": "DT-0A-C13", "campus": "Campus Balzay", "role": "core", "capa": "core", "deg": 8, "x": 705.3, "y": 867.1, "status": "ok", "alert": "", "diagrams": "17;34"}, {"id": "EA-0A-A114", "label": "EA-0A-A114", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 312.0, "y": 871.2, "status": "ok", "alert": "", "diagrams": "21"}, {"id": "EA-1A-A115", "label": "EA-1A-A115", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 348.1, "y": 929.1, "status": "ok", "alert": "", "diagrams": "21"}, {"id": "EA-1A-A116", "label": "EA-1A-A116", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 391.9, "y": 812.7, "status": "ok", "alert": "", "diagrams": "21"}, {"id": "ECOK1-1A-A101", "label": "ECOK1-1A-A101", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 963.3, "y": 417.5, "status": "ok", "alert": "", "diagrams": "4"}, {"id": "ECOK1-1A-A102", "label": "ECOK1-1A-A102", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 922.4, "y": 474.8, "status": "ok", "alert": "", "diagrams": "4"}, {"id": "ECOK2-1A-A52", "label": "ECOK2-1A-A52", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 883.2, "y": 360.7, "status": "ok", "alert": "", "diagrams": "4"}, {"id": "ECOK3-0A-A63", "label": "ECOK3-0A-A63", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 649.3, "y": 243.5, "status": "ok", "alert": "", "diagrams": "14"}, {"id": "ENF-2B-A122", "label": "ENF-2B-A122", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1609.9, "y": 875.2, "status": "ok", "alert": "", "diagrams": "33"}, {"id": "ENF-2B-A22", "label": "ENF-2B-A22", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 2, "x": 1526.6, "y": 818.3, "status": "ok", "alert": "", "diagrams": "33"}, {"id": "ENF-3A-A21", "label": "ENF-3A-A21", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1559.0, "y": 758.3, "status": "ok", "alert": "", "diagrams": "33"}, {"id": "FILOA-0B-A56", "label": "FILOA-0B-A56", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 762.3, "y": 299.4, "status": "ok", "alert": "", "diagrams": "5"}, {"id": "FILOA-2A-A55", "label": "FILOA-2A-A55", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 857.8, "y": 303.7, "status": "ok", "alert": "", "diagrams": "5"}, {"id": "FILOB-1B-A58", "label": "FILOB-1B-A58", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 520.0, "y": 552.3, "status": "ok", "alert": "", "diagrams": "6"}, {"id": "FILOB-2A-A57", "label": "FILOB-2A-A57", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 435.3, "y": 420.0, "status": "ok", "alert": "", "diagrams": "6"}, {"id": "FORTIGATE-1800F-BALZAY", "label": "FORTIGATE-1800F-BALZAY", "campus": "Campus Balzay", "role": "infra", "capa": "interconexion", "deg": 5, "x": 702.4, "y": 802.7, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "FORTIGATE-1800F-CENTRAL", "label": "FORTIGATE-1800F-CENTRAL", "campus": "Campus Central", "role": "infra", "capa": "interconexion", "deg": 5, "x": 795.0, "y": 700.0, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "HOS-0A-A10", "label": "HOS-0A-A10", "campus": "Campus Hospitalidad", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1130.7, "y": 735.8, "status": "ok", "alert": "", "diagrams": "26"}, {"id": "HOS-0A-A13", "label": "HOS-0A-A13", "campus": "Campus Hospitalidad", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1150.1, "y": 630.3, "status": "ok", "alert": "", "diagrams": "26"}, {"id": "HOS-0A-D05", "label": "HOS-0A-D05", "campus": "Campus Hospitalidad", "role": "dist", "capa": "agregacion", "deg": 5, "x": 1062.0, "y": 678.9, "status": "ok", "alert": "", "diagrams": "0;26"}, {"id": "HOS-1A-A12", "label": "HOS-1A-A12", "campus": "Campus Hospitalidad", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1240.8, "y": 701.4, "status": "ok", "alert": "", "diagrams": "26"}, {"id": "HOS-2A-A11", "label": "HOS-2A-A11", "campus": "Campus Hospitalidad", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1104.8, "y": 573.2, "status": "ok", "alert": "", "diagrams": "26"}, {"id": "INTERNET-MPLS", "label": "INTERNET-MPLS", "campus": "Nube MPLS", "role": "infra", "capa": "wan", "deg": 8, "x": 975.8, "y": 735.8, "status": "ok", "alert": "", "diagrams": "0;34"}, {"id": "INV-1A-A161", "label": "INV-1A-A161", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1343.5, "y": 888.8, "status": "ok", "alert": "", "diagrams": "29"}, {"id": "INV-1A-A61", "label": "INV-1A-A61", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1436.2, "y": 847.4, "status": "ok", "alert": "", "diagrams": "29"}, {"id": "INV-1B-A162", "label": "INV-1B-A162", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1480.0, "y": 969.9, "status": "ok", "alert": "", "diagrams": "29"}, {"id": "INV-1B-A62", "label": "INV-1B-A62", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 2, "x": 1436.6, "y": 911.2, "status": "ok", "alert": "", "diagrams": "29"}, {"id": "JUR-0A-A59", "label": "JUR-0A-A59", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 328.2, "y": 470.0, "status": "ok", "alert": "", "diagrams": "7"}, {"id": "JUR-0A-A60", "label": "JUR-0A-A60", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 281.3, "y": 528.4, "status": "ok", "alert": "", "diagrams": "7"}, {"id": "JUR-1A-A61", "label": "JUR-1A-A61", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 188.6, "y": 474.7, "status": "ok", "alert": "", "diagrams": "7"}, {"id": "JUR-1A-A62", "label": "JUR-1A-A62", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 284.4, "y": 403.4, "status": "ok", "alert": "", "diagrams": "7"}, {"id": "LAB-1A-A18", "label": "LAB-1A-A18", "campus": "Campus Yanuncay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1273.0, "y": 1069.8, "status": "ok", "alert": "", "diagrams": "25"}, {"id": "LABMAC-1A-A13", "label": "LABMAC-1A-A13", "campus": "Campus Yanuncay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1064.9, "y": 1109.5, "status": "ok", "alert": "", "diagrams": "25"}, {"id": "LAC-0A-A17", "label": "LAC-0A-A17", "campus": "Campus Yanuncay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1189.6, "y": 998.6, "status": "ok", "alert": "", "diagrams": "25"}, {"id": "MEDADM-0F-A16", "label": "MEDADM-0F-A16", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1616.3, "y": 507.6, "status": "ok", "alert": "", "diagrams": "28"}, {"id": "MEDADM-0G-A17", "label": "MEDADM-0G-A17", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1627.1, "y": 450.8, "status": "ok", "alert": "", "diagrams": "28"}, {"id": "MEDADM-1A-A11", "label": "MEDADM-1A-A11", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1550.0, "y": 337.0, "status": "ok", "alert": "", "diagrams": "28"}, {"id": "MEDADM-1B-A12", "label": "MEDADM-1B-A12", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1522.8, "y": 551.3, "status": "ok", "alert": "", "diagrams": "28"}, {"id": "MEDADM-1C-A13", "label": "MEDADM-1C-A13", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1635.1, "y": 393.9, "status": "ok", "alert": "", "diagrams": "28"}, {"id": "MEDADM-1D-A14", "label": "MEDADM-1D-A14", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1528.8, "y": 437.6, "status": "ok", "alert": "", "diagrams": "28"}, {"id": "MEDADM-1E-A15", "label": "MEDADM-1E-A15", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1364.6, "y": 399.2, "status": "ok", "alert": "", "diagrams": "28"}, {"id": "MEDADM-1H-A18", "label": "MEDADM-1H-A18", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1457.3, "y": 354.4, "status": "ok", "alert": "", "diagrams": "28"}, {"id": "MICRORED-1A-A109", "label": "MICRORED-1A-A109", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 466.6, "y": 1230.0, "status": "ok", "alert": "", "diagrams": "17;22"}, {"id": "MON-0A-A103", "label": "MON-0A-A103", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 576.7, "y": 186.6, "status": "ok", "alert": "", "diagrams": "14"}, {"id": "MON-0A-A104", "label": "MON-0A-A104", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 785.7, "y": 167.6, "status": "ok", "alert": "", "diagrams": "14"}, {"id": "MON-1B-A67", "label": "MON-1B-A67", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 2, "x": 638.0, "y": 128.8, "status": "ok", "alert": "", "diagrams": "14"}, {"id": "MON-1B-A68", "label": "MON-1B-A68", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 641.5, "y": 71.8, "status": "ok", "alert": "", "diagrams": "14"}, {"id": "MON-1C-A105", "label": "MON-1C-A105", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 756.8, "y": 242.5, "status": "ok", "alert": "", "diagrams": "14"}, {"id": "MON-1C-A106", "label": "MON-1C-A106", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 693.1, "y": 185.6, "status": "ok", "alert": "", "diagrams": "14"}, {"id": "ODO-0B-A152", "label": "ODO-0B-A152", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1564.0, "y": 630.3, "status": "ok", "alert": "", "diagrams": "30"}, {"id": "ODO-0B-A52", "label": "ODO-0B-A52", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 2, "x": 1471.3, "y": 627.3, "status": "ok", "alert": "", "diagrams": "30"}, {"id": "ODO-0C-A153", "label": "ODO-0C-A153", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1140.7, "y": 396.2, "status": "ok", "alert": "", "diagrams": "30"}, {"id": "ODO-0C-A154", "label": "ODO-0C-A154", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1378.7, "y": 674.7, "status": "ok", "alert": "", "diagrams": "30"}, {"id": "ODO-0C-A53", "label": "ODO-0C-A53", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 3, "x": 1136.1, "y": 470.6, "status": "ok", "alert": "", "diagrams": "30"}, {"id": "ODO-0C-A54", "label": "ODO-0C-A54", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1233.4, "y": 420.8, "status": "ok", "alert": "", "diagrams": "30"}, {"id": "ODO-1A-A151", "label": "ODO-1A-A151", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1286.0, "y": 642.8, "status": "ok", "alert": "", "diagrams": "30"}, {"id": "ODO-1A-A51", "label": "ODO-1A-A51", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1204.7, "y": 527.5, "status": "ok", "alert": "", "diagrams": "30"}, {"id": "PE1-BALZAY", "label": "PE1-BALZAY", "campus": "Campus Balzay", "role": "infra", "capa": "wan", "deg": 4, "x": 792.8, "y": 777.8, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "PE1-CENTRAL", "label": "PE1-CENTRAL", "campus": "Campus Central", "role": "infra", "capa": "wan", "deg": 5, "x": 885.4, "y": 743.2, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "PE2-BALZAY", "label": "PE2-BALZAY", "campus": "Campus Balzay", "role": "infra", "capa": "wan", "deg": 5, "x": 795.7, "y": 834.7, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "PE2-CENTRAL", "label": "PE2-CENTRAL", "campus": "Campus Central", "role": "infra", "capa": "wan", "deg": 6, "x": 885.4, "y": 675.4, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "POS-0A-A131", "label": "POS-0A-A131", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1655.4, "y": 749.3, "status": "ok", "alert": "", "diagrams": "32"}, {"id": "POS-0A-A31", "label": "POS-0A-A31", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1744.8, "y": 670.3, "status": "ok", "alert": "", "diagrams": "32"}, {"id": "POS-1B-A32", "label": "POS-1B-A32", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1765.0, "y": 737.3, "status": "ok", "alert": "", "diagrams": "32"}, {"id": "POS-2C-A133", "label": "POS-2C-A133", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1930.0, "y": 684.0, "status": "ok", "alert": "", "diagrams": "32"}, {"id": "POS-2C-A33", "label": "POS-2C-A33", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 2, "x": 1837.4, "y": 677.1, "status": "ok", "alert": "", "diagrams": "32"}, {"id": "POSLAB-0D-A34", "label": "POSLAB-0D-A34", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1686.0, "y": 608.1, "status": "ok", "alert": "", "diagrams": "32"}, {"id": "POST-1A-A64", "label": "POST-1A-A64", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 2, "x": 851.2, "y": 233.4, "status": "ok", "alert": "", "diagrams": "1;9"}, {"id": "POST-1A-A65", "label": "POST-1A-A65", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 2, "x": 878.4, "y": 127.2, "status": "ok", "alert": "", "diagrams": "9"}, {"id": "POST-2A-A66", "label": "POST-2A-A66", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 885.4, "y": 70.0, "status": "ok", "alert": "", "diagrams": "9"}, {"id": "PRO-1A-A73", "label": "PRO-1A-A73", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 2, "x": 558.2, "y": 261.1, "status": "ok", "alert": "", "diagrams": "12"}, {"id": "PRO-3A-A74", "label": "PRO-3A-A74", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 484.0, "y": 157.3, "status": "ok", "alert": "", "diagrams": "12"}, {"id": "PSIC-1A-A53", "label": "PSIC-1A-A53", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 608.7, "y": 357.3, "status": "ok", "alert": "", "diagrams": "8"}, {"id": "PSIC-2B-A54", "label": "PSIC-2B-A54", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 701.9, "y": 368.7, "status": "ok", "alert": "", "diagrams": "8"}, {"id": "QUI-0A-A78", "label": "QUI-0A-A78", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 278.0, "y": 642.1, "status": "ok", "alert": "", "diagrams": "11"}, {"id": "QUI-1A-A83", "label": "QUI-1A-A83", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 215.3, "y": 585.3, "status": "ok", "alert": "", "diagrams": "11"}, {"id": "QUI-2A-A81", "label": "QUI-2A-A81", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 90.8, "y": 665.4, "status": "ok", "alert": "", "diagrams": "11"}, {"id": "QUI-2A-A82", "label": "QUI-2A-A82", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 2, "x": 184.9, "y": 646.2, "status": "ok", "alert": "", "diagrams": "11"}, {"id": "QUIN-1A-A117", "label": "QUIN-1A-A117", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 2, "x": 169.6, "y": 983.6, "status": "ok", "alert": "", "diagrams": "23"}, {"id": "QUIN-1A-A128", "label": "QUIN-1A-A128", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 77.0, "y": 1025.4, "status": "ok", "alert": "", "diagrams": "23"}, {"id": "ROUTER-CAMPUS-CENTRO-HISTORICO", "label": "ROUTER-CAMPUS-CENTRO-HISTORICO", "campus": "Sede Centro Historico", "role": "infra", "capa": "wan", "deg": 2, "x": 612.0, "y": 756.8, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "ROUTER-CAMPUS-HUAYNA-CAPAC", "label": "ROUTER-CAMPUS-HUAYNA-CAPAC", "campus": "Campus Paraiso", "role": "infra", "capa": "wan", "deg": 3, "x": 1240.5, "y": 584.3, "status": "ok", "alert": "", "diagrams": "27;34"}, {"id": "ROUTER-CAMPUS-MUSEO", "label": "ROUTER-CAMPUS-MUSEO", "campus": "Sede Museo", "role": "infra", "capa": "wan", "deg": 2, "x": 519.4, "y": 767.3, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "ROUTER-CAMPUS-PARAISO", "label": "ROUTER-CAMPUS-PARAISO", "campus": "Campus Paraiso", "role": "infra", "capa": "wan", "deg": 2, "x": 989.3, "y": 592.8, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "ROUTER-CAMPUS-YANUNCAY", "label": "ROUTER-CAMPUS-YANUNCAY", "campus": "Campus Yanuncay", "role": "infra", "capa": "wan", "deg": 3, "x": 971.9, "y": 849.6, "status": "ok", "alert": "", "diagrams": "0;34"}, {"id": "ROUTER-L2TP-BALZAY", "label": "ROUTER-L2TP-BALZAY", "campus": "Campus Balzay", "role": "infra", "capa": "wan", "deg": 4, "x": 526.6, "y": 878.9, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "SW-ARUBA-CENTRO-HISTORICO", "label": "SW-ARUBA-CENTRO-HISTORICO", "campus": "Sede Centro Historico", "role": "acceso", "capa": "acceso", "deg": 2, "x": 698.3, "y": 699.9, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "SW-ARUBA-MUSEO", "label": "SW-ARUBA-MUSEO", "campus": "Sede Museo", "role": "acceso", "capa": "acceso", "deg": 2, "x": 605.6, "y": 654.4, "status": "ok", "alert": "", "diagrams": "34"}, {"id": "TALL-0A-A12", "label": "TALL-0A-A12", "campus": "Campus Yanuncay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1004.8, "y": 963.2, "status": "ok", "alert": "", "diagrams": "25"}, {"id": "TEAT-0A-A75", "label": "TEAT-0A-A75", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 501.3, "y": 708.9, "status": "ok", "alert": "", "diagrams": "2"}, {"id": "TECMED-0B-A42", "label": "TECMED-0B-A42", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1364.6, "y": 307.7, "status": "ok", "alert": "", "diagrams": "31"}, {"id": "TECMED-1A-A141", "label": "TECMED-1A-A141", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1317.6, "y": 184.9, "status": "ok", "alert": "", "diagrams": "31"}, {"id": "TECMED-1A-A41", "label": "TECMED-1A-A41", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 2, "x": 1312.6, "y": 241.7, "status": "ok", "alert": "", "diagrams": "31"}, {"id": "TECMED-2C-A43", "label": "TECMED-2C-A43", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1261.4, "y": 298.6, "status": "ok", "alert": "", "diagrams": "31"}, {"id": "TECMED-3D-A44", "label": "TECMED-3D-A44", "campus": "Campus Paraiso", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1168.6, "y": 338.6, "status": "ok", "alert": "", "diagrams": "31"}, {"id": "TECQUI-0A-A10", "label": "TECQUI-0A-A10", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 3, "x": 973.6, "y": 346.6, "status": "ok", "alert": "", "diagrams": "15"}, {"id": "TECQUI-0A-A11", "label": "TECQUI-0A-A11", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1066.2, "y": 339.3, "status": "ok", "alert": "", "diagrams": "15"}, {"id": "TECQUI-0A-A12", "label": "TECQUI-0A-A12", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 1018.4, "y": 282.4, "status": "ok", "alert": "", "diagrams": "15"}, {"id": "VIN-0A-A72", "label": "VIN-0A-A72", "campus": "Campus Central", "role": "acceso", "capa": "acceso", "deg": 1, "x": 860.4, "y": 605.7, "status": "ok", "alert": "", "diagrams": "13"}, {"id": "VLIR-0A-A107", "label": "VLIR-0A-A107", "campus": "Campus Balzay", "role": "acceso", "capa": "acceso", "deg": 1, "x": 801.6, "y": 891.6, "status": "ok", "alert": "", "diagrams": "17;24"}], "edges": [{"s": "ROUTER-CAMPUS-YANUNCAY", "t": "AGRPRI-1A-D10", "label": "Uplink MPLS del campus (inferido del informe, no visible en los diagramas)", "bw": null, "cap": null, "rol": "inferido", "diag": "0"}, {"s": "INTERNET-MPLS", "t": "HOS-0A-D05", "label": "Uplink MPLS del campus (inferido del informe, no visible en los diagramas)", "bw": null, "cap": null, "rol": "inferido", "diag": "0"}, {"s": "INTERNET-MPLS", "t": "CCJ-CJURIDICO-D4", "label": "Uplink MPLS (inferido del informe, no visible en los diagramas)", "bw": null, "cap": null, "rol": "inferido", "diag": "0"}, {"s": "DATCC-2A-C2", "t": "DATCC-2A-C3", "label": "Enlace entre Cores: lag256 1.89 Gbps", "bw": 1890.0, "cap": null, "rol": "principal", "diag": "1;34"}, {"s": "CC-AETUC-D30", "t": "DATCC-2A-C2", "label": "C2: lag207 74.03 Mbps", "bw": 74.03, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-AETUC-D30", "t": "DATCC-2A-C3", "label": "C3: lag207 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "1"}, {"s": "CC-ARQUITECTURA-D107", "t": "DATCC-2A-C2", "label": "C2: lag206 398.39 Mbps", "bw": 398.39, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-ARQUITECTURA-D107", "t": "DATCC-2A-C3", "label": "C3: lag206 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "1"}, {"s": "CC-BIBLIOTECA-D112", "t": "DATCC-2A-C2", "label": "C2: lag205 458.15 Mbps", "bw": 458.15, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-BIBLIOTECA-D112", "t": "DATCC-2A-C3", "label": "C3: lag205 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "1"}, {"s": "CC-BLOQUE-IQ", "t": "DATCC-2A-C2", "label": "C2: lag210 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "1"}, {"s": "CC-BLOQUE-IQ", "t": "DATCC-2A-C3", "label": "C3: lag210 494.31 Mbps", "bw": 494.31, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-PROMAS-D31", "t": "DATCC-2A-C2", "label": "C2: lag209 117.47 Mbps", "bw": 117.47, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-PROMAS-D31", "t": "DATCC-2A-C3", "label": "C3: lag209 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "1"}, {"s": "CC-QUIMICA-D109", "t": "DATCC-2A-C2", "label": "C2: lag211 103.31 Mbps", "bw": 103.31, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-QUIMICA-D109", "t": "DATCC-2A-C3", "label": "C3: lag211 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "1"}, {"s": "CC-ADM-D40", "t": "DATCC-2A-C2", "label": "C2: lag208 100.93 Mbps", "bw": 100.93, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-ADM-D40", "t": "DATCC-2A-C3", "label": "C3: lag208 82.82 Mbps", "bw": 82.82, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-FILOSOFIA-B-D111", "t": "DATCC-2A-C3", "label": "C3: lag216 181.8 Mbps", "bw": 181.8, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-FILOSOFIA-B-D111", "t": "DATCC-2A-C2", "label": "C2: lag216 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "1"}, {"s": "CC-JURISPRUDENCIA-D110", "t": "DATCC-2A-C3", "label": "C3: lag217 130.98 Mbps", "bw": 130.98, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-JURISPRUDENCIA-D110", "t": "DATCC-2A-C2", "label": "C2: lag217 74.45 Mbps", "bw": 74.45, "cap": null, "rol": "secundario", "diag": "1"}, {"s": "CC-PSICOLOGIA-D125", "t": "DATCC-2A-C3", "label": "C3: lag215 265.28 Mbps", "bw": 265.28, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-PSICOLOGIA-D125", "t": "DATCC-2A-C2", "label": "C2: lag215 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "1"}, {"s": "CC-FILOSOFIA-A-D108", "t": "DATCC-2A-C3", "label": "C3: lag214 220.7 Mbps", "bw": 220.7, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-FILOSOFIA-A-D108", "t": "DATCC-2A-C2", "label": "C2: lag214 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "1"}, {"s": "CC-MONJAS-D126", "t": "DATCC-2A-C3", "label": "C3: lag213 256.51 Mbps", "bw": 256.51, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-MONJAS-D126", "t": "DATCC-2A-C2", "label": "C2: lag213 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "1"}, {"s": "CC-ECONOMIA-D51", "t": "DATCC-2A-C3", "label": "C3: lag212 346.27 Mbps", "bw": 346.27, "cap": null, "rol": "principal", "diag": "1"}, {"s": "CC-ECONOMIA-D51", "t": "DATCC-2A-C2", "label": "C2: lag212 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "1"}, {"s": "POST-1A-A64", "t": "CC-FILOSOFIA-A-D108", "label": "D108: 1/1/5 200.42 Mbps", "bw": 200.42, "cap": null, "rol": "principal", "diag": "1;9"}, {"s": "CC-ADM-D40", "t": "TEAT-0A-A75", "label": "D40: 1/1/5 8.2 Mbps", "bw": 8.2, "cap": null, "rol": "principal", "diag": "2"}, {"s": "CC-ADM-D40", "t": "CMED-0A-A42", "label": "D40: 1/1/3 7.97 Mbps", "bw": 7.97, "cap": null, "rol": "principal", "diag": "2"}, {"s": "CC-ADM-D40", "t": "CCADM-2A-A43", "label": "D40: lag14 24.53 Mbps", "bw": 24.53, "cap": null, "rol": "principal", "diag": "2"}, {"s": "CC-ADM-D40", "t": "CCADM-2A-A44", "label": "D40: lag13 105.36 Mbps", "bw": 105.36, "cap": null, "rol": "principal", "diag": "2"}, {"s": "CC-ADM-D40", "t": "CCADM-2A-A45", "label": "D40: lag12 8.28 Mbps", "bw": 8.28, "cap": null, "rol": "principal", "diag": "2"}, {"s": "CC-AETUC-D30", "t": "AETUC-0A-A76", "label": "D30: 1/1/1 59.19 Mbps", "bw": 59.19, "cap": null, "rol": "principal", "diag": "3"}, {"s": "CC-AETUC-D30", "t": "AETUC-0A-A97", "label": "D30: 1/1/2 37.7 Mbps", "bw": 37.7, "cap": null, "rol": "principal", "diag": "3"}, {"s": "AETUC-0A-A76", "t": "AETUCCF-2A-A79", "label": "A76: 1/1/48 51.9 Mbps", "bw": 51.9, "cap": null, "rol": "principal", "diag": "3"}, {"s": "CC-ECONOMIA-D51", "t": "ECOK2-1A-A52", "label": "D51: lag11 36.58 Mbps", "bw": 36.58, "cap": null, "rol": "principal", "diag": "4"}, {"s": "CC-ECONOMIA-D51", "t": "ECOK1-1A-A101", "label": "D51: lag12 5.73 Mbps", "bw": 5.73, "cap": null, "rol": "principal", "diag": "4"}, {"s": "CC-ECONOMIA-D51", "t": "ECOK1-1A-A102", "label": "D51: lag13 268.16 Mbps", "bw": 268.16, "cap": null, "rol": "principal", "diag": "4"}, {"s": "CC-FILOSOFIA-A-D108", "t": "FILOA-0B-A56", "label": "D108: lag12 39.4 Mbps", "bw": 39.4, "cap": null, "rol": "principal", "diag": "5"}, {"s": "CC-FILOSOFIA-A-D108", "t": "FILOA-2A-A55", "label": "D108: lag11 33.78 Mbps", "bw": 33.78, "cap": null, "rol": "principal", "diag": "5"}, {"s": "CC-FILOSOFIA-B-D111", "t": "FILOB-2A-A57", "label": "D111: lag11 99.58 Mbps", "bw": 99.58, "cap": null, "rol": "principal", "diag": "6"}, {"s": "CC-FILOSOFIA-B-D111", "t": "FILOB-1B-A58", "label": "D111: lag12 63.51 Mbps", "bw": 63.51, "cap": null, "rol": "principal", "diag": "6"}, {"s": "CC-JURISPRUDENCIA-D110", "t": "JUR-0A-A59", "label": "D110: 1/1/1 11.47 Mbps", "bw": 11.47, "cap": null, "rol": "principal", "diag": "7"}, {"s": "CC-JURISPRUDENCIA-D110", "t": "JUR-0A-A60", "label": "D110: 1/1/7 4.37 Mbps", "bw": 4.37, "cap": null, "rol": "principal", "diag": "7"}, {"s": "CC-JURISPRUDENCIA-D110", "t": "JUR-1A-A61", "label": "D110: lag42 60.21 Mbps", "bw": 60.21, "cap": null, "rol": "principal", "diag": "7"}, {"s": "CC-JURISPRUDENCIA-D110", "t": "JUR-1A-A62", "label": "D110: lag43 55.03 Mbps", "bw": 55.03, "cap": null, "rol": "principal", "diag": "7"}, {"s": "CC-PSICOLOGIA-D125", "t": "PSIC-1A-A53", "label": "D125: lag21 126.27 Mbps", "bw": 126.27, "cap": null, "rol": "principal", "diag": "8"}, {"s": "CC-PSICOLOGIA-D125", "t": "PSIC-2B-A54", "label": "D50: lag22 71.19 Mbps", "bw": 71.19, "cap": null, "rol": "principal", "diag": "8"}, {"s": "POST-1A-A64", "t": "POST-1A-A65", "label": "A64: 1/1/50 34.23 Mbps", "bw": 34.23, "cap": null, "rol": "principal", "diag": "9"}, {"s": "POST-1A-A65", "t": "POST-2A-A66", "label": "A65: 1/1/48 2.67 Mbps", "bw": 2.67, "cap": null, "rol": "principal", "diag": "9"}, {"s": "CC-ARQUITECTURA-D107", "t": "ARQ-0A-A85", "label": "D107: lag11 80.54 Mbps", "bw": 80.54, "cap": null, "rol": "principal", "diag": "10"}, {"s": "ARQ-0A-A85", "t": "ARQ-0A-A84", "label": "A85: 1/1/51 2.94 Mbps", "bw": 2.94, "cap": null, "rol": "principal", "diag": "10"}, {"s": "CC-ARQUITECTURA-D107", "t": "ARQ-0B-A87", "label": "D107: lag12 9.87 Mbps", "bw": 9.87, "cap": null, "rol": "principal", "diag": "10"}, {"s": "CC-ARQUITECTURA-D107", "t": "ARQ-1C-A86", "label": "D107: 1/1/3 9.98 Mbps", "bw": 9.98, "cap": null, "rol": "principal", "diag": "10"}, {"s": "CC-ARQUITECTURA-D107", "t": "ARQ-1C-A96", "label": "D107: lag13 51.55 Mbps", "bw": 51.55, "cap": null, "rol": "principal", "diag": "10"}, {"s": "CC-ARQUITECTURA-D107", "t": "ARQ-0D-A88", "label": "D107: lag14 47.14 Mbps", "bw": 47.14, "cap": null, "rol": "principal", "diag": "10"}, {"s": "ARQ-0D-A88", "t": "ARQ-0D-A89", "label": "A88: 1/1/52 45.32 Mbps", "bw": 45.32, "cap": null, "rol": "principal", "diag": "10"}, {"s": "CC-ARQUITECTURA-D107", "t": "ARQ-0D-A90", "label": "D107: lag15 2.96 Mbps", "bw": 2.96, "cap": null, "rol": "principal", "diag": "10"}, {"s": "CC-ARQUITECTURA-D107", "t": "ARQ-1E-A91", "label": "D107: lag16 96.32 Mbps", "bw": 96.32, "cap": null, "rol": "principal", "diag": "10"}, {"s": "ARQ-1E-A91", "t": "ARQ-1E-A92", "label": "A91: 4/1/49 96.64 Mbps", "bw": 96.64, "cap": null, "rol": "principal", "diag": "10"}, {"s": "CC-ARQUITECTURA-D107", "t": "ARQ-0G-A93-CEPAUC", "label": "D107: 1/1/13 3.53 Mbps", "bw": 3.53, "cap": null, "rol": "principal", "diag": "10"}, {"s": "CC-QUIMICA-D109", "t": "QUI-1A-A83", "label": "D109: lag11 55.56 Mbps", "bw": 55.56, "cap": null, "rol": "principal", "diag": "11"}, {"s": "CC-QUIMICA-D109", "t": "QUI-0A-A78", "label": "D109: lag12 0 bps", "bw": 0.0, "cap": null, "rol": "respaldo", "diag": "11"}, {"s": "CC-QUIMICA-D109", "t": "QUI-2A-A82", "label": "D109: lag13 2.67 Mbps", "bw": 2.67, "cap": null, "rol": "principal", "diag": "11"}, {"s": "QUI-2A-A82", "t": "QUI-2A-A81", "label": "A81: 1/1/48 5.93 Kbps", "bw": 0.00593, "cap": null, "rol": "principal", "diag": "11"}, {"s": "CC-PROMAS-D31", "t": "PRO-1A-A73", "label": "D31: lag41 68.74 Mbps", "bw": 68.74, "cap": null, "rol": "principal", "diag": "12"}, {"s": "CC-PROMAS-D31", "t": "CREDU-0B-A94", "label": "D31: 1/1/3 17.32 Mbps", "bw": 17.32, "cap": null, "rol": "principal", "diag": "12"}, {"s": "PRO-1A-A73", "t": "PRO-3A-A74", "label": "", "bw": null, "cap": null, "rol": "principal", "diag": "12"}, {"s": "CC-BIBLIOTECA-D112", "t": "CCBIB-1A-A71", "label": "D112: lag11 189.65 Mbps", "bw": 189.65, "cap": null, "rol": "principal", "diag": "13"}, {"s": "CC-BIBLIOTECA-D112", "t": "VIN-0A-A72", "label": "D112: 1/1/3 36.32 Mbps", "bw": 36.32, "cap": null, "rol": "principal", "diag": "13"}, {"s": "CC-MONJAS-D126", "t": "MON-0A-A103", "label": "D126: lag63 3.82 Mbps", "bw": 3.82, "cap": null, "rol": "principal", "diag": "14"}, {"s": "CC-MONJAS-D126", "t": "MON-0A-A104", "label": "D126: lag64 39.99 Mbps", "bw": 39.99, "cap": null, "rol": "principal", "diag": "14"}, {"s": "CC-MONJAS-D126", "t": "MON-1C-A105", "label": "D126: lag67 2.76 Mbps", "bw": 2.76, "cap": null, "rol": "principal", "diag": "14"}, {"s": "CC-MONJAS-D126", "t": "MON-1C-A106", "label": "D126: lag66 16.36 Mbps", "bw": 16.36, "cap": null, "rol": "principal", "diag": "14"}, {"s": "CC-MONJAS-D126", "t": "MON-1B-A67", "label": "D126: lag62 36.31 Mbps", "bw": 36.31, "cap": null, "rol": "principal", "diag": "14"}, {"s": "MON-1B-A67", "t": "MON-1B-A68", "label": "A67: 2/1/52 37.86 Mbps", "bw": 37.86, "cap": null, "rol": "principal", "diag": "14"}, {"s": "CC-MONJAS-D126", "t": "ECOK3-0A-A63", "label": "D126: 1/1/9 32.03 Mbps", "bw": 32.03, "cap": null, "rol": "principal", "diag": "14"}, {"s": "CC-ECONOMIA-D51", "t": "TECQUI-0A-A10", "label": "", "bw": null, "cap": null, "rol": "principal", "diag": "15"}, {"s": "TECQUI-0A-A10", "t": "TECQUI-0A-A11", "label": "", "bw": null, "cap": null, "rol": "principal", "diag": "15"}, {"s": "TECQUI-0A-A10", "t": "TECQUI-0A-A12", "label": "A12: 1/1/50 7.6 Mbps", "bw": 7.6, "cap": null, "rol": "principal", "diag": "15"}, {"s": "CCJ-CJURIDICO-D4", "t": "CCJ-1A-A10", "label": "D4: 1/1/51 39.04 Mbps", "bw": 39.04, "cap": null, "rol": "principal", "diag": "16"}, {"s": "CCJ-CJURIDICO-D4", "t": "CCJ-1A-A11", "label": "D4: 1/1/52 1.56 Mbps", "bw": 1.56, "cap": null, "rol": "principal", "diag": "16"}, {"s": "DT-0A-C12", "t": "DT-0A-C13", "label": "C12: lag256 243.03 Mbps", "bw": 243.03, "cap": null, "rol": "principal", "diag": "17;34"}, {"s": "DT-0A-C12", "t": "BAL-AUL1-D4", "label": "C12: lag18 1.64 Mbps", "bw": 1.64, "cap": null, "rol": "principal", "diag": "17"}, {"s": "DT-0A-C13", "t": "BAL-AUL1-D4", "label": "C13: lag18 171.71 Mbps", "bw": 171.71, "cap": null, "rol": "secundario", "diag": "17"}, {"s": "DT-0A-C12", "t": "BAL-AUL2-D1", "label": "C12: lag15 21.06 Mbps", "bw": 21.06, "cap": null, "rol": "principal", "diag": "17"}, {"s": "DT-0A-C13", "t": "BAL-AUL2-D1", "label": "C13: lag15 145.25 Mbps", "bw": 145.25, "cap": null, "rol": "secundario", "diag": "17"}, {"s": "DT-0A-C12", "t": "BAL-CENTEC-D2", "label": "C12: lag16 17.36 Mbps", "bw": 17.36, "cap": null, "rol": "principal", "diag": "17"}, {"s": "DT-0A-C13", "t": "BAL-CENTEC-D2", "label": "C13: lag16 58.16 Mbps", "bw": 58.16, "cap": null, "rol": "secundario", "diag": "17"}, {"s": "DT-0A-C12", "t": "CB-EADMI-D6", "label": "C12: lag17 7.18 Mbps", "bw": 7.18, "cap": null, "rol": "principal", "diag": "17"}, {"s": "DT-0A-C13", "t": "CB-EADMI-D6", "label": "C13: lag17 76.66 Mbps", "bw": 76.66, "cap": null, "rol": "secundario", "diag": "17"}, {"s": "BAL-AUL2-D1", "t": "MICRORED-1A-A109", "label": "D1: int1/1/3 11.02 Mbps", "bw": 11.02, "cap": null, "rol": "principal", "diag": "17;22"}, {"s": "BAL-CENTEC-D2", "t": "CEA-0A-A108", "label": "D2: lag70 4.99 Mbps", "bw": 4.99, "cap": null, "rol": "principal", "diag": "17;24"}, {"s": "BAL-CENTEC-D2", "t": "VLIR-0A-A107", "label": "D2: int1/1/3 13.75 Mbps", "bw": 13.75, "cap": null, "rol": "principal", "diag": "17;24"}, {"s": "CB-EADMI-D6", "t": "BAL-EADM-D3", "label": "D3: int 1/1/6 19.63 Mbps", "bw": 19.63, "cap": null, "rol": "principal", "diag": "17"}, {"s": "BAL-AUL1-D4", "t": "AUL1-2A-A110", "label": "D4: 1/1/1 65.9 Mbps", "bw": 65.9, "cap": null, "rol": "principal", "diag": "18"}, {"s": "BAL-AUL1-D4", "t": "AUL1-2A-A111", "label": "D4: 1/1/2 77.62 Mbps", "bw": 77.62, "cap": null, "rol": "principal", "diag": "18"}, {"s": "BAL-AUL1-D4", "t": "AUL1-3A-A112", "label": "D4: 1/1/3 29.78 Mbps", "bw": 29.78, "cap": null, "rol": "principal", "diag": "18"}, {"s": "BAL-AUL1-D4", "t": "AUL1-3A-A104", "label": "D4: 1/1/4 84.67 Mbps", "bw": 84.67, "cap": null, "rol": "principal", "diag": "18"}, {"s": "BAL-AUL2-D1", "t": "AUL2-0A-A106", "label": "D1: lag30 68.5 Mbps", "bw": 68.5, "cap": null, "rol": "principal", "diag": "19"}, {"s": "BAL-AUL2-D1", "t": "AUL2-0A-A122", "label": "D1: lag31 1.22 Mbps", "bw": 1.22, "cap": null, "rol": "principal", "diag": "19"}, {"s": "BAL-AUL2-D1", "t": "AUL2-0A-A121", "label": "D1: lag32 81.71 Mbps", "bw": 81.71, "cap": null, "rol": "principal", "diag": "19"}, {"s": "BAL-AUL2-D1", "t": "AUL2-0A-A119", "label": "D1: lag33 1.33 Mbps", "bw": 1.33, "cap": null, "rol": "principal", "diag": "19"}, {"s": "BAL-AUL2-D1", "t": "AUL2-0A-A118", "label": "D1: lag34 2.69 Mbps", "bw": 2.69, "cap": null, "rol": "principal", "diag": "19"}, {"s": "BAL-AUL2-D1", "t": "AUL2-0A-A120", "label": "D1: lag35 5.03 Mbps", "bw": 5.03, "cap": null, "rol": "principal", "diag": "19"}, {"s": "BAL-AUL2-D1", "t": "AUL2-0A-A123", "label": "D1: lag36 1.35 Mbps", "bw": 1.35, "cap": null, "rol": "principal", "diag": "19"}, {"s": "BAL-AUL2-D1", "t": "AUL2-01A-A124-SUBLAB2", "label": "D1: 1/1/17 25.46 Mbps", "bw": 25.46, "cap": null, "rol": "principal", "diag": "19"}, {"s": "BAL-AUL2-D1", "t": "AUL2-01A-A24-SUB", "label": "D1: 1/1/22 78.4 Mbps", "bw": 78.4, "cap": null, "rol": "principal", "diag": "19"}, {"s": "BAL-CENTEC-D2", "t": "CTBLOQ1-0A-A101", "label": "D2: lag60 5.65 Mbps", "bw": 5.65, "cap": null, "rol": "principal", "diag": "20"}, {"s": "BAL-CENTEC-D2", "t": "CTBLOQ2-0A-A102", "label": "D2: lag50 22.29 Mbps", "bw": 22.29, "cap": null, "rol": "principal", "diag": "20"}, {"s": "BAL-CENTEC-D2", "t": "CTBLOQ3-0A-A103", "label": "D2: lag40 12.91 Mbps", "bw": 12.91, "cap": null, "rol": "principal", "diag": "20"}, {"s": "CB-EADMI-D6", "t": "EA-1A-A115", "label": "D3: lag100 50.53 Mbps", "bw": 50.53, "cap": null, "rol": "principal", "diag": "21"}, {"s": "CB-EADMI-D6", "t": "EA-0A-A114", "label": "D3: lag90 20.91 Mbps", "bw": 20.91, "cap": null, "rol": "principal", "diag": "21"}, {"s": "CB-EADMI-D6", "t": "EA-1A-A116", "label": "D3: int1/1/5 1.86 Mbps", "bw": 1.86, "cap": null, "rol": "principal", "diag": "21"}, {"s": "BAL-EADM-D3", "t": "QUIN-1A-A117", "label": "BAL-EADM-D3: int 1/1/6 54.06 Mbps", "bw": 54.06, "cap": null, "rol": "principal", "diag": "23"}, {"s": "QUIN-1A-A117", "t": "QUIN-1A-A128", "label": "", "bw": null, "cap": null, "rol": "principal", "diag": "23"}, {"s": "AGRPRI-1A-D10", "t": "TALL-0A-A12", "label": "D10: 1/1/3 10.56 Mbps", "bw": 10.56, "cap": null, "rol": "principal", "diag": "25"}, {"s": "AGRPRI-1A-D10", "t": "DAN-1A-A11", "label": "D10: 1/1/4 10.28 Mbps", "bw": 10.28, "cap": null, "rol": "principal", "diag": "25"}, {"s": "AGRPRI-1A-D10", "t": "LABMAC-1A-A13", "label": "D10: lag110 19.07 Mbps", "bw": 19.07, "cap": null, "rol": "principal", "diag": "25"}, {"s": "AGRPRI-1A-D10", "t": "ART-0A-A15", "label": "D10: lag120 40.41 Mbps", "bw": 40.41, "cap": null, "rol": "principal", "diag": "25"}, {"s": "AGRPRI-1A-D10", "t": "BLOQUED-0A-A21", "label": "D10: lag190 9.74 Mbps", "bw": 9.74, "cap": null, "rol": "principal", "diag": "25"}, {"s": "AGRPRI-1A-D10", "t": "BIB-2A-A16", "label": "D10: lag130 68.33 Mbps", "bw": 68.33, "cap": null, "rol": "principal", "diag": "25"}, {"s": "AGRPRI-1A-D10", "t": "LAC-0A-A17", "label": "D10: lag140 11.7 Mbps", "bw": 11.7, "cap": null, "rol": "principal", "diag": "25"}, {"s": "AGRPRI-1A-D10", "t": "LAB-1A-A18", "label": "D10: lag150 17.54 Mbps", "bw": 17.54, "cap": null, "rol": "principal", "diag": "25"}, {"s": "AGRPRI-1A-D10", "t": "AGRPRI-1A-A19", "label": "D10: lag160 30.48 Mbps", "bw": 30.48, "cap": null, "rol": "principal", "diag": "25"}, {"s": "AGRPRI-1A-D10", "t": "ANF-0A-A14", "label": "D10: 1/1/19 6.44 Mbps", "bw": 6.44, "cap": null, "rol": "principal", "diag": "25"}, {"s": "AGRPRI-1A-D10", "t": "CEN-1A-A20", "label": "D10: lag180 5.32 Mbps", "bw": 5.32, "cap": null, "rol": "principal", "diag": "25"}, {"s": "HOS-0A-D05", "t": "HOS-0A-A10", "label": "D5: lag60 26.42 Mbps", "bw": 26.42, "cap": null, "rol": "principal", "diag": "26"}, {"s": "HOS-0A-D05", "t": "HOS-2A-A11", "label": "D5: lag61 91.33 Mbps", "bw": 91.33, "cap": null, "rol": "principal", "diag": "26"}, {"s": "HOS-0A-D05", "t": "HOS-1A-A12", "label": "D5: lag62 50.77 Mbps", "bw": 50.77, "cap": null, "rol": "principal", "diag": "26"}, {"s": "HOS-0A-D05", "t": "HOS-0A-A13", "label": "D5: 1/1/7 21.7 Mbps", "bw": 21.7, "cap": null, "rol": "principal", "diag": "26"}, {"s": "CPAR-C10", "t": "ROUTER-CAMPUS-HUAYNA-CAPAC", "label": "C10: 1/1/25 Link-to-VPLS-CEDIA 317.83 Mbps", "bw": 317.83, "cap": null, "rol": "principal", "diag": "27"}, {"s": "CPAR-C10", "t": "CP-EADMINA1-D6", "label": "C10: lag211 Con Redundancia 76.7 Mbps", "bw": 76.7, "cap": null, "rol": "principal", "diag": "27"}, {"s": "CPAR-C10", "t": "CP-INVESTIGACION-D5", "label": "C10: lag205 84.7 Mbps", "bw": 84.7, "cap": null, "rol": "principal", "diag": "27"}, {"s": "CPAR-C10", "t": "CP-ENFERMERIA-D1", "label": "C10: lag201 147.9 Mbps", "bw": 147.9, "cap": null, "rol": "principal", "diag": "27"}, {"s": "CPAR-C10", "t": "CP-TECMEDICO-D3", "label": "C10: lag203 113.56 Mbps", "bw": 113.56, "cap": null, "rol": "principal", "diag": "27"}, {"s": "CPAR-C10", "t": "CP-POSGRADO-D2", "label": "C10: lag202 40.79 Mbps", "bw": 40.79, "cap": null, "rol": "principal", "diag": "27"}, {"s": "CPAR-C10", "t": "CP-ODONTOLOGIA-D4", "label": "C10: lag204 216.33 Mbps", "bw": 216.33, "cap": null, "rol": "principal", "diag": "27"}, {"s": "CP-EADMINA1-D6", "t": "MEDADM-1A-A11", "label": "D6: lag11 26.87 Mbps", "bw": 26.87, "cap": null, "rol": "principal", "diag": "28"}, {"s": "CP-EADMINA1-D6", "t": "MEDADM-1B-A12", "label": "D6: lag12 1.77 Mbps", "bw": 1.77, "cap": null, "rol": "principal", "diag": "28"}, {"s": "CP-EADMINA1-D6", "t": "MEDADM-1C-A13", "label": "D6: lag13 1.77 Mbps", "bw": 1.77, "cap": null, "rol": "principal", "diag": "28"}, {"s": "CP-EADMINA1-D6", "t": "MEDADM-1D-A14", "label": "D6: lag14 20.96 Mbps", "bw": 20.96, "cap": null, "rol": "principal", "diag": "28"}, {"s": "CP-EADMINA1-D6", "t": "MEDADM-1E-A15", "label": "D6: lag15 1.77 Mbps", "bw": 1.77, "cap": null, "rol": "principal", "diag": "28"}, {"s": "CP-EADMINA1-D6", "t": "MEDADM-0F-A16", "label": "D6: lag16 35.48 Mbps", "bw": 35.48, "cap": null, "rol": "principal", "diag": "28"}, {"s": "CP-EADMINA1-D6", "t": "MEDADM-0G-A17", "label": "D6: lag17 2.33 Mbps", "bw": 2.33, "cap": null, "rol": "principal", "diag": "28"}, {"s": "CP-EADMINA1-D6", "t": "MEDADM-1H-A18", "label": "D6: lag18 11.62 Mbps", "bw": 11.62, "cap": null, "rol": "principal", "diag": "28"}, {"s": "CP-INVESTIGACION-D5", "t": "INV-1A-A61", "label": "D5: lag61 1.65 Mbps", "bw": 1.65, "cap": null, "rol": "principal", "diag": "29"}, {"s": "CP-INVESTIGACION-D5", "t": "INV-1A-A161", "label": "D5: lag64 51.44 Mbps", "bw": 51.44, "cap": null, "rol": "principal", "diag": "29"}, {"s": "CP-INVESTIGACION-D5", "t": "CENDIA-0A-A19", "label": "D5: lag63 6.65 Mbps", "bw": 6.65, "cap": null, "rol": "principal", "diag": "29"}, {"s": "CP-INVESTIGACION-D5", "t": "INV-1B-A62", "label": "D5: lag62 61.87 Mbps", "bw": 61.87, "cap": null, "rol": "principal", "diag": "29"}, {"s": "INV-1B-A62", "t": "INV-1B-A162", "label": "A62:lag110 54.09 Mbps", "bw": 54.09, "cap": null, "rol": "principal", "diag": "29"}, {"s": "CP-ODONTOLOGIA-D4", "t": "ODO-1A-A151", "label": "D4: lag54 22.75 Mbps", "bw": 22.75, "cap": null, "rol": "principal", "diag": "30"}, {"s": "CP-ODONTOLOGIA-D4", "t": "ODO-1A-A51", "label": "D4: lag51 2.82 Mbps", "bw": 2.82, "cap": null, "rol": "principal", "diag": "30"}, {"s": "CP-ODONTOLOGIA-D4", "t": "ODO-0B-A52", "label": "D4: lag52 14.98 Mbps", "bw": 14.98, "cap": null, "rol": "principal", "diag": "30"}, {"s": "CP-ODONTOLOGIA-D4", "t": "ODO-0C-A53", "label": "D4: lag53 18.33 Mbps", "bw": 18.33, "cap": null, "rol": "principal", "diag": "30"}, {"s": "CP-ODONTOLOGIA-D4", "t": "ODO-0C-A154", "label": "D4: 1/1/9 53.04 Mbps", "bw": 53.04, "cap": null, "rol": "principal", "diag": "30"}, {"s": "ODO-0B-A52", "t": "ODO-0B-A152", "label": "A52: 1/1/52 11.77 Mbps", "bw": 11.77, "cap": null, "rol": "principal", "diag": "30"}, {"s": "ODO-0C-A53", "t": "ODO-0C-A153", "label": "A53: lag110 14.26 Mbps", "bw": 14.26, "cap": null, "rol": "principal", "diag": "30"}, {"s": "ODO-0C-A53", "t": "ODO-0C-A54", "label": "A53: lag111 1.56 Mbps", "bw": 1.56, "cap": null, "rol": "principal", "diag": "30"}, {"s": "CP-TECMEDICO-D3", "t": "TECMED-1A-A41", "label": "D3: lag41 38.04 Mbps", "bw": 38.04, "cap": null, "rol": "principal", "diag": "31"}, {"s": "CP-TECMEDICO-D3", "t": "TECMED-0B-A42", "label": "D3: lag42 29.42 Mbps", "bw": 29.42, "cap": null, "rol": "principal", "diag": "31"}, {"s": "CP-TECMEDICO-D3", "t": "TECMED-2C-A43", "label": "D3: lag43 53.8 Mbps", "bw": 53.8, "cap": null, "rol": "principal", "diag": "31"}, {"s": "CP-TECMEDICO-D3", "t": "TECMED-3D-A44", "label": "D3: lag44 54.63 Mbps", "bw": 54.63, "cap": null, "rol": "principal", "diag": "31"}, {"s": "TECMED-1A-A41", "t": "TECMED-1A-A141", "label": "A41: lag110 21.7 Mbps", "bw": 21.7, "cap": null, "rol": "principal", "diag": "31"}, {"s": "CP-POSGRADO-D2", "t": "POS-0A-A31", "label": "D2: lag31 1.87 Mbps", "bw": 1.87, "cap": null, "rol": "principal", "diag": "32"}, {"s": "CP-POSGRADO-D2", "t": "POS-1B-A32", "label": "D2: lag32 7.82 Mbps", "bw": 7.82, "cap": null, "rol": "principal", "diag": "32"}, {"s": "CP-POSGRADO-D2", "t": "POS-2C-A33", "label": "D2: lag33 13.57 Mbps", "bw": 13.57, "cap": null, "rol": "principal", "diag": "32"}, {"s": "CP-POSGRADO-D2", "t": "POSLAB-0D-A34", "label": "D2: lag34 16.6 Mbps", "bw": 16.6, "cap": null, "rol": "principal", "diag": "32"}, {"s": "CP-POSGRADO-D2", "t": "POS-0A-A131", "label": "D2: lag35 9.31 Mbps", "bw": 9.31, "cap": null, "rol": "principal", "diag": "32"}, {"s": "POS-2C-A33", "t": "POS-2C-A133", "label": "A33: lag110 8.38 Mbps", "bw": 8.38, "cap": null, "rol": "principal", "diag": "32"}, {"s": "CP-ENFERMERIA-D1", "t": "ENF-2B-A22", "label": "D1: lag12 48.66 Mbps", "bw": 48.66, "cap": null, "rol": "principal", "diag": "33"}, {"s": "CP-ENFERMERIA-D1", "t": "ENF-3A-A21", "label": "D1: lag11 21.09 Mbps", "bw": 21.09, "cap": null, "rol": "principal", "diag": "33"}, {"s": "ENF-2B-A22", "t": "ENF-2B-A122", "label": "A22: 1/1/52 51.99 Mbps", "bw": 51.99, "cap": null, "rol": "principal", "diag": "33"}, {"s": "INTERNET-MPLS", "t": "ROUTER-CAMPUS-HUAYNA-CAPAC", "label": "Trafico MPLS 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "INTERNET-MPLS", "t": "ROUTER-CAMPUS-YANUNCAY", "label": "Trafico MPLS 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "ROUTER-CAMPUS-HUAYNA-CAPAC", "t": "ROUTER-CAMPUS-PARAISO", "label": "Trafico MPLS 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "INTERNET-MPLS", "t": "PE1-BALZAY", "label": "Trafico MPLS 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "INTERNET-MPLS", "t": "PE2-BALZAY", "label": "Trafico MPLS 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "INTERNET-MPLS", "t": "PE1-CENTRAL", "label": "Trafico MPLS 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "INTERNET-MPLS", "t": "PE2-CENTRAL", "label": "Trafico MPLS 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "ROUTER-CAMPUS-YANUNCAY", "t": "PE1-CENTRAL", "label": "Trafico MPLS 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "ROUTER-CAMPUS-PARAISO", "t": "PE2-CENTRAL", "label": "Trafico MPLS 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "PE1-BALZAY", "t": "PE2-CENTRAL", "label": "Fibra oscura MPLS 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "PE2-BALZAY", "t": "PE1-CENTRAL", "label": "Fibra oscura MPLS 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "PE1-BALZAY", "t": "PE2-BALZAY", "label": "", "bw": null, "cap": null, "rol": "wan", "diag": "34"}, {"s": "PE1-CENTRAL", "t": "PE2-CENTRAL", "label": "", "bw": null, "cap": null, "rol": "wan", "diag": "34"}, {"s": "PE1-BALZAY", "t": "FORTIGATE-1800F-BALZAY", "label": "Trafico hacia internet L3 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "PE2-BALZAY", "t": "FORTIGATE-1800F-BALZAY", "label": "Trafico hacia internet L3 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "PE1-CENTRAL", "t": "FORTIGATE-1800F-CENTRAL", "label": "Trafico hacia internet L3 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "PE2-CENTRAL", "t": "FORTIGATE-1800F-CENTRAL", "label": "Trafico hacia internet L3 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "FORTIGATE-1800F-BALZAY", "t": "DT-0A-C12", "label": "LAG 2x10G red LAN L3 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "FORTIGATE-1800F-BALZAY", "t": "DT-0A-C13", "label": "LAG 2x10G red LAN L3 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "FORTIGATE-1800F-CENTRAL", "t": "DATCC-2A-C2", "label": "LAG 2x10G red LAN L3 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "FORTIGATE-1800F-CENTRAL", "t": "DATCC-2A-C3", "label": "LAG 2x10G red LAN L3 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "PE2-BALZAY", "t": "DT-0A-C13", "label": "MPLS L2 2x10 Gbps Trafico Data Center L2", "bw": null, "cap": 20000.0, "rol": "wan", "diag": "34"}, {"s": "PE2-CENTRAL", "t": "DATCC-2A-C3", "label": "MPLS L2 2x10 Gbps Trafico Data Center L2", "bw": null, "cap": 20000.0, "rol": "wan", "diag": "34"}, {"s": "FORTIGATE-1800F-BALZAY", "t": "FORTIGATE-1800F-CENTRAL", "label": "HA de Firewalls Perimetrales L2 1 Gbps", "bw": null, "cap": 1000.0, "rol": "wan", "diag": "34"}, {"s": "DT-0A-C12", "t": "ROUTER-L2TP-BALZAY", "label": "L2TP 1 Gbps backup", "bw": null, "cap": 1000.0, "rol": "wan", "diag": "34"}, {"s": "DT-0A-C13", "t": "ROUTER-L2TP-BALZAY", "label": "L2TP 1 Gbps backup", "bw": null, "cap": 1000.0, "rol": "wan", "diag": "34"}, {"s": "ROUTER-L2TP-BALZAY", "t": "ROUTER-CAMPUS-MUSEO", "label": "L2TP 1 Gbps backup", "bw": null, "cap": 1000.0, "rol": "wan", "diag": "34"}, {"s": "ROUTER-L2TP-BALZAY", "t": "ROUTER-CAMPUS-CENTRO-HISTORICO", "label": "L2TP 1 Gbps backup", "bw": null, "cap": 1000.0, "rol": "wan", "diag": "34"}, {"s": "ROUTER-CAMPUS-MUSEO", "t": "SW-ARUBA-MUSEO", "label": "", "bw": null, "cap": null, "rol": "wan", "diag": "34"}, {"s": "SW-ARUBA-MUSEO", "t": "DATCC-2A-C2", "label": "Fibra oscura red LAN L3 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}, {"s": "ROUTER-CAMPUS-CENTRO-HISTORICO", "t": "SW-ARUBA-CENTRO-HISTORICO", "label": "", "bw": null, "cap": null, "rol": "wan", "diag": "34"}, {"s": "SW-ARUBA-CENTRO-HISTORICO", "t": "DATCC-2A-C3", "label": "Fibra oscura red LAN L3 10 Gbps", "bw": null, "cap": 10000.0, "rol": "wan", "diag": "34"}]};
+
+const CAMPUS = [
+  ["Campus Central", "#3987e5"],
+  ["Campus Balzay", "#d95926"],
+  ["Campus Paraiso", "#199e70"],
+  ["Campus Yanuncay", "#c98500"],
+  ["Campus Hospitalidad", "#d55181"],
+  ["Sede Museo", "#4bb3c4"],
+  ["Sede Centro Historico", "#b06fd0"],
+  ["Nube MPLS", "#9085e9"],
+];
+const CCOLOR = Object.fromEntries(CAMPUS);
+const ROLE_NAME = { core: "Core", dist: "Distribución", acceso: "Acceso", infra: "Interconexión" };
+const TYPE_NAME = {"principal": "principal", "secundario": "secundario (par redundante)", "respaldo": "respaldo en espera", "wan": "WAN / MPLS", "inferido": "inferido"};
+
+const nodesById = Object.fromEntries(DATA.nodes.map(n => [n.id, n]));
+const adj = {};
+DATA.nodes.forEach(n => adj[n.id] = []);
+DATA.edges.forEach((e, i) => { adj[e.s].push(i); adj[e.t].push(i); });
+const maxBw = Math.max(...DATA.edges.map(e => e.bw || 0));
+const anchoEnlace = e => e.bw != null ? e.bw : (e.cap != null ? e.cap : 0);
+
+/* ---------- KPIs ---------- */
+const isMeasured = e => e.bw != null;
+const totalBw = DATA.edges.filter(e => e.rol !== "wan" && isMeasured(e)).reduce((a, e) => a + e.bw, 0);
+const standby = DATA.edges.filter(e => e.rol === "respaldo").length;
+const nAlerts = DATA.nodes.filter(n => n.status !== "ok").length;
+document.getElementById("kpis").innerHTML = [
+  ["Equipos", DATA.nodes.length],
+  ["Enlaces", DATA.edges.length],
+  ["Ubicaciones", CAMPUS.length],
+  ["Tráfico medido", (totalBw / 1000).toFixed(2) + " Gbps"],
+  ["En espera (0 bps)", standby],
+  ["Alertas", nAlerts, "warn-n"],
+].map(([l, v, c]) => `<div class="kpi"><b class="${c || ""}">${v}</b><span class="lbl">${l}</span></div>`).join("");
+
+/* ---------- SVG map ---------- */
+const svg = document.getElementById("svgMap");
+const NS = "http://www.w3.org/2000/svg";
+const W = 2000, H = 1300;
+let vb = { x: 0, y: 0, w: W, h: H };
+function applyVB() { svg.setAttribute("viewBox", `${vb.x} ${vb.y} ${vb.w} ${vb.h}`); syncLabels(); }
+
+const gEdges = document.createElementNS(NS, "g");
+const gNodes = document.createElementNS(NS, "g");
+svg.appendChild(gEdges); svg.appendChild(gNodes);
+
+const edgeEls = DATA.edges.map((e, i) => {
+  const a = nodesById[e.s], b = nodesById[e.t];
+  const ln = document.createElementNS(NS, "line");
+  ln.setAttribute("x1", a.x); ln.setAttribute("y1", a.y);
+  ln.setAttribute("x2", b.x); ln.setAttribute("y2", b.y);
+  ln.setAttribute("class", "edge " + e.rol);
+  ln.setAttribute("stroke-width", anchoEnlace(e) ? (1 + 2.6 * Math.sqrt(Math.min(anchoEnlace(e), maxBw) / maxBw)).toFixed(2) : 1);
+  ln.dataset.i = i;
+  gEdges.appendChild(ln);
+  return ln;
+});
+
+function shapeFor(n, r) {
+  if (n.role === "core") return `<rect class="shape" x="${-r}" y="${-r}" width="${2*r}" height="${2*r}" transform="rotate(45)"/>`;
+  if (n.role === "dist") return `<rect class="shape" x="${-r}" y="${-r}" width="${2*r}" height="${2*r}" rx="2"/>`;
+  if (n.role === "infra") {
+    const p = [];
+    for (let k = 0; k < 6; k++) { const a = Math.PI / 3 * k - Math.PI / 6; p.push(`${(r*1.1*Math.cos(a)).toFixed(1)},${(r*1.1*Math.sin(a)).toFixed(1)}`); }
+    return `<polygon class="shape" points="${p.join(" ")}"/>`;
+  }
+  return `<circle class="shape" r="${r}"/>`;
+}
+const nodeEls = DATA.nodes.map(n => {
+  const g = document.createElementNS(NS, "g");
+  const major = n.role !== "acceso" || n.deg >= 6;
+  const r = Math.min(6 + n.deg * 1.15, 22) * (n.role === "acceso" ? 0.75 : 1);
+  n._r = r;
+  g.setAttribute("class", "node" + (major ? " major" : ""));
+  g.setAttribute("transform", `translate(${n.x},${n.y})`);
+  let ring = "";
+  if (n.status !== "ok") {
+    ring = `<circle class="ring" r="${r + 4.5}" stroke="${n.status === "critical" ? "var(--crit)" : "var(--warn)"}"/>`;
+  }
+  g.innerHTML = ring + shapeFor(n, r) +
+    `<text y="${-r - 5}" text-anchor="middle" font-size="${major ? 13 : 10}">${n.label}</text>`;
+  g.querySelector(".shape").setAttribute("fill", CCOLOR[n.campus]);
+  g.dataset.id = n.id;
+  g.setAttribute("tabindex", "0");
+  g.setAttribute("role", "button");
+  g.setAttribute("aria-label", n.label);
+  gNodes.appendChild(g);
+  return g;
+});
+
+/* label visibility depends on zoom */
+function syncLabels() {
+  const zoom = W / vb.w;
+  gNodes.querySelectorAll(".node:not(.major) text").forEach(t => {
+    t.style.display = zoom >= 1.7 ? "" : "none";
+  });
+}
+
+/* pan / zoom */
+let panning = null;
+svg.addEventListener("pointerdown", ev => {
+  if (ev.target.closest(".node")) return;
+  panning = { x: ev.clientX, y: ev.clientY, vx: vb.x, vy: vb.y };
+  svg.classList.add("panning"); svg.setPointerCapture(ev.pointerId);
+});
+svg.addEventListener("pointermove", ev => {
+  if (!panning) return;
+  const sc = vb.w / svg.clientWidth;
+  vb.x = panning.vx - (ev.clientX - panning.x) * sc;
+  vb.y = panning.vy - (ev.clientY - panning.y) * sc;
+  applyVB();
+});
+svg.addEventListener("pointerup", () => { panning = null; svg.classList.remove("panning"); });
+svg.addEventListener("wheel", ev => {
+  ev.preventDefault();
+  const f = ev.deltaY > 0 ? 1.18 : 1 / 1.18;
+  zoomAt(ev.clientX, ev.clientY, f);
+}, { passive: false });
+function zoomAt(cx, cy, f) {
+  const rect = svg.getBoundingClientRect();
+  const px = vb.x + (cx - rect.left) / rect.width * vb.w;
+  const py = vb.y + (cy - rect.top) / rect.height * vb.h;
+  vb.w = Math.min(Math.max(vb.w * f, 140), W * 2.2);
+  vb.h = vb.w * svg.clientHeight / Math.max(svg.clientWidth, 1);
+  vb.x = px - (cx - rect.left) / rect.width * vb.w;
+  vb.y = py - (cy - rect.top) / rect.height * vb.h;
+  applyVB();
+}
+document.getElementById("zin").onclick = () => { const r = svg.getBoundingClientRect(); zoomAt(r.left + r.width / 2, r.top + r.height / 2, 1 / 1.35); };
+document.getElementById("zout").onclick = () => { const r = svg.getBoundingClientRect(); zoomAt(r.left + r.width / 2, r.top + r.height / 2, 1.35); };
+document.getElementById("zfit").onclick = fit;
+function fit() {
+  const ar = svg.clientHeight / Math.max(svg.clientWidth, 1);
+  let w = W, h = W * ar;
+  if (h < H) { h = H; w = H / ar; }
+  vb = { x: (W - w) / 2, y: (H - h) / 2, w, h };
+  applyVB();
+}
+window.addEventListener("resize", () => {
+  vb.h = vb.w * svg.clientHeight / Math.max(svg.clientWidth, 1); applyVB();
+});
+fit();
+
+/* ---------- tooltip ---------- */
+const tip = document.getElementById("tooltip");
+function showTip(html, ev) {
+  tip.innerHTML = html; tip.style.display = "block";
+  const pad = 14;
+  let x = ev.clientX + pad, y = ev.clientY + pad;
+  const r = tip.getBoundingClientRect();
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - pad;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - pad;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+function hideTip() { tip.style.display = "none"; }
+
+gNodes.addEventListener("pointermove", ev => {
+  const g = ev.target.closest(".node"); if (!g) { hideTip(); return; }
+  const n = nodesById[g.dataset.id];
+  showTip(`<div class="t-name">${n.label}</div>
+    <div class="t-sub">${n.campus} · ${ROLE_NAME[n.role]} · ${n.deg} enlace${n.deg === 1 ? "" : "s"}</div>
+    ${n.alert ? `<div class="t-sub" style="color:${n.status === "critical" ? "var(--crit)" : "var(--warn)"}">⚠ ${n.alert}</div>` : ""}`, ev);
+});
+gNodes.addEventListener("pointerleave", hideTip);
+gEdges.addEventListener("pointermove", ev => {
+  if (!ev.target.dataset.i) return;
+  const e = DATA.edges[ev.target.dataset.i];
+  showTip(`<div class="t-name">${nodesById[e.s].label} ↔ ${nodesById[e.t].label}</div>
+    <div class="t-sub">${e.label || "(sin etiqueta)"} · ${TYPE_NAME[e.rol]}${e.bw != null ? " · " + fmtBw(e.bw) + " medidos" : ""}${e.cap != null ? " · " + fmtBw(e.cap) + " nominales" : ""} · diagrama ${e.diag}</div>`, ev);
+});
+gEdges.addEventListener("pointerleave", hideTip);
+
+function fmtBw(bw) { return bw >= 1000 ? (bw / 1000).toFixed(2) + " Gbps" : bw + " Mbps"; }
+
+/* ---------- filters & highlighting ---------- */
+const state = {
+  campus: new Set(CAMPUS.map(c => c[0])),
+  types: new Set(["principal", "secundario", "respaldo", "wan", "inferido"]),
+  q: "", sel: null,
+};
+function nodeVisible(n) { return state.campus.has(n.campus); }
+function render() {
+  const q = state.q.trim().toLowerCase();
+  const selN = state.sel ? nodesById[state.sel] : null;
+  const neigh = new Set();
+  if (selN) { neigh.add(selN.id); adj[selN.id].forEach(i => { neigh.add(DATA.edges[i].s); neigh.add(DATA.edges[i].t); }); }
+  DATA.nodes.forEach((n, i) => {
+    const el = nodeEls[i];
+    el.classList.toggle("hidden", !nodeVisible(n));
+    const match = q && (n.label.toLowerCase().includes(q));
+    const dim = (q && !match) || (selN && !neigh.has(n.id));
+    el.classList.toggle("dim", !!dim);
+    el.classList.toggle("sel", state.sel === n.id);
+  });
+  DATA.edges.forEach((e, i) => {
+    const el = edgeEls[i];
+    const vis = state.types.has(e.rol) && nodeVisible(nodesById[e.s]) && nodeVisible(nodesById[e.t]);
+    el.classList.toggle("hidden", !vis);
+    const onSel = selN && (e.s === selN.id || e.t === selN.id);
+    el.classList.toggle("hl", !!onSel);
+    el.classList.toggle("dim", !!((q || selN) && !onSel &&
+      !(q && (nodesById[e.s].label.toLowerCase().includes(q) || nodesById[e.t].label.toLowerCase().includes(q) || (e.label || "").toLowerCase().includes(q)))));
+  });
+}
+
+/* chips */
+const chipBox = document.getElementById("campusChips");
+chipBox.innerHTML = CAMPUS.map(([c, col]) => {
+  const count = DATA.nodes.filter(n => n.campus === c).length;
+  return `<button class="chip" style="--sw:${col}" aria-pressed="true" data-c="${c}"><span class="sw"></span>${c.replace("Campus ", "")} · ${count}</button>`;
+}).join("");
+chipBox.addEventListener("click", ev => {
+  const b = ev.target.closest(".chip"); if (!b) return;
+  const c = b.dataset.c;
+  if (state.campus.has(c) && state.campus.size === 1) { CAMPUS.forEach(([x]) => state.campus.add(x)); }
+  else if (state.campus.has(c)) state.campus.delete(c);
+  else state.campus.add(c);
+  chipBox.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", state.campus.has(x.dataset.c)));
+  render();
+});
+const typeBox = document.getElementById("typeChips");
+const TYPES = [["principal", "Principal", "var(--ok)"], ["secundario", "Secundario", "#7fa8c9"], ["respaldo", "Respaldo (0 bps)", "#55606a"], ["wan", "WAN / MPLS", "#9085e9"], ["inferido", "Inferido", "var(--c-mpls)"]];
+typeBox.innerHTML = TYPES.map(([t, name, col]) =>
+  `<button class="chip linetype" style="--sw:${col}" aria-pressed="true" data-t="${t}"><span class="sw"></span>${name}</button>`).join("");
+typeBox.addEventListener("click", ev => {
+  const b = ev.target.closest(".chip"); if (!b) return;
+  const t = b.dataset.t;
+  state.types.has(t) ? state.types.delete(t) : state.types.add(t);
+  b.setAttribute("aria-pressed", state.types.has(t));
+  render();
+});
+
+document.getElementById("q").addEventListener("input", ev => { state.q = ev.target.value; render(); });
+
+/* ---------- alerts ---------- */
+const alertsBox = document.getElementById("alerts");
+alertsBox.innerHTML = DATA.nodes.filter(n => n.status !== "ok").map(n =>
+  `<div class="alert ${n.status}" data-id="${n.id}" role="button" tabindex="0">
+     <div class="ic">${n.status === "critical" ? "⛔" : "⚠️"}</div>
+     <div><b>${n.label}</b><span>${n.alert}</span></div>
+   </div>`).join("") || `<span class="hint">Sin alertas.</span>`;
+alertsBox.addEventListener("click", ev => {
+  const a = ev.target.closest(".alert"); if (a) selectNode(a.dataset.id, true);
+});
+
+/* ---------- selection & detail ---------- */
+function selectNode(id, focusMap) {
+  state.sel = state.sel === id ? null : id;
+  render(); renderDetail();
+  if (state.sel && focusMap) {
+    const n = nodesById[id];
+    vb.w = 500; vb.h = vb.w * svg.clientHeight / Math.max(svg.clientWidth, 1);
+    vb.x = n.x - vb.w / 2; vb.y = n.y - vb.h / 2;
+    applyVB();
+    document.getElementById("mapPanel").scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+gNodes.addEventListener("click", ev => {
+  const g = ev.target.closest(".node"); if (g) selectNode(g.dataset.id);
+});
+gNodes.addEventListener("keydown", ev => {
+  const g = ev.target.closest(".node");
+  if (g && (ev.key === "Enter" || ev.key === " ")) { ev.preventDefault(); selectNode(g.dataset.id); }
+});
+svg.addEventListener("dblclick", () => { state.sel = null; render(); renderDetail(); });
+
+function renderDetail() {
+  const box = document.getElementById("detail");
+  if (!state.sel) { box.innerHTML = `<div id="detailEmpty">Selecciona un nodo en el mapa o en la tabla.</div>`; return; }
+  const n = nodesById[state.sel];
+  const links = adj[n.id].map(i => DATA.edges[i]).sort((a, b) => (b.bw || 0) - (a.bw || 0));
+  const diags = [...new Set(links.flatMap(e => String(e.diag).split(",")))].filter(d => d !== "0")
+    .map(Number).sort((a, b) => a - b).join(", ");
+  box.innerHTML = `
+    <div class="d-head"><span class="sw" style="background:${CCOLOR[n.campus]}"></span><b>${n.label}</b></div>
+    <div class="d-meta">${n.campus} · ${ROLE_NAME[n.role]} · ${n.deg} enlace${n.deg === 1 ? "" : "s"} · diagrama(s) ${diags || "—"}</div>
+    ${n.alert ? `<div class="d-alert ${n.status}">${n.status === "critical" ? "⛔" : "⚠️"} ${n.alert}</div>` : ""}
+    ${links.map(e => {
+      const peer = nodesById[e.s === n.id ? e.t : e.s];
+      return `<div class="linkrow" data-id="${peer.id}" role="button" tabindex="0">
+        <span class="peer">${peer.label}</span>
+        <span class="bwcell">${e.bw != null ? fmtBw(e.bw) : "—"}</span>
+        <span class="meta">${e.label || TYPE_NAME[e.rol]} · ${TYPE_NAME[e.rol]} · diag. ${e.diag}</span>
+        <span class="bwbar"><i style="width:${e.bw ? Math.max(2, 100 * Math.sqrt(e.bw / maxBw)).toFixed(1) : 0}%"></i></span>
+      </div>`;
+    }).join("")}`;
+  box.querySelectorAll(".linkrow").forEach(r => {
+    r.addEventListener("click", () => selectNode(r.dataset.id, true));
+  });
+}
+
+/* ---------- campus cards ---------- */
+const cards = document.getElementById("cards");
+cards.innerHTML = CAMPUS.map(([c, col]) => {
+  const ns = DATA.nodes.filter(n => n.campus === c);
+  const ids = new Set(ns.map(n => n.id));
+  const es = DATA.edges.filter(e => ids.has(e.s) || ids.has(e.t));
+  const tr = es.filter(e => e.rol !== "wan" && isMeasured(e)).reduce((a, e) => a + e.bw, 0);
+  const hub = ns.slice().sort((a, b) => b.deg - a.deg)[0];
+  return `<div class="panel card" style="--cc:${col}">
+    <h3>${c}</h3>
+    <div class="stats">
+      <div><b>${ns.length}</b><span class="lbl">equipos</span></div>
+      <div><b>${es.length}</b><span class="lbl">enlaces</span></div>
+      <div><b>${(tr / 1000).toFixed(1)}</b><span class="lbl">Gbps medidos</span></div>
+    </div>
+    <div class="hub">Concentrador: <code>${hub.label}</code> (${hub.deg} enlaces)</div>
+  </div>`;
+}).join("");
+
+/* ---------- links table ---------- */
+const tbody = document.getElementById("tbody");
+let sortK = "bw", sortDir = -1;
+let rows = DATA.edges.map((e, i) => ({ i, s: nodesById[e.s].label, t: nodesById[e.t].label, label: e.label, bw: e.bw, cap: e.cap, rol: e.rol, diag: e.diag }));
+function renderTable() {
+  const q = document.getElementById("tq").value.trim().toLowerCase();
+  let rs = rows.filter(r => !q || (r.s + " " + r.t + " " + r.label + " " + r.rol).toLowerCase().includes(q));
+  rs.sort((a, b) => {
+    let va = a[sortK], vb2 = b[sortK];
+    if (sortK === "bw" || sortK === "cap") { va = va == null ? -1 : va; vb2 = vb2 == null ? -1 : vb2; return (va - vb2) * sortDir; }
+    return String(va).localeCompare(String(vb2)) * sortDir;
+  });
+  document.getElementById("tcount").textContent = rs.length + " de " + rows.length;
+  tbody.innerHTML = rs.map(r => `<tr>
+    <td><a class="devlink" data-l="${r.s}">${r.s}</a></td>
+    <td><a class="devlink" data-l="${r.t}">${r.t}</a></td>
+    <td class="mono" style="color:var(--ink-2)">${r.label || "—"}</td>
+    <td class="num">${r.bw != null ? r.bw.toLocaleString("es-EC") : "—"}<span class="minibar"><i style="width:${r.bw ? Math.max(2, 100 * Math.sqrt(r.bw / maxBw)).toFixed(1) : 0}%"></i></span></td>
+    <td class="num">${r.cap != null ? r.cap.toLocaleString("es-EC") : "—"}</td>
+    <td><span class="tag ${r.rol}">${TYPE_NAME[r.rol]}</span></td>
+    <td class="mono" style="color:var(--ink-3)">${r.diag}</td>
+  </tr>`).join("");
+}
+document.getElementById("tq").addEventListener("input", renderTable);
+document.querySelectorAll("th button").forEach(b => b.addEventListener("click", () => {
+  const k = b.dataset.k;
+  if (sortK === k) sortDir *= -1; else { sortK = k; sortDir = (k === "bw" || k === "cap") ? -1 : 1; }
+  renderTable();
+}));
+tbody.addEventListener("click", ev => {
+  const a = ev.target.closest(".devlink"); if (!a) return;
+  const n = DATA.nodes.find(x => x.label === a.dataset.l);
+  if (n) selectNode(n.id, true);
+});
+renderTable();
+render();
+</script>

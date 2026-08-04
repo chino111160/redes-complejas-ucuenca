@@ -1,0 +1,10 @@
+# Código base del proyecto integrador -- Módulo de Redes Complejas (1217)
+# Instalación:  python3 -m pip install -r requirements.txt
+
+networkx>=3.0
+
+# Necesarias para las fases posteriores (P2 en adelante)
+numpy>=1.24
+scipy>=1.10
+pandas>=2.0
+matplotlib>=3.7

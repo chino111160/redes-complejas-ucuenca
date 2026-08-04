@@ -1,0 +1,2311 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+  <key id="label" for="node" attr.name="label" attr.type="string" />
+  <key id="campus" for="node" attr.name="campus" attr.type="string" />
+  <key id="capa" for="node" attr.name="capa" attr.type="string" />
+  <key id="ndiag" for="node" attr.name="diagrams" attr.type="string" />
+  <key id="elabel" for="edge" attr.name="label" attr.type="string" />
+  <key id="trafico" for="edge" attr.name="trafico_mbps" attr.type="double" />
+  <key id="capacidad" for="edge" attr.name="capacidad_mbps" attr.type="double" />
+  <key id="rol" for="edge" attr.name="rol" attr.type="string" />
+  <key id="ediag" for="edge" attr.name="diagrams" attr.type="string" />
+  <graph id="UCuenca" edgedefault="undirected">
+    <node id="AETUC-0A-A76">
+      <data key="label">AETUC-0A-A76</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">3</data>
+    </node>
+    <node id="AETUC-0A-A97">
+      <data key="label">AETUC-0A-A97</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">3</data>
+    </node>
+    <node id="AETUCCF-2A-A79">
+      <data key="label">AETUCCF-2A-A79</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">3</data>
+    </node>
+    <node id="AGRPRI-1A-A19">
+      <data key="label">AGRPRI-1A-A19</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">25</data>
+    </node>
+    <node id="AGRPRI-1A-D10">
+      <data key="label">AGRPRI-1A-D10</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">0;25</data>
+    </node>
+    <node id="ANF-0A-A14">
+      <data key="label">ANF-0A-A14</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">25</data>
+    </node>
+    <node id="ARQ-0A-A84">
+      <data key="label">ARQ-0A-A84</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">10</data>
+    </node>
+    <node id="ARQ-0A-A85">
+      <data key="label">ARQ-0A-A85</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">10</data>
+    </node>
+    <node id="ARQ-0B-A87">
+      <data key="label">ARQ-0B-A87</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">10</data>
+    </node>
+    <node id="ARQ-0D-A88">
+      <data key="label">ARQ-0D-A88</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">10</data>
+    </node>
+    <node id="ARQ-0D-A89">
+      <data key="label">ARQ-0D-A89</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">10</data>
+    </node>
+    <node id="ARQ-0D-A90">
+      <data key="label">ARQ-0D-A90</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">10</data>
+    </node>
+    <node id="ARQ-0G-A93-CEPAUC">
+      <data key="label">ARQ-0G-A93-CEPAUC</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">10</data>
+    </node>
+    <node id="ARQ-1C-A86">
+      <data key="label">ARQ-1C-A86</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">10</data>
+    </node>
+    <node id="ARQ-1C-A96">
+      <data key="label">ARQ-1C-A96</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">10</data>
+    </node>
+    <node id="ARQ-1E-A91">
+      <data key="label">ARQ-1E-A91</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">10</data>
+    </node>
+    <node id="ARQ-1E-A92">
+      <data key="label">ARQ-1E-A92</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">10</data>
+    </node>
+    <node id="ART-0A-A15">
+      <data key="label">ART-0A-A15</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">25</data>
+    </node>
+    <node id="AUL1-2A-A110">
+      <data key="label">AUL1-2A-A110</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">18</data>
+    </node>
+    <node id="AUL1-2A-A111">
+      <data key="label">AUL1-2A-A111</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">18</data>
+    </node>
+    <node id="AUL1-3A-A104">
+      <data key="label">AUL1-3A-A104</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">18</data>
+    </node>
+    <node id="AUL1-3A-A112">
+      <data key="label">AUL1-3A-A112</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">18</data>
+    </node>
+    <node id="AUL2-01A-A124-SUBLAB2">
+      <data key="label">AUL2-01A-A124-SUBLAB2</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">19</data>
+    </node>
+    <node id="AUL2-01A-A24-SUB">
+      <data key="label">AUL2-01A-A24-SUB</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">19</data>
+    </node>
+    <node id="AUL2-0A-A106">
+      <data key="label">AUL2-0A-A106</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">19</data>
+    </node>
+    <node id="AUL2-0A-A118">
+      <data key="label">AUL2-0A-A118</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">19</data>
+    </node>
+    <node id="AUL2-0A-A119">
+      <data key="label">AUL2-0A-A119</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">19</data>
+    </node>
+    <node id="AUL2-0A-A120">
+      <data key="label">AUL2-0A-A120</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">19</data>
+    </node>
+    <node id="AUL2-0A-A121">
+      <data key="label">AUL2-0A-A121</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">19</data>
+    </node>
+    <node id="AUL2-0A-A122">
+      <data key="label">AUL2-0A-A122</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">19</data>
+    </node>
+    <node id="AUL2-0A-A123">
+      <data key="label">AUL2-0A-A123</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">19</data>
+    </node>
+    <node id="BAL-AUL1-D4">
+      <data key="label">BAL-AUL1-D4</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">17;18</data>
+    </node>
+    <node id="BAL-AUL2-D1">
+      <data key="label">BAL-AUL2-D1</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">17;19;22</data>
+    </node>
+    <node id="BAL-CENTEC-D2">
+      <data key="label">BAL-CENTEC-D2</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">17;20;24</data>
+    </node>
+    <node id="BAL-EADM-D3">
+      <data key="label">BAL-EADM-D3</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">17;23</data>
+    </node>
+    <node id="BIB-2A-A16">
+      <data key="label">BIB-2A-A16</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">25</data>
+    </node>
+    <node id="BLOQUED-0A-A21">
+      <data key="label">BLOQUED-0A-A21</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">25</data>
+    </node>
+    <node id="CB-EADMI-D6">
+      <data key="label">CB-EADMI-D6</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">17;21</data>
+    </node>
+    <node id="CC-ADM-D40">
+      <data key="label">CC-ADM-D40</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;2</data>
+    </node>
+    <node id="CC-AETUC-D30">
+      <data key="label">CC-AETUC-D30</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;3</data>
+    </node>
+    <node id="CC-ARQUITECTURA-D107">
+      <data key="label">CC-ARQUITECTURA-D107</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;10</data>
+    </node>
+    <node id="CC-BIBLIOTECA-D112">
+      <data key="label">CC-BIBLIOTECA-D112</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;13</data>
+    </node>
+    <node id="CC-BLOQUE-IQ">
+      <data key="label">CC-BLOQUE-IQ</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1</data>
+    </node>
+    <node id="CC-ECONOMIA-D51">
+      <data key="label">CC-ECONOMIA-D51</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;4;15</data>
+    </node>
+    <node id="CC-FILOSOFIA-A-D108">
+      <data key="label">CC-FILOSOFIA-A-D108</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;5;9</data>
+    </node>
+    <node id="CC-FILOSOFIA-B-D111">
+      <data key="label">CC-FILOSOFIA-B-D111</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;6</data>
+    </node>
+    <node id="CC-JURISPRUDENCIA-D110">
+      <data key="label">CC-JURISPRUDENCIA-D110</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;7</data>
+    </node>
+    <node id="CC-MONJAS-D126">
+      <data key="label">CC-MONJAS-D126</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;14</data>
+    </node>
+    <node id="CC-PROMAS-D31">
+      <data key="label">CC-PROMAS-D31</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;12</data>
+    </node>
+    <node id="CC-PSICOLOGIA-D125">
+      <data key="label">CC-PSICOLOGIA-D125</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;8</data>
+    </node>
+    <node id="CC-QUIMICA-D109">
+      <data key="label">CC-QUIMICA-D109</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">1;11</data>
+    </node>
+    <node id="CCADM-2A-A43">
+      <data key="label">CCADM-2A-A43</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">2</data>
+    </node>
+    <node id="CCADM-2A-A44">
+      <data key="label">CCADM-2A-A44</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">2</data>
+    </node>
+    <node id="CCADM-2A-A45">
+      <data key="label">CCADM-2A-A45</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">2</data>
+    </node>
+    <node id="CCBIB-1A-A71">
+      <data key="label">CCBIB-1A-A71</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">13</data>
+    </node>
+    <node id="CCJ-1A-A10">
+      <data key="label">CCJ-1A-A10</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">16</data>
+    </node>
+    <node id="CCJ-1A-A11">
+      <data key="label">CCJ-1A-A11</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">16</data>
+    </node>
+    <node id="CCJ-CJURIDICO-D4">
+      <data key="label">CCJ-CJURIDICO-D4</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">0;16</data>
+    </node>
+    <node id="CEA-0A-A108">
+      <data key="label">CEA-0A-A108</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">17;24</data>
+    </node>
+    <node id="CEN-1A-A20">
+      <data key="label">CEN-1A-A20</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">25</data>
+    </node>
+    <node id="CENDIA-0A-A19">
+      <data key="label">CENDIA-0A-A19</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">29</data>
+    </node>
+    <node id="CMED-0A-A42">
+      <data key="label">CMED-0A-A42</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">2</data>
+    </node>
+    <node id="CP-EADMINA1-D6">
+      <data key="label">CP-EADMINA1-D6</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">27;28</data>
+    </node>
+    <node id="CP-ENFERMERIA-D1">
+      <data key="label">CP-ENFERMERIA-D1</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">27;33</data>
+    </node>
+    <node id="CP-INVESTIGACION-D5">
+      <data key="label">CP-INVESTIGACION-D5</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">27;29</data>
+    </node>
+    <node id="CP-ODONTOLOGIA-D4">
+      <data key="label">CP-ODONTOLOGIA-D4</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">27;30</data>
+    </node>
+    <node id="CP-POSGRADO-D2">
+      <data key="label">CP-POSGRADO-D2</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">27;32</data>
+    </node>
+    <node id="CP-TECMEDICO-D3">
+      <data key="label">CP-TECMEDICO-D3</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">27;31</data>
+    </node>
+    <node id="CPAR-C10">
+      <data key="label">CPAR-C10</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">core</data>
+      <data key="ndiag">27</data>
+    </node>
+    <node id="CREDU-0B-A94">
+      <data key="label">CREDU-0B-A94</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">12</data>
+    </node>
+    <node id="CTBLOQ1-0A-A101">
+      <data key="label">CTBLOQ1-0A-A101</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">20</data>
+    </node>
+    <node id="CTBLOQ2-0A-A102">
+      <data key="label">CTBLOQ2-0A-A102</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">20</data>
+    </node>
+    <node id="CTBLOQ3-0A-A103">
+      <data key="label">CTBLOQ3-0A-A103</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">20</data>
+    </node>
+    <node id="DAN-1A-A11">
+      <data key="label">DAN-1A-A11</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">25</data>
+    </node>
+    <node id="DATCC-2A-C2">
+      <data key="label">DATCC-2A-C2</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">core</data>
+      <data key="ndiag">1;34</data>
+    </node>
+    <node id="DATCC-2A-C3">
+      <data key="label">DATCC-2A-C3</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">core</data>
+      <data key="ndiag">1;34</data>
+    </node>
+    <node id="DT-0A-C12">
+      <data key="label">DT-0A-C12</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">core</data>
+      <data key="ndiag">17;34</data>
+    </node>
+    <node id="DT-0A-C13">
+      <data key="label">DT-0A-C13</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">core</data>
+      <data key="ndiag">17;34</data>
+    </node>
+    <node id="EA-0A-A114">
+      <data key="label">EA-0A-A114</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">21</data>
+    </node>
+    <node id="EA-1A-A115">
+      <data key="label">EA-1A-A115</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">21</data>
+    </node>
+    <node id="EA-1A-A116">
+      <data key="label">EA-1A-A116</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">21</data>
+    </node>
+    <node id="ECOK1-1A-A101">
+      <data key="label">ECOK1-1A-A101</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">4</data>
+    </node>
+    <node id="ECOK1-1A-A102">
+      <data key="label">ECOK1-1A-A102</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">4</data>
+    </node>
+    <node id="ECOK2-1A-A52">
+      <data key="label">ECOK2-1A-A52</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">4</data>
+    </node>
+    <node id="ECOK3-0A-A63">
+      <data key="label">ECOK3-0A-A63</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">14</data>
+    </node>
+    <node id="ENF-2B-A122">
+      <data key="label">ENF-2B-A122</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">33</data>
+    </node>
+    <node id="ENF-2B-A22">
+      <data key="label">ENF-2B-A22</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">33</data>
+    </node>
+    <node id="ENF-3A-A21">
+      <data key="label">ENF-3A-A21</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">33</data>
+    </node>
+    <node id="FILOA-0B-A56">
+      <data key="label">FILOA-0B-A56</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">5</data>
+    </node>
+    <node id="FILOA-2A-A55">
+      <data key="label">FILOA-2A-A55</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">5</data>
+    </node>
+    <node id="FILOB-1B-A58">
+      <data key="label">FILOB-1B-A58</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">6</data>
+    </node>
+    <node id="FILOB-2A-A57">
+      <data key="label">FILOB-2A-A57</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">6</data>
+    </node>
+    <node id="FORTIGATE-1800F-BALZAY">
+      <data key="label">FORTIGATE-1800F-BALZAY</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">interconexion</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="FORTIGATE-1800F-CENTRAL">
+      <data key="label">FORTIGATE-1800F-CENTRAL</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">interconexion</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="HOS-0A-A10">
+      <data key="label">HOS-0A-A10</data>
+      <data key="campus">Campus Hospitalidad</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">26</data>
+    </node>
+    <node id="HOS-0A-A13">
+      <data key="label">HOS-0A-A13</data>
+      <data key="campus">Campus Hospitalidad</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">26</data>
+    </node>
+    <node id="HOS-0A-D05">
+      <data key="label">HOS-0A-D05</data>
+      <data key="campus">Campus Hospitalidad</data>
+      <data key="capa">agregacion</data>
+      <data key="ndiag">0;26</data>
+    </node>
+    <node id="HOS-1A-A12">
+      <data key="label">HOS-1A-A12</data>
+      <data key="campus">Campus Hospitalidad</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">26</data>
+    </node>
+    <node id="HOS-2A-A11">
+      <data key="label">HOS-2A-A11</data>
+      <data key="campus">Campus Hospitalidad</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">26</data>
+    </node>
+    <node id="INTERNET-MPLS">
+      <data key="label">INTERNET-MPLS</data>
+      <data key="campus">Nube MPLS</data>
+      <data key="capa">wan</data>
+      <data key="ndiag">0;34</data>
+    </node>
+    <node id="INV-1A-A161">
+      <data key="label">INV-1A-A161</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">29</data>
+    </node>
+    <node id="INV-1A-A61">
+      <data key="label">INV-1A-A61</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">29</data>
+    </node>
+    <node id="INV-1B-A162">
+      <data key="label">INV-1B-A162</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">29</data>
+    </node>
+    <node id="INV-1B-A62">
+      <data key="label">INV-1B-A62</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">29</data>
+    </node>
+    <node id="JUR-0A-A59">
+      <data key="label">JUR-0A-A59</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">7</data>
+    </node>
+    <node id="JUR-0A-A60">
+      <data key="label">JUR-0A-A60</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">7</data>
+    </node>
+    <node id="JUR-1A-A61">
+      <data key="label">JUR-1A-A61</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">7</data>
+    </node>
+    <node id="JUR-1A-A62">
+      <data key="label">JUR-1A-A62</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">7</data>
+    </node>
+    <node id="LAB-1A-A18">
+      <data key="label">LAB-1A-A18</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">25</data>
+    </node>
+    <node id="LABMAC-1A-A13">
+      <data key="label">LABMAC-1A-A13</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">25</data>
+    </node>
+    <node id="LAC-0A-A17">
+      <data key="label">LAC-0A-A17</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">25</data>
+    </node>
+    <node id="MEDADM-0F-A16">
+      <data key="label">MEDADM-0F-A16</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">28</data>
+    </node>
+    <node id="MEDADM-0G-A17">
+      <data key="label">MEDADM-0G-A17</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">28</data>
+    </node>
+    <node id="MEDADM-1A-A11">
+      <data key="label">MEDADM-1A-A11</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">28</data>
+    </node>
+    <node id="MEDADM-1B-A12">
+      <data key="label">MEDADM-1B-A12</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">28</data>
+    </node>
+    <node id="MEDADM-1C-A13">
+      <data key="label">MEDADM-1C-A13</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">28</data>
+    </node>
+    <node id="MEDADM-1D-A14">
+      <data key="label">MEDADM-1D-A14</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">28</data>
+    </node>
+    <node id="MEDADM-1E-A15">
+      <data key="label">MEDADM-1E-A15</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">28</data>
+    </node>
+    <node id="MEDADM-1H-A18">
+      <data key="label">MEDADM-1H-A18</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">28</data>
+    </node>
+    <node id="MICRORED-1A-A109">
+      <data key="label">MICRORED-1A-A109</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">17;22</data>
+    </node>
+    <node id="MON-0A-A103">
+      <data key="label">MON-0A-A103</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">14</data>
+    </node>
+    <node id="MON-0A-A104">
+      <data key="label">MON-0A-A104</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">14</data>
+    </node>
+    <node id="MON-1B-A67">
+      <data key="label">MON-1B-A67</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">14</data>
+    </node>
+    <node id="MON-1B-A68">
+      <data key="label">MON-1B-A68</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">14</data>
+    </node>
+    <node id="MON-1C-A105">
+      <data key="label">MON-1C-A105</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">14</data>
+    </node>
+    <node id="MON-1C-A106">
+      <data key="label">MON-1C-A106</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">14</data>
+    </node>
+    <node id="ODO-0B-A152">
+      <data key="label">ODO-0B-A152</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">30</data>
+    </node>
+    <node id="ODO-0B-A52">
+      <data key="label">ODO-0B-A52</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">30</data>
+    </node>
+    <node id="ODO-0C-A153">
+      <data key="label">ODO-0C-A153</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">30</data>
+    </node>
+    <node id="ODO-0C-A154">
+      <data key="label">ODO-0C-A154</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">30</data>
+    </node>
+    <node id="ODO-0C-A53">
+      <data key="label">ODO-0C-A53</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">30</data>
+    </node>
+    <node id="ODO-0C-A54">
+      <data key="label">ODO-0C-A54</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">30</data>
+    </node>
+    <node id="ODO-1A-A151">
+      <data key="label">ODO-1A-A151</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">30</data>
+    </node>
+    <node id="ODO-1A-A51">
+      <data key="label">ODO-1A-A51</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">30</data>
+    </node>
+    <node id="PE1-BALZAY">
+      <data key="label">PE1-BALZAY</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">wan</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="PE1-CENTRAL">
+      <data key="label">PE1-CENTRAL</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">wan</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="PE2-BALZAY">
+      <data key="label">PE2-BALZAY</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">wan</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="PE2-CENTRAL">
+      <data key="label">PE2-CENTRAL</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">wan</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="POS-0A-A131">
+      <data key="label">POS-0A-A131</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">32</data>
+    </node>
+    <node id="POS-0A-A31">
+      <data key="label">POS-0A-A31</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">32</data>
+    </node>
+    <node id="POS-1B-A32">
+      <data key="label">POS-1B-A32</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">32</data>
+    </node>
+    <node id="POS-2C-A133">
+      <data key="label">POS-2C-A133</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">32</data>
+    </node>
+    <node id="POS-2C-A33">
+      <data key="label">POS-2C-A33</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">32</data>
+    </node>
+    <node id="POSLAB-0D-A34">
+      <data key="label">POSLAB-0D-A34</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">32</data>
+    </node>
+    <node id="POST-1A-A64">
+      <data key="label">POST-1A-A64</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">1;9</data>
+    </node>
+    <node id="POST-1A-A65">
+      <data key="label">POST-1A-A65</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">9</data>
+    </node>
+    <node id="POST-2A-A66">
+      <data key="label">POST-2A-A66</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">9</data>
+    </node>
+    <node id="PRO-1A-A73">
+      <data key="label">PRO-1A-A73</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">12</data>
+    </node>
+    <node id="PRO-3A-A74">
+      <data key="label">PRO-3A-A74</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">12</data>
+    </node>
+    <node id="PSIC-1A-A53">
+      <data key="label">PSIC-1A-A53</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">8</data>
+    </node>
+    <node id="PSIC-2B-A54">
+      <data key="label">PSIC-2B-A54</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">8</data>
+    </node>
+    <node id="QUI-0A-A78">
+      <data key="label">QUI-0A-A78</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">11</data>
+    </node>
+    <node id="QUI-1A-A83">
+      <data key="label">QUI-1A-A83</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">11</data>
+    </node>
+    <node id="QUI-2A-A81">
+      <data key="label">QUI-2A-A81</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">11</data>
+    </node>
+    <node id="QUI-2A-A82">
+      <data key="label">QUI-2A-A82</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">11</data>
+    </node>
+    <node id="QUIN-1A-A117">
+      <data key="label">QUIN-1A-A117</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">23</data>
+    </node>
+    <node id="QUIN-1A-A128">
+      <data key="label">QUIN-1A-A128</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">23</data>
+    </node>
+    <node id="ROUTER-CAMPUS-CENTRO-HISTORICO">
+      <data key="label">ROUTER-CAMPUS-CENTRO-HISTORICO</data>
+      <data key="campus">Sede Centro Historico</data>
+      <data key="capa">wan</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="ROUTER-CAMPUS-HUAYNA-CAPAC">
+      <data key="label">ROUTER-CAMPUS-HUAYNA-CAPAC</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">wan</data>
+      <data key="ndiag">27;34</data>
+    </node>
+    <node id="ROUTER-CAMPUS-MUSEO">
+      <data key="label">ROUTER-CAMPUS-MUSEO</data>
+      <data key="campus">Sede Museo</data>
+      <data key="capa">wan</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="ROUTER-CAMPUS-PARAISO">
+      <data key="label">ROUTER-CAMPUS-PARAISO</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">wan</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="ROUTER-CAMPUS-YANUNCAY">
+      <data key="label">ROUTER-CAMPUS-YANUNCAY</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">wan</data>
+      <data key="ndiag">0;34</data>
+    </node>
+    <node id="ROUTER-L2TP-BALZAY">
+      <data key="label">ROUTER-L2TP-BALZAY</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">wan</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="SW-ARUBA-CENTRO-HISTORICO">
+      <data key="label">SW-ARUBA-CENTRO-HISTORICO</data>
+      <data key="campus">Sede Centro Historico</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="SW-ARUBA-MUSEO">
+      <data key="label">SW-ARUBA-MUSEO</data>
+      <data key="campus">Sede Museo</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">34</data>
+    </node>
+    <node id="TALL-0A-A12">
+      <data key="label">TALL-0A-A12</data>
+      <data key="campus">Campus Yanuncay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">25</data>
+    </node>
+    <node id="TEAT-0A-A75">
+      <data key="label">TEAT-0A-A75</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">2</data>
+    </node>
+    <node id="TECMED-0B-A42">
+      <data key="label">TECMED-0B-A42</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">31</data>
+    </node>
+    <node id="TECMED-1A-A141">
+      <data key="label">TECMED-1A-A141</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">31</data>
+    </node>
+    <node id="TECMED-1A-A41">
+      <data key="label">TECMED-1A-A41</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">31</data>
+    </node>
+    <node id="TECMED-2C-A43">
+      <data key="label">TECMED-2C-A43</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">31</data>
+    </node>
+    <node id="TECMED-3D-A44">
+      <data key="label">TECMED-3D-A44</data>
+      <data key="campus">Campus Paraiso</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">31</data>
+    </node>
+    <node id="TECQUI-0A-A10">
+      <data key="label">TECQUI-0A-A10</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">15</data>
+    </node>
+    <node id="TECQUI-0A-A11">
+      <data key="label">TECQUI-0A-A11</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">15</data>
+    </node>
+    <node id="TECQUI-0A-A12">
+      <data key="label">TECQUI-0A-A12</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">15</data>
+    </node>
+    <node id="VIN-0A-A72">
+      <data key="label">VIN-0A-A72</data>
+      <data key="campus">Campus Central</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">13</data>
+    </node>
+    <node id="VLIR-0A-A107">
+      <data key="label">VLIR-0A-A107</data>
+      <data key="campus">Campus Balzay</data>
+      <data key="capa">acceso</data>
+      <data key="ndiag">17;24</data>
+    </node>
+    <edge id="e0" source="ROUTER-CAMPUS-YANUNCAY" target="AGRPRI-1A-D10">
+      <data key="elabel">Uplink MPLS del campus (inferido del informe, no visible en los diagramas)</data>
+      <data key="rol">inferido</data>
+      <data key="ediag">0</data>
+    </edge>
+    <edge id="e1" source="INTERNET-MPLS" target="HOS-0A-D05">
+      <data key="elabel">Uplink MPLS del campus (inferido del informe, no visible en los diagramas)</data>
+      <data key="rol">inferido</data>
+      <data key="ediag">0</data>
+    </edge>
+    <edge id="e2" source="INTERNET-MPLS" target="CCJ-CJURIDICO-D4">
+      <data key="elabel">Uplink MPLS (inferido del informe, no visible en los diagramas)</data>
+      <data key="rol">inferido</data>
+      <data key="ediag">0</data>
+    </edge>
+    <edge id="e3" source="DATCC-2A-C2" target="DATCC-2A-C3">
+      <data key="elabel">Enlace entre Cores: lag256 1.89 Gbps</data>
+      <data key="trafico">1890</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1;34</data>
+    </edge>
+    <edge id="e4" source="CC-AETUC-D30" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag207 74.03 Mbps</data>
+      <data key="trafico">74.03</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e5" source="CC-AETUC-D30" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag207 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e6" source="CC-ARQUITECTURA-D107" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag206 398.39 Mbps</data>
+      <data key="trafico">398.39</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e7" source="CC-ARQUITECTURA-D107" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag206 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e8" source="CC-BIBLIOTECA-D112" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag205 458.15 Mbps</data>
+      <data key="trafico">458.15</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e9" source="CC-BIBLIOTECA-D112" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag205 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e10" source="CC-BLOQUE-IQ" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag210 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e11" source="CC-BLOQUE-IQ" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag210 494.31 Mbps</data>
+      <data key="trafico">494.31</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e12" source="CC-PROMAS-D31" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag209 117.47 Mbps</data>
+      <data key="trafico">117.47</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e13" source="CC-PROMAS-D31" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag209 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e14" source="CC-QUIMICA-D109" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag211 103.31 Mbps</data>
+      <data key="trafico">103.31</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e15" source="CC-QUIMICA-D109" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag211 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e16" source="CC-ADM-D40" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag208 100.93 Mbps</data>
+      <data key="trafico">100.93</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e17" source="CC-ADM-D40" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag208 82.82 Mbps</data>
+      <data key="trafico">82.82</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e18" source="CC-FILOSOFIA-B-D111" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag216 181.8 Mbps</data>
+      <data key="trafico">181.8</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e19" source="CC-FILOSOFIA-B-D111" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag216 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e20" source="CC-JURISPRUDENCIA-D110" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag217 130.98 Mbps</data>
+      <data key="trafico">130.98</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e21" source="CC-JURISPRUDENCIA-D110" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag217 74.45 Mbps</data>
+      <data key="trafico">74.45</data>
+      <data key="rol">secundario</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e22" source="CC-PSICOLOGIA-D125" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag215 265.28 Mbps</data>
+      <data key="trafico">265.28</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e23" source="CC-PSICOLOGIA-D125" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag215 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e24" source="CC-FILOSOFIA-A-D108" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag214 220.7 Mbps</data>
+      <data key="trafico">220.7</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e25" source="CC-FILOSOFIA-A-D108" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag214 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e26" source="CC-MONJAS-D126" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag213 256.51 Mbps</data>
+      <data key="trafico">256.51</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e27" source="CC-MONJAS-D126" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag213 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e28" source="CC-ECONOMIA-D51" target="DATCC-2A-C3">
+      <data key="elabel">C3: lag212 346.27 Mbps</data>
+      <data key="trafico">346.27</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e29" source="CC-ECONOMIA-D51" target="DATCC-2A-C2">
+      <data key="elabel">C2: lag212 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">1</data>
+    </edge>
+    <edge id="e30" source="POST-1A-A64" target="CC-FILOSOFIA-A-D108">
+      <data key="elabel">D108: 1/1/5 200.42 Mbps</data>
+      <data key="trafico">200.42</data>
+      <data key="rol">principal</data>
+      <data key="ediag">1;9</data>
+    </edge>
+    <edge id="e31" source="CC-ADM-D40" target="TEAT-0A-A75">
+      <data key="elabel">D40: 1/1/5 8.2 Mbps</data>
+      <data key="trafico">8.2</data>
+      <data key="rol">principal</data>
+      <data key="ediag">2</data>
+    </edge>
+    <edge id="e32" source="CC-ADM-D40" target="CMED-0A-A42">
+      <data key="elabel">D40: 1/1/3 7.97 Mbps</data>
+      <data key="trafico">7.97</data>
+      <data key="rol">principal</data>
+      <data key="ediag">2</data>
+    </edge>
+    <edge id="e33" source="CC-ADM-D40" target="CCADM-2A-A43">
+      <data key="elabel">D40: lag14 24.53 Mbps</data>
+      <data key="trafico">24.53</data>
+      <data key="rol">principal</data>
+      <data key="ediag">2</data>
+    </edge>
+    <edge id="e34" source="CC-ADM-D40" target="CCADM-2A-A44">
+      <data key="elabel">D40: lag13 105.36 Mbps</data>
+      <data key="trafico">105.36</data>
+      <data key="rol">principal</data>
+      <data key="ediag">2</data>
+    </edge>
+    <edge id="e35" source="CC-ADM-D40" target="CCADM-2A-A45">
+      <data key="elabel">D40: lag12 8.28 Mbps</data>
+      <data key="trafico">8.28</data>
+      <data key="rol">principal</data>
+      <data key="ediag">2</data>
+    </edge>
+    <edge id="e36" source="CC-AETUC-D30" target="AETUC-0A-A76">
+      <data key="elabel">D30: 1/1/1 59.19 Mbps</data>
+      <data key="trafico">59.19</data>
+      <data key="rol">principal</data>
+      <data key="ediag">3</data>
+    </edge>
+    <edge id="e37" source="CC-AETUC-D30" target="AETUC-0A-A97">
+      <data key="elabel">D30: 1/1/2 37.7 Mbps</data>
+      <data key="trafico">37.7</data>
+      <data key="rol">principal</data>
+      <data key="ediag">3</data>
+    </edge>
+    <edge id="e38" source="AETUC-0A-A76" target="AETUCCF-2A-A79">
+      <data key="elabel">A76: 1/1/48 51.9 Mbps</data>
+      <data key="trafico">51.9</data>
+      <data key="rol">principal</data>
+      <data key="ediag">3</data>
+    </edge>
+    <edge id="e39" source="CC-ECONOMIA-D51" target="ECOK2-1A-A52">
+      <data key="elabel">D51: lag11 36.58 Mbps</data>
+      <data key="trafico">36.58</data>
+      <data key="rol">principal</data>
+      <data key="ediag">4</data>
+    </edge>
+    <edge id="e40" source="CC-ECONOMIA-D51" target="ECOK1-1A-A101">
+      <data key="elabel">D51: lag12 5.73 Mbps</data>
+      <data key="trafico">5.73</data>
+      <data key="rol">principal</data>
+      <data key="ediag">4</data>
+    </edge>
+    <edge id="e41" source="CC-ECONOMIA-D51" target="ECOK1-1A-A102">
+      <data key="elabel">D51: lag13 268.16 Mbps</data>
+      <data key="trafico">268.16</data>
+      <data key="rol">principal</data>
+      <data key="ediag">4</data>
+    </edge>
+    <edge id="e42" source="CC-FILOSOFIA-A-D108" target="FILOA-0B-A56">
+      <data key="elabel">D108: lag12 39.4 Mbps</data>
+      <data key="trafico">39.4</data>
+      <data key="rol">principal</data>
+      <data key="ediag">5</data>
+    </edge>
+    <edge id="e43" source="CC-FILOSOFIA-A-D108" target="FILOA-2A-A55">
+      <data key="elabel">D108: lag11 33.78 Mbps</data>
+      <data key="trafico">33.78</data>
+      <data key="rol">principal</data>
+      <data key="ediag">5</data>
+    </edge>
+    <edge id="e44" source="CC-FILOSOFIA-B-D111" target="FILOB-2A-A57">
+      <data key="elabel">D111: lag11 99.58 Mbps</data>
+      <data key="trafico">99.58</data>
+      <data key="rol">principal</data>
+      <data key="ediag">6</data>
+    </edge>
+    <edge id="e45" source="CC-FILOSOFIA-B-D111" target="FILOB-1B-A58">
+      <data key="elabel">D111: lag12 63.51 Mbps</data>
+      <data key="trafico">63.51</data>
+      <data key="rol">principal</data>
+      <data key="ediag">6</data>
+    </edge>
+    <edge id="e46" source="CC-JURISPRUDENCIA-D110" target="JUR-0A-A59">
+      <data key="elabel">D110: 1/1/1 11.47 Mbps</data>
+      <data key="trafico">11.47</data>
+      <data key="rol">principal</data>
+      <data key="ediag">7</data>
+    </edge>
+    <edge id="e47" source="CC-JURISPRUDENCIA-D110" target="JUR-0A-A60">
+      <data key="elabel">D110: 1/1/7 4.37 Mbps</data>
+      <data key="trafico">4.37</data>
+      <data key="rol">principal</data>
+      <data key="ediag">7</data>
+    </edge>
+    <edge id="e48" source="CC-JURISPRUDENCIA-D110" target="JUR-1A-A61">
+      <data key="elabel">D110: lag42 60.21 Mbps</data>
+      <data key="trafico">60.21</data>
+      <data key="rol">principal</data>
+      <data key="ediag">7</data>
+    </edge>
+    <edge id="e49" source="CC-JURISPRUDENCIA-D110" target="JUR-1A-A62">
+      <data key="elabel">D110: lag43 55.03 Mbps</data>
+      <data key="trafico">55.03</data>
+      <data key="rol">principal</data>
+      <data key="ediag">7</data>
+    </edge>
+    <edge id="e50" source="CC-PSICOLOGIA-D125" target="PSIC-1A-A53">
+      <data key="elabel">D125: lag21 126.27 Mbps</data>
+      <data key="trafico">126.27</data>
+      <data key="rol">principal</data>
+      <data key="ediag">8</data>
+    </edge>
+    <edge id="e51" source="CC-PSICOLOGIA-D125" target="PSIC-2B-A54">
+      <data key="elabel">D50: lag22 71.19 Mbps</data>
+      <data key="trafico">71.19</data>
+      <data key="rol">principal</data>
+      <data key="ediag">8</data>
+    </edge>
+    <edge id="e52" source="POST-1A-A64" target="POST-1A-A65">
+      <data key="elabel">A64: 1/1/50 34.23 Mbps</data>
+      <data key="trafico">34.23</data>
+      <data key="rol">principal</data>
+      <data key="ediag">9</data>
+    </edge>
+    <edge id="e53" source="POST-1A-A65" target="POST-2A-A66">
+      <data key="elabel">A65: 1/1/48 2.67 Mbps</data>
+      <data key="trafico">2.67</data>
+      <data key="rol">principal</data>
+      <data key="ediag">9</data>
+    </edge>
+    <edge id="e54" source="CC-ARQUITECTURA-D107" target="ARQ-0A-A85">
+      <data key="elabel">D107: lag11 80.54 Mbps</data>
+      <data key="trafico">80.54</data>
+      <data key="rol">principal</data>
+      <data key="ediag">10</data>
+    </edge>
+    <edge id="e55" source="ARQ-0A-A85" target="ARQ-0A-A84">
+      <data key="elabel">A85: 1/1/51 2.94 Mbps</data>
+      <data key="trafico">2.94</data>
+      <data key="rol">principal</data>
+      <data key="ediag">10</data>
+    </edge>
+    <edge id="e56" source="CC-ARQUITECTURA-D107" target="ARQ-0B-A87">
+      <data key="elabel">D107: lag12 9.87 Mbps</data>
+      <data key="trafico">9.87</data>
+      <data key="rol">principal</data>
+      <data key="ediag">10</data>
+    </edge>
+    <edge id="e57" source="CC-ARQUITECTURA-D107" target="ARQ-1C-A86">
+      <data key="elabel">D107: 1/1/3 9.98 Mbps</data>
+      <data key="trafico">9.98</data>
+      <data key="rol">principal</data>
+      <data key="ediag">10</data>
+    </edge>
+    <edge id="e58" source="CC-ARQUITECTURA-D107" target="ARQ-1C-A96">
+      <data key="elabel">D107: lag13 51.55 Mbps</data>
+      <data key="trafico">51.55</data>
+      <data key="rol">principal</data>
+      <data key="ediag">10</data>
+    </edge>
+    <edge id="e59" source="CC-ARQUITECTURA-D107" target="ARQ-0D-A88">
+      <data key="elabel">D107: lag14 47.14 Mbps</data>
+      <data key="trafico">47.14</data>
+      <data key="rol">principal</data>
+      <data key="ediag">10</data>
+    </edge>
+    <edge id="e60" source="ARQ-0D-A88" target="ARQ-0D-A89">
+      <data key="elabel">A88: 1/1/52 45.32 Mbps</data>
+      <data key="trafico">45.32</data>
+      <data key="rol">principal</data>
+      <data key="ediag">10</data>
+    </edge>
+    <edge id="e61" source="CC-ARQUITECTURA-D107" target="ARQ-0D-A90">
+      <data key="elabel">D107: lag15 2.96 Mbps</data>
+      <data key="trafico">2.96</data>
+      <data key="rol">principal</data>
+      <data key="ediag">10</data>
+    </edge>
+    <edge id="e62" source="CC-ARQUITECTURA-D107" target="ARQ-1E-A91">
+      <data key="elabel">D107: lag16 96.32 Mbps</data>
+      <data key="trafico">96.32</data>
+      <data key="rol">principal</data>
+      <data key="ediag">10</data>
+    </edge>
+    <edge id="e63" source="ARQ-1E-A91" target="ARQ-1E-A92">
+      <data key="elabel">A91: 4/1/49 96.64 Mbps</data>
+      <data key="trafico">96.64</data>
+      <data key="rol">principal</data>
+      <data key="ediag">10</data>
+    </edge>
+    <edge id="e64" source="CC-ARQUITECTURA-D107" target="ARQ-0G-A93-CEPAUC">
+      <data key="elabel">D107: 1/1/13 3.53 Mbps</data>
+      <data key="trafico">3.53</data>
+      <data key="rol">principal</data>
+      <data key="ediag">10</data>
+    </edge>
+    <edge id="e65" source="CC-QUIMICA-D109" target="QUI-1A-A83">
+      <data key="elabel">D109: lag11 55.56 Mbps</data>
+      <data key="trafico">55.56</data>
+      <data key="rol">principal</data>
+      <data key="ediag">11</data>
+    </edge>
+    <edge id="e66" source="CC-QUIMICA-D109" target="QUI-0A-A78">
+      <data key="elabel">D109: lag12 0 bps</data>
+      <data key="trafico">0</data>
+      <data key="rol">respaldo</data>
+      <data key="ediag">11</data>
+    </edge>
+    <edge id="e67" source="CC-QUIMICA-D109" target="QUI-2A-A82">
+      <data key="elabel">D109: lag13 2.67 Mbps</data>
+      <data key="trafico">2.67</data>
+      <data key="rol">principal</data>
+      <data key="ediag">11</data>
+    </edge>
+    <edge id="e68" source="QUI-2A-A82" target="QUI-2A-A81">
+      <data key="elabel">A81: 1/1/48 5.93 Kbps</data>
+      <data key="trafico">0.00593</data>
+      <data key="rol">principal</data>
+      <data key="ediag">11</data>
+    </edge>
+    <edge id="e69" source="CC-PROMAS-D31" target="PRO-1A-A73">
+      <data key="elabel">D31: lag41 68.74 Mbps</data>
+      <data key="trafico">68.74</data>
+      <data key="rol">principal</data>
+      <data key="ediag">12</data>
+    </edge>
+    <edge id="e70" source="CC-PROMAS-D31" target="CREDU-0B-A94">
+      <data key="elabel">D31: 1/1/3 17.32 Mbps</data>
+      <data key="trafico">17.32</data>
+      <data key="rol">principal</data>
+      <data key="ediag">12</data>
+    </edge>
+    <edge id="e71" source="PRO-1A-A73" target="PRO-3A-A74">
+      <data key="rol">principal</data>
+      <data key="ediag">12</data>
+    </edge>
+    <edge id="e72" source="CC-BIBLIOTECA-D112" target="CCBIB-1A-A71">
+      <data key="elabel">D112: lag11 189.65 Mbps</data>
+      <data key="trafico">189.65</data>
+      <data key="rol">principal</data>
+      <data key="ediag">13</data>
+    </edge>
+    <edge id="e73" source="CC-BIBLIOTECA-D112" target="VIN-0A-A72">
+      <data key="elabel">D112: 1/1/3 36.32 Mbps</data>
+      <data key="trafico">36.32</data>
+      <data key="rol">principal</data>
+      <data key="ediag">13</data>
+    </edge>
+    <edge id="e74" source="CC-MONJAS-D126" target="MON-0A-A103">
+      <data key="elabel">D126: lag63 3.82 Mbps</data>
+      <data key="trafico">3.82</data>
+      <data key="rol">principal</data>
+      <data key="ediag">14</data>
+    </edge>
+    <edge id="e75" source="CC-MONJAS-D126" target="MON-0A-A104">
+      <data key="elabel">D126: lag64 39.99 Mbps</data>
+      <data key="trafico">39.99</data>
+      <data key="rol">principal</data>
+      <data key="ediag">14</data>
+    </edge>
+    <edge id="e76" source="CC-MONJAS-D126" target="MON-1C-A105">
+      <data key="elabel">D126: lag67 2.76 Mbps</data>
+      <data key="trafico">2.76</data>
+      <data key="rol">principal</data>
+      <data key="ediag">14</data>
+    </edge>
+    <edge id="e77" source="CC-MONJAS-D126" target="MON-1C-A106">
+      <data key="elabel">D126: lag66 16.36 Mbps</data>
+      <data key="trafico">16.36</data>
+      <data key="rol">principal</data>
+      <data key="ediag">14</data>
+    </edge>
+    <edge id="e78" source="CC-MONJAS-D126" target="MON-1B-A67">
+      <data key="elabel">D126: lag62 36.31 Mbps</data>
+      <data key="trafico">36.31</data>
+      <data key="rol">principal</data>
+      <data key="ediag">14</data>
+    </edge>
+    <edge id="e79" source="MON-1B-A67" target="MON-1B-A68">
+      <data key="elabel">A67: 2/1/52 37.86 Mbps</data>
+      <data key="trafico">37.86</data>
+      <data key="rol">principal</data>
+      <data key="ediag">14</data>
+    </edge>
+    <edge id="e80" source="CC-MONJAS-D126" target="ECOK3-0A-A63">
+      <data key="elabel">D126: 1/1/9 32.03 Mbps</data>
+      <data key="trafico">32.03</data>
+      <data key="rol">principal</data>
+      <data key="ediag">14</data>
+    </edge>
+    <edge id="e81" source="CC-ECONOMIA-D51" target="TECQUI-0A-A10">
+      <data key="rol">principal</data>
+      <data key="ediag">15</data>
+    </edge>
+    <edge id="e82" source="TECQUI-0A-A10" target="TECQUI-0A-A11">
+      <data key="rol">principal</data>
+      <data key="ediag">15</data>
+    </edge>
+    <edge id="e83" source="TECQUI-0A-A10" target="TECQUI-0A-A12">
+      <data key="elabel">A12: 1/1/50 7.6 Mbps</data>
+      <data key="trafico">7.6</data>
+      <data key="rol">principal</data>
+      <data key="ediag">15</data>
+    </edge>
+    <edge id="e84" source="CCJ-CJURIDICO-D4" target="CCJ-1A-A10">
+      <data key="elabel">D4: 1/1/51 39.04 Mbps</data>
+      <data key="trafico">39.04</data>
+      <data key="rol">principal</data>
+      <data key="ediag">16</data>
+    </edge>
+    <edge id="e85" source="CCJ-CJURIDICO-D4" target="CCJ-1A-A11">
+      <data key="elabel">D4: 1/1/52 1.56 Mbps</data>
+      <data key="trafico">1.56</data>
+      <data key="rol">principal</data>
+      <data key="ediag">16</data>
+    </edge>
+    <edge id="e86" source="DT-0A-C12" target="DT-0A-C13">
+      <data key="elabel">C12: lag256 243.03 Mbps</data>
+      <data key="trafico">243.03</data>
+      <data key="rol">principal</data>
+      <data key="ediag">17;34</data>
+    </edge>
+    <edge id="e87" source="DT-0A-C12" target="BAL-AUL1-D4">
+      <data key="elabel">C12: lag18 1.64 Mbps</data>
+      <data key="trafico">1.64</data>
+      <data key="rol">principal</data>
+      <data key="ediag">17</data>
+    </edge>
+    <edge id="e88" source="DT-0A-C13" target="BAL-AUL1-D4">
+      <data key="elabel">C13: lag18 171.71 Mbps</data>
+      <data key="trafico">171.71</data>
+      <data key="rol">secundario</data>
+      <data key="ediag">17</data>
+    </edge>
+    <edge id="e89" source="DT-0A-C12" target="BAL-AUL2-D1">
+      <data key="elabel">C12: lag15 21.06 Mbps</data>
+      <data key="trafico">21.06</data>
+      <data key="rol">principal</data>
+      <data key="ediag">17</data>
+    </edge>
+    <edge id="e90" source="DT-0A-C13" target="BAL-AUL2-D1">
+      <data key="elabel">C13: lag15 145.25 Mbps</data>
+      <data key="trafico">145.25</data>
+      <data key="rol">secundario</data>
+      <data key="ediag">17</data>
+    </edge>
+    <edge id="e91" source="DT-0A-C12" target="BAL-CENTEC-D2">
+      <data key="elabel">C12: lag16 17.36 Mbps</data>
+      <data key="trafico">17.36</data>
+      <data key="rol">principal</data>
+      <data key="ediag">17</data>
+    </edge>
+    <edge id="e92" source="DT-0A-C13" target="BAL-CENTEC-D2">
+      <data key="elabel">C13: lag16 58.16 Mbps</data>
+      <data key="trafico">58.16</data>
+      <data key="rol">secundario</data>
+      <data key="ediag">17</data>
+    </edge>
+    <edge id="e93" source="DT-0A-C12" target="CB-EADMI-D6">
+      <data key="elabel">C12: lag17 7.18 Mbps</data>
+      <data key="trafico">7.18</data>
+      <data key="rol">principal</data>
+      <data key="ediag">17</data>
+    </edge>
+    <edge id="e94" source="DT-0A-C13" target="CB-EADMI-D6">
+      <data key="elabel">C13: lag17 76.66 Mbps</data>
+      <data key="trafico">76.66</data>
+      <data key="rol">secundario</data>
+      <data key="ediag">17</data>
+    </edge>
+    <edge id="e95" source="BAL-AUL2-D1" target="MICRORED-1A-A109">
+      <data key="elabel">D1: int1/1/3 11.02 Mbps</data>
+      <data key="trafico">11.02</data>
+      <data key="rol">principal</data>
+      <data key="ediag">17;22</data>
+    </edge>
+    <edge id="e96" source="BAL-CENTEC-D2" target="CEA-0A-A108">
+      <data key="elabel">D2: lag70 4.99 Mbps</data>
+      <data key="trafico">4.99</data>
+      <data key="rol">principal</data>
+      <data key="ediag">17;24</data>
+    </edge>
+    <edge id="e97" source="BAL-CENTEC-D2" target="VLIR-0A-A107">
+      <data key="elabel">D2: int1/1/3 13.75 Mbps</data>
+      <data key="trafico">13.75</data>
+      <data key="rol">principal</data>
+      <data key="ediag">17;24</data>
+    </edge>
+    <edge id="e98" source="CB-EADMI-D6" target="BAL-EADM-D3">
+      <data key="elabel">D3: int 1/1/6 19.63 Mbps</data>
+      <data key="trafico">19.63</data>
+      <data key="rol">principal</data>
+      <data key="ediag">17</data>
+    </edge>
+    <edge id="e99" source="BAL-AUL1-D4" target="AUL1-2A-A110">
+      <data key="elabel">D4: 1/1/1 65.9 Mbps</data>
+      <data key="trafico">65.9</data>
+      <data key="rol">principal</data>
+      <data key="ediag">18</data>
+    </edge>
+    <edge id="e100" source="BAL-AUL1-D4" target="AUL1-2A-A111">
+      <data key="elabel">D4: 1/1/2 77.62 Mbps</data>
+      <data key="trafico">77.62</data>
+      <data key="rol">principal</data>
+      <data key="ediag">18</data>
+    </edge>
+    <edge id="e101" source="BAL-AUL1-D4" target="AUL1-3A-A112">
+      <data key="elabel">D4: 1/1/3 29.78 Mbps</data>
+      <data key="trafico">29.78</data>
+      <data key="rol">principal</data>
+      <data key="ediag">18</data>
+    </edge>
+    <edge id="e102" source="BAL-AUL1-D4" target="AUL1-3A-A104">
+      <data key="elabel">D4: 1/1/4 84.67 Mbps</data>
+      <data key="trafico">84.67</data>
+      <data key="rol">principal</data>
+      <data key="ediag">18</data>
+    </edge>
+    <edge id="e103" source="BAL-AUL2-D1" target="AUL2-0A-A106">
+      <data key="elabel">D1: lag30 68.5 Mbps</data>
+      <data key="trafico">68.5</data>
+      <data key="rol">principal</data>
+      <data key="ediag">19</data>
+    </edge>
+    <edge id="e104" source="BAL-AUL2-D1" target="AUL2-0A-A122">
+      <data key="elabel">D1: lag31 1.22 Mbps</data>
+      <data key="trafico">1.22</data>
+      <data key="rol">principal</data>
+      <data key="ediag">19</data>
+    </edge>
+    <edge id="e105" source="BAL-AUL2-D1" target="AUL2-0A-A121">
+      <data key="elabel">D1: lag32 81.71 Mbps</data>
+      <data key="trafico">81.71</data>
+      <data key="rol">principal</data>
+      <data key="ediag">19</data>
+    </edge>
+    <edge id="e106" source="BAL-AUL2-D1" target="AUL2-0A-A119">
+      <data key="elabel">D1: lag33 1.33 Mbps</data>
+      <data key="trafico">1.33</data>
+      <data key="rol">principal</data>
+      <data key="ediag">19</data>
+    </edge>
+    <edge id="e107" source="BAL-AUL2-D1" target="AUL2-0A-A118">
+      <data key="elabel">D1: lag34 2.69 Mbps</data>
+      <data key="trafico">2.69</data>
+      <data key="rol">principal</data>
+      <data key="ediag">19</data>
+    </edge>
+    <edge id="e108" source="BAL-AUL2-D1" target="AUL2-0A-A120">
+      <data key="elabel">D1: lag35 5.03 Mbps</data>
+      <data key="trafico">5.03</data>
+      <data key="rol">principal</data>
+      <data key="ediag">19</data>
+    </edge>
+    <edge id="e109" source="BAL-AUL2-D1" target="AUL2-0A-A123">
+      <data key="elabel">D1: lag36 1.35 Mbps</data>
+      <data key="trafico">1.35</data>
+      <data key="rol">principal</data>
+      <data key="ediag">19</data>
+    </edge>
+    <edge id="e110" source="BAL-AUL2-D1" target="AUL2-01A-A124-SUBLAB2">
+      <data key="elabel">D1: 1/1/17 25.46 Mbps</data>
+      <data key="trafico">25.46</data>
+      <data key="rol">principal</data>
+      <data key="ediag">19</data>
+    </edge>
+    <edge id="e111" source="BAL-AUL2-D1" target="AUL2-01A-A24-SUB">
+      <data key="elabel">D1: 1/1/22 78.4 Mbps</data>
+      <data key="trafico">78.4</data>
+      <data key="rol">principal</data>
+      <data key="ediag">19</data>
+    </edge>
+    <edge id="e112" source="BAL-CENTEC-D2" target="CTBLOQ1-0A-A101">
+      <data key="elabel">D2: lag60 5.65 Mbps</data>
+      <data key="trafico">5.65</data>
+      <data key="rol">principal</data>
+      <data key="ediag">20</data>
+    </edge>
+    <edge id="e113" source="BAL-CENTEC-D2" target="CTBLOQ2-0A-A102">
+      <data key="elabel">D2: lag50 22.29 Mbps</data>
+      <data key="trafico">22.29</data>
+      <data key="rol">principal</data>
+      <data key="ediag">20</data>
+    </edge>
+    <edge id="e114" source="BAL-CENTEC-D2" target="CTBLOQ3-0A-A103">
+      <data key="elabel">D2: lag40 12.91 Mbps</data>
+      <data key="trafico">12.91</data>
+      <data key="rol">principal</data>
+      <data key="ediag">20</data>
+    </edge>
+    <edge id="e115" source="CB-EADMI-D6" target="EA-1A-A115">
+      <data key="elabel">D3: lag100 50.53 Mbps</data>
+      <data key="trafico">50.53</data>
+      <data key="rol">principal</data>
+      <data key="ediag">21</data>
+    </edge>
+    <edge id="e116" source="CB-EADMI-D6" target="EA-0A-A114">
+      <data key="elabel">D3: lag90 20.91 Mbps</data>
+      <data key="trafico">20.91</data>
+      <data key="rol">principal</data>
+      <data key="ediag">21</data>
+    </edge>
+    <edge id="e117" source="CB-EADMI-D6" target="EA-1A-A116">
+      <data key="elabel">D3: int1/1/5 1.86 Mbps</data>
+      <data key="trafico">1.86</data>
+      <data key="rol">principal</data>
+      <data key="ediag">21</data>
+    </edge>
+    <edge id="e118" source="BAL-EADM-D3" target="QUIN-1A-A117">
+      <data key="elabel">BAL-EADM-D3: int 1/1/6 54.06 Mbps</data>
+      <data key="trafico">54.06</data>
+      <data key="rol">principal</data>
+      <data key="ediag">23</data>
+    </edge>
+    <edge id="e119" source="QUIN-1A-A117" target="QUIN-1A-A128">
+      <data key="rol">principal</data>
+      <data key="ediag">23</data>
+    </edge>
+    <edge id="e120" source="AGRPRI-1A-D10" target="TALL-0A-A12">
+      <data key="elabel">D10: 1/1/3 10.56 Mbps</data>
+      <data key="trafico">10.56</data>
+      <data key="rol">principal</data>
+      <data key="ediag">25</data>
+    </edge>
+    <edge id="e121" source="AGRPRI-1A-D10" target="DAN-1A-A11">
+      <data key="elabel">D10: 1/1/4 10.28 Mbps</data>
+      <data key="trafico">10.28</data>
+      <data key="rol">principal</data>
+      <data key="ediag">25</data>
+    </edge>
+    <edge id="e122" source="AGRPRI-1A-D10" target="LABMAC-1A-A13">
+      <data key="elabel">D10: lag110 19.07 Mbps</data>
+      <data key="trafico">19.07</data>
+      <data key="rol">principal</data>
+      <data key="ediag">25</data>
+    </edge>
+    <edge id="e123" source="AGRPRI-1A-D10" target="ART-0A-A15">
+      <data key="elabel">D10: lag120 40.41 Mbps</data>
+      <data key="trafico">40.41</data>
+      <data key="rol">principal</data>
+      <data key="ediag">25</data>
+    </edge>
+    <edge id="e124" source="AGRPRI-1A-D10" target="BLOQUED-0A-A21">
+      <data key="elabel">D10: lag190 9.74 Mbps</data>
+      <data key="trafico">9.74</data>
+      <data key="rol">principal</data>
+      <data key="ediag">25</data>
+    </edge>
+    <edge id="e125" source="AGRPRI-1A-D10" target="BIB-2A-A16">
+      <data key="elabel">D10: lag130 68.33 Mbps</data>
+      <data key="trafico">68.33</data>
+      <data key="rol">principal</data>
+      <data key="ediag">25</data>
+    </edge>
+    <edge id="e126" source="AGRPRI-1A-D10" target="LAC-0A-A17">
+      <data key="elabel">D10: lag140 11.7 Mbps</data>
+      <data key="trafico">11.7</data>
+      <data key="rol">principal</data>
+      <data key="ediag">25</data>
+    </edge>
+    <edge id="e127" source="AGRPRI-1A-D10" target="LAB-1A-A18">
+      <data key="elabel">D10: lag150 17.54 Mbps</data>
+      <data key="trafico">17.54</data>
+      <data key="rol">principal</data>
+      <data key="ediag">25</data>
+    </edge>
+    <edge id="e128" source="AGRPRI-1A-D10" target="AGRPRI-1A-A19">
+      <data key="elabel">D10: lag160 30.48 Mbps</data>
+      <data key="trafico">30.48</data>
+      <data key="rol">principal</data>
+      <data key="ediag">25</data>
+    </edge>
+    <edge id="e129" source="AGRPRI-1A-D10" target="ANF-0A-A14">
+      <data key="elabel">D10: 1/1/19 6.44 Mbps</data>
+      <data key="trafico">6.44</data>
+      <data key="rol">principal</data>
+      <data key="ediag">25</data>
+    </edge>
+    <edge id="e130" source="AGRPRI-1A-D10" target="CEN-1A-A20">
+      <data key="elabel">D10: lag180 5.32 Mbps</data>
+      <data key="trafico">5.32</data>
+      <data key="rol">principal</data>
+      <data key="ediag">25</data>
+    </edge>
+    <edge id="e131" source="HOS-0A-D05" target="HOS-0A-A10">
+      <data key="elabel">D5: lag60 26.42 Mbps</data>
+      <data key="trafico">26.42</data>
+      <data key="rol">principal</data>
+      <data key="ediag">26</data>
+    </edge>
+    <edge id="e132" source="HOS-0A-D05" target="HOS-2A-A11">
+      <data key="elabel">D5: lag61 91.33 Mbps</data>
+      <data key="trafico">91.33</data>
+      <data key="rol">principal</data>
+      <data key="ediag">26</data>
+    </edge>
+    <edge id="e133" source="HOS-0A-D05" target="HOS-1A-A12">
+      <data key="elabel">D5: lag62 50.77 Mbps</data>
+      <data key="trafico">50.77</data>
+      <data key="rol">principal</data>
+      <data key="ediag">26</data>
+    </edge>
+    <edge id="e134" source="HOS-0A-D05" target="HOS-0A-A13">
+      <data key="elabel">D5: 1/1/7 21.7 Mbps</data>
+      <data key="trafico">21.7</data>
+      <data key="rol">principal</data>
+      <data key="ediag">26</data>
+    </edge>
+    <edge id="e135" source="CPAR-C10" target="ROUTER-CAMPUS-HUAYNA-CAPAC">
+      <data key="elabel">C10: 1/1/25 Link-to-VPLS-CEDIA 317.83 Mbps</data>
+      <data key="trafico">317.83</data>
+      <data key="rol">principal</data>
+      <data key="ediag">27</data>
+    </edge>
+    <edge id="e136" source="CPAR-C10" target="CP-EADMINA1-D6">
+      <data key="elabel">C10: lag211 Con Redundancia 76.7 Mbps</data>
+      <data key="trafico">76.7</data>
+      <data key="rol">principal</data>
+      <data key="ediag">27</data>
+    </edge>
+    <edge id="e137" source="CPAR-C10" target="CP-INVESTIGACION-D5">
+      <data key="elabel">C10: lag205 84.7 Mbps</data>
+      <data key="trafico">84.7</data>
+      <data key="rol">principal</data>
+      <data key="ediag">27</data>
+    </edge>
+    <edge id="e138" source="CPAR-C10" target="CP-ENFERMERIA-D1">
+      <data key="elabel">C10: lag201 147.9 Mbps</data>
+      <data key="trafico">147.9</data>
+      <data key="rol">principal</data>
+      <data key="ediag">27</data>
+    </edge>
+    <edge id="e139" source="CPAR-C10" target="CP-TECMEDICO-D3">
+      <data key="elabel">C10: lag203 113.56 Mbps</data>
+      <data key="trafico">113.56</data>
+      <data key="rol">principal</data>
+      <data key="ediag">27</data>
+    </edge>
+    <edge id="e140" source="CPAR-C10" target="CP-POSGRADO-D2">
+      <data key="elabel">C10: lag202 40.79 Mbps</data>
+      <data key="trafico">40.79</data>
+      <data key="rol">principal</data>
+      <data key="ediag">27</data>
+    </edge>
+    <edge id="e141" source="CPAR-C10" target="CP-ODONTOLOGIA-D4">
+      <data key="elabel">C10: lag204 216.33 Mbps</data>
+      <data key="trafico">216.33</data>
+      <data key="rol">principal</data>
+      <data key="ediag">27</data>
+    </edge>
+    <edge id="e142" source="CP-EADMINA1-D6" target="MEDADM-1A-A11">
+      <data key="elabel">D6: lag11 26.87 Mbps</data>
+      <data key="trafico">26.87</data>
+      <data key="rol">principal</data>
+      <data key="ediag">28</data>
+    </edge>
+    <edge id="e143" source="CP-EADMINA1-D6" target="MEDADM-1B-A12">
+      <data key="elabel">D6: lag12 1.77 Mbps</data>
+      <data key="trafico">1.77</data>
+      <data key="rol">principal</data>
+      <data key="ediag">28</data>
+    </edge>
+    <edge id="e144" source="CP-EADMINA1-D6" target="MEDADM-1C-A13">
+      <data key="elabel">D6: lag13 1.77 Mbps</data>
+      <data key="trafico">1.77</data>
+      <data key="rol">principal</data>
+      <data key="ediag">28</data>
+    </edge>
+    <edge id="e145" source="CP-EADMINA1-D6" target="MEDADM-1D-A14">
+      <data key="elabel">D6: lag14 20.96 Mbps</data>
+      <data key="trafico">20.96</data>
+      <data key="rol">principal</data>
+      <data key="ediag">28</data>
+    </edge>
+    <edge id="e146" source="CP-EADMINA1-D6" target="MEDADM-1E-A15">
+      <data key="elabel">D6: lag15 1.77 Mbps</data>
+      <data key="trafico">1.77</data>
+      <data key="rol">principal</data>
+      <data key="ediag">28</data>
+    </edge>
+    <edge id="e147" source="CP-EADMINA1-D6" target="MEDADM-0F-A16">
+      <data key="elabel">D6: lag16 35.48 Mbps</data>
+      <data key="trafico">35.48</data>
+      <data key="rol">principal</data>
+      <data key="ediag">28</data>
+    </edge>
+    <edge id="e148" source="CP-EADMINA1-D6" target="MEDADM-0G-A17">
+      <data key="elabel">D6: lag17 2.33 Mbps</data>
+      <data key="trafico">2.33</data>
+      <data key="rol">principal</data>
+      <data key="ediag">28</data>
+    </edge>
+    <edge id="e149" source="CP-EADMINA1-D6" target="MEDADM-1H-A18">
+      <data key="elabel">D6: lag18 11.62 Mbps</data>
+      <data key="trafico">11.62</data>
+      <data key="rol">principal</data>
+      <data key="ediag">28</data>
+    </edge>
+    <edge id="e150" source="CP-INVESTIGACION-D5" target="INV-1A-A61">
+      <data key="elabel">D5: lag61 1.65 Mbps</data>
+      <data key="trafico">1.65</data>
+      <data key="rol">principal</data>
+      <data key="ediag">29</data>
+    </edge>
+    <edge id="e151" source="CP-INVESTIGACION-D5" target="INV-1A-A161">
+      <data key="elabel">D5: lag64 51.44 Mbps</data>
+      <data key="trafico">51.44</data>
+      <data key="rol">principal</data>
+      <data key="ediag">29</data>
+    </edge>
+    <edge id="e152" source="CP-INVESTIGACION-D5" target="CENDIA-0A-A19">
+      <data key="elabel">D5: lag63 6.65 Mbps</data>
+      <data key="trafico">6.65</data>
+      <data key="rol">principal</data>
+      <data key="ediag">29</data>
+    </edge>
+    <edge id="e153" source="CP-INVESTIGACION-D5" target="INV-1B-A62">
+      <data key="elabel">D5: lag62 61.87 Mbps</data>
+      <data key="trafico">61.87</data>
+      <data key="rol">principal</data>
+      <data key="ediag">29</data>
+    </edge>
+    <edge id="e154" source="INV-1B-A62" target="INV-1B-A162">
+      <data key="elabel">A62:lag110 54.09 Mbps</data>
+      <data key="trafico">54.09</data>
+      <data key="rol">principal</data>
+      <data key="ediag">29</data>
+    </edge>
+    <edge id="e155" source="CP-ODONTOLOGIA-D4" target="ODO-1A-A151">
+      <data key="elabel">D4: lag54 22.75 Mbps</data>
+      <data key="trafico">22.75</data>
+      <data key="rol">principal</data>
+      <data key="ediag">30</data>
+    </edge>
+    <edge id="e156" source="CP-ODONTOLOGIA-D4" target="ODO-1A-A51">
+      <data key="elabel">D4: lag51 2.82 Mbps</data>
+      <data key="trafico">2.82</data>
+      <data key="rol">principal</data>
+      <data key="ediag">30</data>
+    </edge>
+    <edge id="e157" source="CP-ODONTOLOGIA-D4" target="ODO-0B-A52">
+      <data key="elabel">D4: lag52 14.98 Mbps</data>
+      <data key="trafico">14.98</data>
+      <data key="rol">principal</data>
+      <data key="ediag">30</data>
+    </edge>
+    <edge id="e158" source="CP-ODONTOLOGIA-D4" target="ODO-0C-A53">
+      <data key="elabel">D4: lag53 18.33 Mbps</data>
+      <data key="trafico">18.33</data>
+      <data key="rol">principal</data>
+      <data key="ediag">30</data>
+    </edge>
+    <edge id="e159" source="CP-ODONTOLOGIA-D4" target="ODO-0C-A154">
+      <data key="elabel">D4: 1/1/9 53.04 Mbps</data>
+      <data key="trafico">53.04</data>
+      <data key="rol">principal</data>
+      <data key="ediag">30</data>
+    </edge>
+    <edge id="e160" source="ODO-0B-A52" target="ODO-0B-A152">
+      <data key="elabel">A52: 1/1/52 11.77 Mbps</data>
+      <data key="trafico">11.77</data>
+      <data key="rol">principal</data>
+      <data key="ediag">30</data>
+    </edge>
+    <edge id="e161" source="ODO-0C-A53" target="ODO-0C-A153">
+      <data key="elabel">A53: lag110 14.26 Mbps</data>
+      <data key="trafico">14.26</data>
+      <data key="rol">principal</data>
+      <data key="ediag">30</data>
+    </edge>
+    <edge id="e162" source="ODO-0C-A53" target="ODO-0C-A54">
+      <data key="elabel">A53: lag111 1.56 Mbps</data>
+      <data key="trafico">1.56</data>
+      <data key="rol">principal</data>
+      <data key="ediag">30</data>
+    </edge>
+    <edge id="e163" source="CP-TECMEDICO-D3" target="TECMED-1A-A41">
+      <data key="elabel">D3: lag41 38.04 Mbps</data>
+      <data key="trafico">38.04</data>
+      <data key="rol">principal</data>
+      <data key="ediag">31</data>
+    </edge>
+    <edge id="e164" source="CP-TECMEDICO-D3" target="TECMED-0B-A42">
+      <data key="elabel">D3: lag42 29.42 Mbps</data>
+      <data key="trafico">29.42</data>
+      <data key="rol">principal</data>
+      <data key="ediag">31</data>
+    </edge>
+    <edge id="e165" source="CP-TECMEDICO-D3" target="TECMED-2C-A43">
+      <data key="elabel">D3: lag43 53.8 Mbps</data>
+      <data key="trafico">53.8</data>
+      <data key="rol">principal</data>
+      <data key="ediag">31</data>
+    </edge>
+    <edge id="e166" source="CP-TECMEDICO-D3" target="TECMED-3D-A44">
+      <data key="elabel">D3: lag44 54.63 Mbps</data>
+      <data key="trafico">54.63</data>
+      <data key="rol">principal</data>
+      <data key="ediag">31</data>
+    </edge>
+    <edge id="e167" source="TECMED-1A-A41" target="TECMED-1A-A141">
+      <data key="elabel">A41: lag110 21.7 Mbps</data>
+      <data key="trafico">21.7</data>
+      <data key="rol">principal</data>
+      <data key="ediag">31</data>
+    </edge>
+    <edge id="e168" source="CP-POSGRADO-D2" target="POS-0A-A31">
+      <data key="elabel">D2: lag31 1.87 Mbps</data>
+      <data key="trafico">1.87</data>
+      <data key="rol">principal</data>
+      <data key="ediag">32</data>
+    </edge>
+    <edge id="e169" source="CP-POSGRADO-D2" target="POS-1B-A32">
+      <data key="elabel">D2: lag32 7.82 Mbps</data>
+      <data key="trafico">7.82</data>
+      <data key="rol">principal</data>
+      <data key="ediag">32</data>
+    </edge>
+    <edge id="e170" source="CP-POSGRADO-D2" target="POS-2C-A33">
+      <data key="elabel">D2: lag33 13.57 Mbps</data>
+      <data key="trafico">13.57</data>
+      <data key="rol">principal</data>
+      <data key="ediag">32</data>
+    </edge>
+    <edge id="e171" source="CP-POSGRADO-D2" target="POSLAB-0D-A34">
+      <data key="elabel">D2: lag34 16.6 Mbps</data>
+      <data key="trafico">16.6</data>
+      <data key="rol">principal</data>
+      <data key="ediag">32</data>
+    </edge>
+    <edge id="e172" source="CP-POSGRADO-D2" target="POS-0A-A131">
+      <data key="elabel">D2: lag35 9.31 Mbps</data>
+      <data key="trafico">9.31</data>
+      <data key="rol">principal</data>
+      <data key="ediag">32</data>
+    </edge>
+    <edge id="e173" source="POS-2C-A33" target="POS-2C-A133">
+      <data key="elabel">A33: lag110 8.38 Mbps</data>
+      <data key="trafico">8.38</data>
+      <data key="rol">principal</data>
+      <data key="ediag">32</data>
+    </edge>
+    <edge id="e174" source="CP-ENFERMERIA-D1" target="ENF-2B-A22">
+      <data key="elabel">D1: lag12 48.66 Mbps</data>
+      <data key="trafico">48.66</data>
+      <data key="rol">principal</data>
+      <data key="ediag">33</data>
+    </edge>
+    <edge id="e175" source="CP-ENFERMERIA-D1" target="ENF-3A-A21">
+      <data key="elabel">D1: lag11 21.09 Mbps</data>
+      <data key="trafico">21.09</data>
+      <data key="rol">principal</data>
+      <data key="ediag">33</data>
+    </edge>
+    <edge id="e176" source="ENF-2B-A22" target="ENF-2B-A122">
+      <data key="elabel">A22: 1/1/52 51.99 Mbps</data>
+      <data key="trafico">51.99</data>
+      <data key="rol">principal</data>
+      <data key="ediag">33</data>
+    </edge>
+    <edge id="e177" source="INTERNET-MPLS" target="ROUTER-CAMPUS-HUAYNA-CAPAC">
+      <data key="elabel">Trafico MPLS 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e178" source="INTERNET-MPLS" target="ROUTER-CAMPUS-YANUNCAY">
+      <data key="elabel">Trafico MPLS 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e179" source="ROUTER-CAMPUS-HUAYNA-CAPAC" target="ROUTER-CAMPUS-PARAISO">
+      <data key="elabel">Trafico MPLS 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e180" source="INTERNET-MPLS" target="PE1-BALZAY">
+      <data key="elabel">Trafico MPLS 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e181" source="INTERNET-MPLS" target="PE2-BALZAY">
+      <data key="elabel">Trafico MPLS 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e182" source="INTERNET-MPLS" target="PE1-CENTRAL">
+      <data key="elabel">Trafico MPLS 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e183" source="INTERNET-MPLS" target="PE2-CENTRAL">
+      <data key="elabel">Trafico MPLS 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e184" source="ROUTER-CAMPUS-YANUNCAY" target="PE1-CENTRAL">
+      <data key="elabel">Trafico MPLS 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e185" source="ROUTER-CAMPUS-PARAISO" target="PE2-CENTRAL">
+      <data key="elabel">Trafico MPLS 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e186" source="PE1-BALZAY" target="PE2-CENTRAL">
+      <data key="elabel">Fibra oscura MPLS 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e187" source="PE2-BALZAY" target="PE1-CENTRAL">
+      <data key="elabel">Fibra oscura MPLS 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e188" source="PE1-BALZAY" target="PE2-BALZAY">
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e189" source="PE1-CENTRAL" target="PE2-CENTRAL">
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e190" source="PE1-BALZAY" target="FORTIGATE-1800F-BALZAY">
+      <data key="elabel">Trafico hacia internet L3 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e191" source="PE2-BALZAY" target="FORTIGATE-1800F-BALZAY">
+      <data key="elabel">Trafico hacia internet L3 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e192" source="PE1-CENTRAL" target="FORTIGATE-1800F-CENTRAL">
+      <data key="elabel">Trafico hacia internet L3 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e193" source="PE2-CENTRAL" target="FORTIGATE-1800F-CENTRAL">
+      <data key="elabel">Trafico hacia internet L3 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e194" source="FORTIGATE-1800F-BALZAY" target="DT-0A-C12">
+      <data key="elabel">LAG 2x10G red LAN L3 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e195" source="FORTIGATE-1800F-BALZAY" target="DT-0A-C13">
+      <data key="elabel">LAG 2x10G red LAN L3 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e196" source="FORTIGATE-1800F-CENTRAL" target="DATCC-2A-C2">
+      <data key="elabel">LAG 2x10G red LAN L3 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e197" source="FORTIGATE-1800F-CENTRAL" target="DATCC-2A-C3">
+      <data key="elabel">LAG 2x10G red LAN L3 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e198" source="PE2-BALZAY" target="DT-0A-C13">
+      <data key="elabel">MPLS L2 2x10 Gbps Trafico Data Center L2</data>
+      <data key="capacidad">20000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e199" source="PE2-CENTRAL" target="DATCC-2A-C3">
+      <data key="elabel">MPLS L2 2x10 Gbps Trafico Data Center L2</data>
+      <data key="capacidad">20000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e200" source="FORTIGATE-1800F-BALZAY" target="FORTIGATE-1800F-CENTRAL">
+      <data key="elabel">HA de Firewalls Perimetrales L2 1 Gbps</data>
+      <data key="capacidad">1000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e201" source="DT-0A-C12" target="ROUTER-L2TP-BALZAY">
+      <data key="elabel">L2TP 1 Gbps backup</data>
+      <data key="capacidad">1000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e202" source="DT-0A-C13" target="ROUTER-L2TP-BALZAY">
+      <data key="elabel">L2TP 1 Gbps backup</data>
+      <data key="capacidad">1000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e203" source="ROUTER-L2TP-BALZAY" target="ROUTER-CAMPUS-MUSEO">
+      <data key="elabel">L2TP 1 Gbps backup</data>
+      <data key="capacidad">1000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e204" source="ROUTER-L2TP-BALZAY" target="ROUTER-CAMPUS-CENTRO-HISTORICO">
+      <data key="elabel">L2TP 1 Gbps backup</data>
+      <data key="capacidad">1000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e205" source="ROUTER-CAMPUS-MUSEO" target="SW-ARUBA-MUSEO">
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e206" source="SW-ARUBA-MUSEO" target="DATCC-2A-C2">
+      <data key="elabel">Fibra oscura red LAN L3 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e207" source="ROUTER-CAMPUS-CENTRO-HISTORICO" target="SW-ARUBA-CENTRO-HISTORICO">
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+    <edge id="e208" source="SW-ARUBA-CENTRO-HISTORICO" target="DATCC-2A-C3">
+      <data key="elabel">Fibra oscura red LAN L3 10 Gbps</data>
+      <data key="capacidad">10000</data>
+      <data key="rol">wan</data>
+      <data key="ediag">34</data>
+    </edge>
+  </graph>
+</graphml>

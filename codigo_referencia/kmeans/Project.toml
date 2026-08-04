@@ -1,0 +1,13 @@
+name = "KMeansExample"
+uuid = "a998e757-bc9a-475a-a625-a6b204ee68f6"
+authors = ["Fabián Astudillo-Salinas <fabian.astudillo.salinas@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
+PalmerPenguins = "8b842266-38fa-440a-9b57-31493939ab85"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
