@@ -1,0 +1,8 @@
+campus,nodos_acceso,flujo_maximo_mbps,iteraciones_ff,iteraciones_ek,aristas_corte,capacidad_corte_mbps
+Campus Balzay,24,23000,23,23,23,23000
+Campus Central,56,44000,44,44,7,44000
+Campus Hospitalidad,4,4000,4,4,4,4000
+Campus Paraiso,35,1000,1,1,1,1000
+Campus Yanuncay,11,10000,10,10,1,10000
+Sede Centro Historico,1,11000,4,2,2,11000
+Sede Museo,1,11000,3,3,2,11000

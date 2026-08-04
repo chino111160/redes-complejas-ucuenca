@@ -1,0 +1,210 @@
+origen,destino,rol,capacidad_mbps,supuesto,trafico_mbps
+ROUTER-CAMPUS-YANUNCAY,AGRPRI-1A-D10,inferido,10000.0,"wan/inferido hacia la nube MPLS, asumido 10 Gbps por analogía con los enlaces MPLS documentados",0.0
+INTERNET-MPLS,HOS-0A-D05,inferido,10000.0,"wan/inferido hacia la nube MPLS, asumido 10 Gbps por analogía con los enlaces MPLS documentados",0.0
+INTERNET-MPLS,CCJ-CJURIDICO-D4,inferido,10000.0,"wan/inferido hacia la nube MPLS, asumido 10 Gbps por analogía con los enlaces MPLS documentados",0.0
+DATCC-2A-C2,DATCC-2A-C3,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",1890.0
+CC-AETUC-D30,DATCC-2A-C2,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",74.03
+CC-AETUC-D30,DATCC-2A-C3,respaldo,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",0.0
+CC-ARQUITECTURA-D107,DATCC-2A-C2,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",398.39
+CC-ARQUITECTURA-D107,DATCC-2A-C3,respaldo,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",0.0
+CC-BIBLIOTECA-D112,DATCC-2A-C2,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",458.15
+CC-BIBLIOTECA-D112,DATCC-2A-C3,respaldo,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",0.0
+CC-BLOQUE-IQ,DATCC-2A-C2,respaldo,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",0.0
+CC-BLOQUE-IQ,DATCC-2A-C3,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",494.31
+CC-PROMAS-D31,DATCC-2A-C2,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",117.47
+CC-PROMAS-D31,DATCC-2A-C3,respaldo,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",0.0
+CC-QUIMICA-D109,DATCC-2A-C2,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",103.31
+CC-QUIMICA-D109,DATCC-2A-C3,respaldo,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",0.0
+CC-ADM-D40,DATCC-2A-C2,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",100.93
+CC-ADM-D40,DATCC-2A-C3,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",82.82
+CC-FILOSOFIA-B-D111,DATCC-2A-C3,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",181.8
+CC-FILOSOFIA-B-D111,DATCC-2A-C2,respaldo,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",0.0
+CC-JURISPRUDENCIA-D110,DATCC-2A-C3,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",130.98
+CC-JURISPRUDENCIA-D110,DATCC-2A-C2,secundario,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",74.45
+CC-PSICOLOGIA-D125,DATCC-2A-C3,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",265.28
+CC-PSICOLOGIA-D125,DATCC-2A-C2,respaldo,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",0.0
+CC-FILOSOFIA-A-D108,DATCC-2A-C3,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",220.7
+CC-FILOSOFIA-A-D108,DATCC-2A-C2,respaldo,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",0.0
+CC-MONJAS-D126,DATCC-2A-C3,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",256.51
+CC-MONJAS-D126,DATCC-2A-C2,respaldo,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",0.0
+CC-ECONOMIA-D51,DATCC-2A-C3,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",346.27
+CC-ECONOMIA-D51,DATCC-2A-C2,respaldo,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",0.0
+POST-1A-A64,CC-FILOSOFIA-A-D108,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",200.42
+CC-ADM-D40,TEAT-0A-A75,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",8.2
+CC-ADM-D40,CMED-0A-A42,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",7.97
+CC-ADM-D40,CCADM-2A-A43,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",24.53
+CC-ADM-D40,CCADM-2A-A44,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",105.36
+CC-ADM-D40,CCADM-2A-A45,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",8.28
+CC-AETUC-D30,AETUC-0A-A76,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",59.19
+CC-AETUC-D30,AETUC-0A-A97,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",37.7
+AETUC-0A-A76,AETUCCF-2A-A79,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",51.9
+CC-ECONOMIA-D51,ECOK2-1A-A52,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",36.58
+CC-ECONOMIA-D51,ECOK1-1A-A101,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",5.73
+CC-ECONOMIA-D51,ECOK1-1A-A102,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",268.16
+CC-FILOSOFIA-A-D108,FILOA-0B-A56,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",39.4
+CC-FILOSOFIA-A-D108,FILOA-2A-A55,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",33.78
+CC-FILOSOFIA-B-D111,FILOB-2A-A57,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",99.58
+CC-FILOSOFIA-B-D111,FILOB-1B-A58,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",63.51
+CC-JURISPRUDENCIA-D110,JUR-0A-A59,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",11.47
+CC-JURISPRUDENCIA-D110,JUR-0A-A60,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",4.37
+CC-JURISPRUDENCIA-D110,JUR-1A-A61,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",60.21
+CC-JURISPRUDENCIA-D110,JUR-1A-A62,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",55.03
+CC-PSICOLOGIA-D125,PSIC-1A-A53,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",126.27
+CC-PSICOLOGIA-D125,PSIC-2B-A54,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",71.19
+POST-1A-A64,POST-1A-A65,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",34.23
+POST-1A-A65,POST-2A-A66,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",2.67
+CC-ARQUITECTURA-D107,ARQ-0A-A85,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",80.54
+ARQ-0A-A85,ARQ-0A-A84,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",2.94
+CC-ARQUITECTURA-D107,ARQ-0B-A87,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",9.87
+CC-ARQUITECTURA-D107,ARQ-1C-A86,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",9.98
+CC-ARQUITECTURA-D107,ARQ-1C-A96,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",51.55
+CC-ARQUITECTURA-D107,ARQ-0D-A88,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",47.14
+ARQ-0D-A88,ARQ-0D-A89,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",45.32
+CC-ARQUITECTURA-D107,ARQ-0D-A90,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",2.96
+CC-ARQUITECTURA-D107,ARQ-1E-A91,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",96.32
+ARQ-1E-A91,ARQ-1E-A92,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",96.64
+CC-ARQUITECTURA-D107,ARQ-0G-A93-CEPAUC,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",3.53
+CC-QUIMICA-D109,QUI-1A-A83,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",55.56
+CC-QUIMICA-D109,QUI-0A-A78,respaldo,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe) [miembro de par redundante]",0.0
+CC-QUIMICA-D109,QUI-2A-A82,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",2.67
+QUI-2A-A82,QUI-2A-A81,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",0.00593
+CC-PROMAS-D31,PRO-1A-A73,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",68.74
+CC-PROMAS-D31,CREDU-0B-A94,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",17.32
+PRO-1A-A73,PRO-3A-A74,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",0.0
+CC-BIBLIOTECA-D112,CCBIB-1A-A71,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",189.65
+CC-BIBLIOTECA-D112,VIN-0A-A72,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",36.32
+CC-MONJAS-D126,MON-0A-A103,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",3.82
+CC-MONJAS-D126,MON-0A-A104,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",39.99
+CC-MONJAS-D126,MON-1C-A105,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",2.76
+CC-MONJAS-D126,MON-1C-A106,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",16.36
+CC-MONJAS-D126,MON-1B-A67,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",36.31
+MON-1B-A67,MON-1B-A68,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",37.86
+CC-MONJAS-D126,ECOK3-0A-A63,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",32.03
+CC-ECONOMIA-D51,TECQUI-0A-A10,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",0.0
+TECQUI-0A-A10,TECQUI-0A-A11,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",0.0
+TECQUI-0A-A10,TECQUI-0A-A12,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",7.6
+CCJ-CJURIDICO-D4,CCJ-1A-A10,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",39.04
+CCJ-CJURIDICO-D4,CCJ-1A-A11,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",1.56
+DT-0A-C12,DT-0A-C13,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",243.03
+DT-0A-C12,BAL-AUL1-D4,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",1.64
+DT-0A-C13,BAL-AUL1-D4,secundario,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",171.71
+DT-0A-C12,BAL-AUL2-D1,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",21.06
+DT-0A-C13,BAL-AUL2-D1,secundario,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",145.25
+DT-0A-C12,BAL-CENTEC-D2,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",17.36
+DT-0A-C13,BAL-CENTEC-D2,secundario,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",58.16
+DT-0A-C12,CB-EADMI-D6,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",7.18
+DT-0A-C13,CB-EADMI-D6,secundario,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1) [miembro de par redundante]",76.66
+BAL-AUL2-D1,MICRORED-1A-A109,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",11.02
+BAL-CENTEC-D2,CEA-0A-A108,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",4.99
+BAL-CENTEC-D2,VLIR-0A-A107,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",13.75
+CB-EADMI-D6,BAL-EADM-D3,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",19.63
+BAL-AUL1-D4,AUL1-2A-A110,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",65.9
+BAL-AUL1-D4,AUL1-2A-A111,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",77.62
+BAL-AUL1-D4,AUL1-3A-A112,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",29.78
+BAL-AUL1-D4,AUL1-3A-A104,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",84.67
+BAL-AUL2-D1,AUL2-0A-A106,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",68.5
+BAL-AUL2-D1,AUL2-0A-A122,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",1.22
+BAL-AUL2-D1,AUL2-0A-A121,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",81.71
+BAL-AUL2-D1,AUL2-0A-A119,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",1.33
+BAL-AUL2-D1,AUL2-0A-A118,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",2.69
+BAL-AUL2-D1,AUL2-0A-A120,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",5.03
+BAL-AUL2-D1,AUL2-0A-A123,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",1.35
+BAL-AUL2-D1,AUL2-01A-A124-SUBLAB2,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",25.46
+BAL-AUL2-D1,AUL2-01A-A24-SUB,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",78.4
+BAL-CENTEC-D2,CTBLOQ1-0A-A101,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",5.65
+BAL-CENTEC-D2,CTBLOQ2-0A-A102,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",22.29
+BAL-CENTEC-D2,CTBLOQ3-0A-A103,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",12.91
+CB-EADMI-D6,EA-1A-A115,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",50.53
+CB-EADMI-D6,EA-0A-A114,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",20.91
+CB-EADMI-D6,EA-1A-A116,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",1.86
+BAL-EADM-D3,QUIN-1A-A117,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",54.06
+QUIN-1A-A117,QUIN-1A-A128,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",0.0
+AGRPRI-1A-D10,TALL-0A-A12,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",10.56
+AGRPRI-1A-D10,DAN-1A-A11,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",10.28
+AGRPRI-1A-D10,LABMAC-1A-A13,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",19.07
+AGRPRI-1A-D10,ART-0A-A15,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",40.41
+AGRPRI-1A-D10,BLOQUED-0A-A21,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",9.74
+AGRPRI-1A-D10,BIB-2A-A16,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",68.33
+AGRPRI-1A-D10,LAC-0A-A17,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",11.7
+AGRPRI-1A-D10,LAB-1A-A18,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",17.54
+AGRPRI-1A-D10,AGRPRI-1A-A19,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",30.48
+AGRPRI-1A-D10,ANF-0A-A14,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",6.44
+AGRPRI-1A-D10,CEN-1A-A20,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",5.32
+HOS-0A-D05,HOS-0A-A10,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",26.42
+HOS-0A-D05,HOS-2A-A11,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",91.33
+HOS-0A-D05,HOS-1A-A12,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",50.77
+HOS-0A-D05,HOS-0A-A13,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",21.7
+CPAR-C10,ROUTER-CAMPUS-HUAYNA-CAPAC,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",317.83
+CPAR-C10,CP-EADMINA1-D6,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",76.7
+CPAR-C10,CP-INVESTIGACION-D5,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",84.7
+CPAR-C10,CP-ENFERMERIA-D1,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",147.9
+CPAR-C10,CP-TECMEDICO-D3,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",113.56
+CPAR-C10,CP-POSGRADO-D2,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",40.79
+CPAR-C10,CP-ODONTOLOGIA-D4,principal,10000.0,"troncal core-agregacion, 10 Gbps (informe, cap. 2.1)",216.33
+CP-EADMINA1-D6,MEDADM-1A-A11,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",26.87
+CP-EADMINA1-D6,MEDADM-1B-A12,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",1.77
+CP-EADMINA1-D6,MEDADM-1C-A13,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",1.77
+CP-EADMINA1-D6,MEDADM-1D-A14,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",20.96
+CP-EADMINA1-D6,MEDADM-1E-A15,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",1.77
+CP-EADMINA1-D6,MEDADM-0F-A16,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",35.48
+CP-EADMINA1-D6,MEDADM-0G-A17,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",2.33
+CP-EADMINA1-D6,MEDADM-1H-A18,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",11.62
+CP-INVESTIGACION-D5,INV-1A-A61,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",1.65
+CP-INVESTIGACION-D5,INV-1A-A161,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",51.44
+CP-INVESTIGACION-D5,CENDIA-0A-A19,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",6.65
+CP-INVESTIGACION-D5,INV-1B-A62,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",61.87
+INV-1B-A62,INV-1B-A162,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",54.09
+CP-ODONTOLOGIA-D4,ODO-1A-A151,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",22.75
+CP-ODONTOLOGIA-D4,ODO-1A-A51,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",2.82
+CP-ODONTOLOGIA-D4,ODO-0B-A52,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",14.98
+CP-ODONTOLOGIA-D4,ODO-0C-A53,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",18.33
+CP-ODONTOLOGIA-D4,ODO-0C-A154,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",53.04
+ODO-0B-A52,ODO-0B-A152,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",11.77
+ODO-0C-A53,ODO-0C-A153,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",14.26
+ODO-0C-A53,ODO-0C-A54,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",1.56
+CP-TECMEDICO-D3,TECMED-1A-A41,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",38.04
+CP-TECMEDICO-D3,TECMED-0B-A42,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",29.42
+CP-TECMEDICO-D3,TECMED-2C-A43,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",53.8
+CP-TECMEDICO-D3,TECMED-3D-A44,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",54.63
+TECMED-1A-A41,TECMED-1A-A141,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",21.7
+CP-POSGRADO-D2,POS-0A-A31,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",1.87
+CP-POSGRADO-D2,POS-1B-A32,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",7.82
+CP-POSGRADO-D2,POS-2C-A33,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",13.57
+CP-POSGRADO-D2,POSLAB-0D-A34,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",16.6
+CP-POSGRADO-D2,POS-0A-A131,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",9.31
+POS-2C-A33,POS-2C-A133,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",8.38
+CP-ENFERMERIA-D1,ENF-2B-A22,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",48.66
+CP-ENFERMERIA-D1,ENF-3A-A21,principal,1000.0,"agregacion-acceso, asumido 1 Gbps (uplink Ethernet estandar, no documentado por el informe)",21.09
+ENF-2B-A22,ENF-2B-A122,principal,1000.0,"capa no troncal, asumido 1 Gbps por defecto",51.99
+INTERNET-MPLS,ROUTER-CAMPUS-HUAYNA-CAPAC,wan,10000.0,documentada (diagrama MPLS),0.0
+INTERNET-MPLS,ROUTER-CAMPUS-YANUNCAY,wan,10000.0,documentada (diagrama MPLS),0.0
+ROUTER-CAMPUS-HUAYNA-CAPAC,ROUTER-CAMPUS-PARAISO,wan,10000.0,documentada (diagrama MPLS),0.0
+INTERNET-MPLS,PE1-BALZAY,wan,10000.0,documentada (diagrama MPLS),0.0
+INTERNET-MPLS,PE2-BALZAY,wan,10000.0,documentada (diagrama MPLS),0.0
+INTERNET-MPLS,PE1-CENTRAL,wan,10000.0,documentada (diagrama MPLS),0.0
+INTERNET-MPLS,PE2-CENTRAL,wan,10000.0,documentada (diagrama MPLS),0.0
+ROUTER-CAMPUS-YANUNCAY,PE1-CENTRAL,wan,10000.0,documentada (diagrama MPLS),0.0
+ROUTER-CAMPUS-PARAISO,PE2-CENTRAL,wan,10000.0,documentada (diagrama MPLS),0.0
+PE1-BALZAY,PE2-CENTRAL,wan,10000.0,documentada (diagrama MPLS),0.0
+PE2-BALZAY,PE1-CENTRAL,wan,10000.0,documentada (diagrama MPLS),0.0
+PE1-BALZAY,PE2-BALZAY,wan,10000.0,"wan/inferido hacia la nube MPLS, asumido 10 Gbps por analogía con los enlaces MPLS documentados",0.0
+PE1-CENTRAL,PE2-CENTRAL,wan,10000.0,"wan/inferido hacia la nube MPLS, asumido 10 Gbps por analogía con los enlaces MPLS documentados",0.0
+PE1-BALZAY,FORTIGATE-1800F-BALZAY,wan,10000.0,documentada (diagrama MPLS),0.0
+PE2-BALZAY,FORTIGATE-1800F-BALZAY,wan,10000.0,documentada (diagrama MPLS),0.0
+PE1-CENTRAL,FORTIGATE-1800F-CENTRAL,wan,10000.0,documentada (diagrama MPLS),0.0
+PE2-CENTRAL,FORTIGATE-1800F-CENTRAL,wan,10000.0,documentada (diagrama MPLS),0.0
+FORTIGATE-1800F-BALZAY,DT-0A-C12,wan,10000.0,documentada (diagrama MPLS),0.0
+FORTIGATE-1800F-BALZAY,DT-0A-C13,wan,10000.0,documentada (diagrama MPLS),0.0
+FORTIGATE-1800F-CENTRAL,DATCC-2A-C2,wan,10000.0,documentada (diagrama MPLS),0.0
+FORTIGATE-1800F-CENTRAL,DATCC-2A-C3,wan,10000.0,documentada (diagrama MPLS),0.0
+PE2-BALZAY,DT-0A-C13,wan,20000.0,documentada (diagrama MPLS),0.0
+PE2-CENTRAL,DATCC-2A-C3,wan,20000.0,documentada (diagrama MPLS),0.0
+FORTIGATE-1800F-BALZAY,FORTIGATE-1800F-CENTRAL,wan,1000.0,documentada (diagrama MPLS),0.0
+DT-0A-C12,ROUTER-L2TP-BALZAY,wan,1000.0,documentada (diagrama MPLS),0.0
+DT-0A-C13,ROUTER-L2TP-BALZAY,wan,1000.0,documentada (diagrama MPLS),0.0
+ROUTER-L2TP-BALZAY,ROUTER-CAMPUS-MUSEO,wan,1000.0,documentada (diagrama MPLS),0.0
+ROUTER-L2TP-BALZAY,ROUTER-CAMPUS-CENTRO-HISTORICO,wan,1000.0,documentada (diagrama MPLS),0.0
+ROUTER-CAMPUS-MUSEO,SW-ARUBA-MUSEO,wan,10000.0,"wan/inferido hacia la nube MPLS, asumido 10 Gbps por analogía con los enlaces MPLS documentados",0.0
+SW-ARUBA-MUSEO,DATCC-2A-C2,wan,10000.0,documentada (diagrama MPLS),0.0
+ROUTER-CAMPUS-CENTRO-HISTORICO,SW-ARUBA-CENTRO-HISTORICO,wan,10000.0,"wan/inferido hacia la nube MPLS, asumido 10 Gbps por analogía con los enlaces MPLS documentados",0.0
+SW-ARUBA-CENTRO-HISTORICO,DATCC-2A-C3,wan,10000.0,documentada (diagrama MPLS),0.0
