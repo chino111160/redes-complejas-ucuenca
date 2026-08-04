@@ -1,0 +1,14 @@
+métrica,valor
+Nodos,177.0
+Aristas,209.0
+Densidad,0.0134
+Componentes conexas,1.0
+Grado medio,2.36
+Grado máximo,17.0
+Grado mínimo,1.0
+Clustering medio,0.0952
+Diámetro,11.0
+Distancia media,5.83
+Asortatividad por grado,-0.1468
+Puntos de articulación,47.0
+Puentes,141.0
