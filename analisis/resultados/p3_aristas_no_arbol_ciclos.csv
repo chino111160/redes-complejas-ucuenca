@@ -1,0 +1,34 @@
+origen,destino,campus_origen,campus_destino
+BAL-AUL2-D1,DT-0A-C12,Campus Balzay,Campus Balzay
+BAL-CENTEC-D2,DT-0A-C12,Campus Balzay,Campus Balzay
+CB-EADMI-D6,DT-0A-C12,Campus Balzay,Campus Balzay
+CC-AETUC-D30,DATCC-2A-C2,Campus Central,Campus Central
+CC-ARQUITECTURA-D107,DATCC-2A-C2,Campus Central,Campus Central
+CC-BIBLIOTECA-D112,DATCC-2A-C2,Campus Central,Campus Central
+CC-BLOQUE-IQ,DATCC-2A-C2,Campus Central,Campus Central
+CC-ECONOMIA-D51,DATCC-2A-C2,Campus Central,Campus Central
+CC-FILOSOFIA-A-D108,DATCC-2A-C2,Campus Central,Campus Central
+CC-FILOSOFIA-B-D111,DATCC-2A-C2,Campus Central,Campus Central
+CC-JURISPRUDENCIA-D110,DATCC-2A-C2,Campus Central,Campus Central
+CC-MONJAS-D126,DATCC-2A-C2,Campus Central,Campus Central
+CC-PROMAS-D31,DATCC-2A-C2,Campus Central,Campus Central
+CC-PSICOLOGIA-D125,DATCC-2A-C2,Campus Central,Campus Central
+CC-QUIMICA-D109,DATCC-2A-C2,Campus Central,Campus Central
+DATCC-2A-C2,DATCC-2A-C3,Campus Central,Campus Central
+DATCC-2A-C2,FORTIGATE-1800F-CENTRAL,Campus Central,Campus Central
+DATCC-2A-C2,SW-ARUBA-MUSEO,Campus Central,Sede Museo
+DATCC-2A-C3,PE2-CENTRAL,Campus Central,Campus Central
+DATCC-2A-C3,SW-ARUBA-CENTRO-HISTORICO,Campus Central,Sede Centro Historico
+DT-0A-C12,DT-0A-C13,Campus Balzay,Campus Balzay
+DT-0A-C12,ROUTER-L2TP-BALZAY,Campus Balzay,Campus Balzay
+DT-0A-C13,FORTIGATE-1800F-BALZAY,Campus Balzay,Campus Balzay
+FORTIGATE-1800F-BALZAY,PE1-BALZAY,Campus Balzay,Campus Balzay
+FORTIGATE-1800F-BALZAY,PE2-BALZAY,Campus Balzay,Campus Balzay
+FORTIGATE-1800F-CENTRAL,PE1-CENTRAL,Campus Central,Campus Central
+FORTIGATE-1800F-CENTRAL,PE2-CENTRAL,Campus Central,Campus Central
+INTERNET-MPLS,PE1-CENTRAL,Nube MPLS,Campus Central
+INTERNET-MPLS,PE2-CENTRAL,Nube MPLS,Campus Central
+INTERNET-MPLS,ROUTER-CAMPUS-HUAYNA-CAPAC,Nube MPLS,Campus Paraiso
+INTERNET-MPLS,ROUTER-CAMPUS-YANUNCAY,Nube MPLS,Campus Yanuncay
+PE1-BALZAY,PE2-BALZAY,Campus Balzay,Campus Balzay
+PE1-CENTRAL,PE2-BALZAY,Campus Central,Campus Balzay

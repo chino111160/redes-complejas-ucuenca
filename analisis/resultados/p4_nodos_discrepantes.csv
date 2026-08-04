@@ -1,0 +1,12 @@
+id,campus_propio,comunidad,campus_dominante_de_su_comunidad
+FORTIGATE-1800F-CENTRAL,Campus Central,21,Campus Balzay
+INTERNET-MPLS,Nube MPLS,21,Campus Balzay
+PE1-CENTRAL,Campus Central,21,Campus Balzay
+PE2-CENTRAL,Campus Central,21,Campus Balzay
+ROUTER-CAMPUS-CENTRO-HISTORICO,Sede Centro Historico,22,Campus Central
+ROUTER-CAMPUS-HUAYNA-CAPAC,Campus Paraiso,21,Campus Balzay
+ROUTER-CAMPUS-MUSEO,Sede Museo,17,Campus Balzay
+ROUTER-CAMPUS-PARAISO,Campus Paraiso,21,Campus Balzay
+ROUTER-CAMPUS-YANUNCAY,Campus Yanuncay,21,Campus Balzay
+SW-ARUBA-CENTRO-HISTORICO,Sede Centro Historico,22,Campus Central
+SW-ARUBA-MUSEO,Sede Museo,17,Campus Balzay
