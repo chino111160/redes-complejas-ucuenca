@@ -1,4 +1,4 @@
-# Artefactos de compilación de LaTeX (se regeneran con xelatex informe.tex)
+# Artefactos de compilación de LaTeX (se regeneran con xelatex)
 informe/*.aux
 informe/*.log
 informe/*.out
@@ -6,6 +6,15 @@ informe/*.toc
 informe/*.fls
 informe/*.fdb_latexmk
 informe/*.synctex.gz
+diapositivas/*.aux
+diapositivas/*.log
+diapositivas/*.out
+diapositivas/*.toc
+diapositivas/*.nav
+diapositivas/*.snm
+diapositivas/*.fls
+diapositivas/*.fdb_latexmk
+diapositivas/*.synctex.gz
 
 # Basura del sistema operativo
 .DS_Store
