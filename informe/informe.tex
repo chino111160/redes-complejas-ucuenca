@@ -1,0 +1,1153 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage[spanish,es-noindentfirst]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\definecolor{azulucuenca}{RGB}{0,42,84}
+\definecolor{rojoucuenca}{RGB}{180,30,30}
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{azulucuenca}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{azulucuenca}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalfont\bfseries}{\thesubsubsection}{1em}{}
+
+\hypersetup{
+  colorlinks=true, linkcolor=azulucuenca, citecolor=azulucuenca,
+  urlcolor=rojoucuenca, pdftitle={Análisis de Redes Complejas -- Red UCuenca},
+  pdfauthor={Efrain Adolfo Alvarado Plasencia}
+}
+
+\graphicspath{{../analisis/figuras/}}
+\sloppy
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\textcolor{rojoucuenca}{\textbf{PROYECTO: RED UCUENCA}}}
+\fancyhead[R]{\small\textcolor{azulucuenca}{UNIVERSIDAD DE CUENCA}}
+\fancyfoot[C]{\thepage}
+
+\newcommand{\code}[1]{\texttt{\small #1}}
+
+\begin{document}
+
+% ================================================================
+\begin{titlepage}
+\begin{center}
+{\Large\textbf{\textcolor{azulucuenca}{UNIVERSIDAD DE CUENCA}}}\\[2mm]
+{\large Maestría en Ciencias de la Ingeniería Eléctrica --- IV Cohorte}\\[1mm]
+{\large Módulo 1217 --- Redes Complejas}\\[15mm]
+
+{\large\textsc{Proyecto integrador del módulo}}\\[6mm]
+
+{\Huge\bfseries\textcolor{azulucuenca}{Análisis de Redes Complejas}}\\[4mm]
+{\Large\bfseries Caso de estudio: la red de datos\\ de la Universidad de Cuenca}\\[6mm]
+
+{\normalsize 177 nodos y 209 enlaces reconstruidos a partir de los 34 diagramas\\
+del informe técnico de topologías y conexiones de red}\\[20mm]
+
+\begin{tabular}{ll}
+\textbf{Integrante:} & Efrain Adolfo Alvarado Plasencia \\
+\textbf{Correo institucional:} & \href{mailto:efrain.alvarado@ucuenca.edu.ec}{efrain.alvarado@ucuenca.edu.ec} \\
+\end{tabular}\\[15mm]
+
+\textbf{Docente:} Dr. Fabián Astudillo-Salinas\\[10mm]
+
+\vfill
+
+{\large Cuenca, Ecuador\\ Agosto de 2026}
+\end{center}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ================================================================
+\section*{Resumen ejecutivo}
+\addcontentsline{toc}{section}{Resumen ejecutivo}
+
+\textbf{Problema.} La red de datos de la Universidad de Cuenca (177 equipos,
+209 enlaces, seis campus interconectados por una nube MPLS) se modela y
+diagnostica con herramientas de teoría de grafos y redes complejas, para
+responder: \emph{¿cuáles son los puntos críticos de la red, qué tan grave
+sería su falla, y qué intervenciones concretas mejorarían más su robustez y
+desempeño?}
+
+\textbf{Método.} Se recorrieron las cinco fases del módulo sobre el grafo
+real reconstruido: caracterización estructural y contraste con modelos
+nulos (Fase 1); recorridos BFS/DFS y partición por comunidades con Louvain
+y \mbox{$k$-means} espectral (Fase 2); caminos más cortos, flujo máximo/costo
+mínimo y localización de instalaciones (Fase 3); percolación, cascadas de
+fallos y epidemias (Fase 4); y una propuesta de rediseño acotada a cinco
+intervenciones (Fase 5). Todo el código (Julia) es reproducible desde
+\code{analisis/scripts/}, reutilizando el código base y el código de
+referencia del módulo (Ford-Fulkerson, Edmonds-Karp, \mbox{$k$-means}).
+
+\textbf{Tres hallazgos principales.}
+\begin{enumerate}[leftmargin=1.3em]
+  \item \textbf{Campus Paraíso no tiene la redundancia que el informe
+    técnico le atribuye.} A pesar de tener 35 equipos de acceso (el segundo
+    campus más grande), su flujo máximo hacia Internet/MPLS es de apenas
+    \textbf{1\,000 Mbps} --- el más bajo de la institución, muy por debajo de
+    Central (44\,000) o Balzay (23\,000) --- porque su único \emph{core}
+    (\code{CPAR-C10}) sale por un \textbf{único} enlace de 1 Gbps.
+  \item \textbf{La red es robusta ante fallos aleatorios pero extremadamente
+    frágil ante ataques dirigidos.} El umbral de percolación cae de
+    $f_c\approx0.237$ (fallo aleatorio) a $f_c\approx0.02$--$0.05$ (ataque por
+    grado o intermediación): eliminar deliberadamente el 5\,\% de los nodos
+    correctos desconecta la mitad de la red.
+  \item \textbf{47 puntos de articulación y 141 puentes} (el 67{,}5\,\% de
+    los enlaces) sostienen una red con clustering casi nulo (0{,}095) y
+    asortatividad negativa (-0{,}147): una jerarquía \emph{core-agregación-
+    acceso} con muy poca redundancia estructural fuera del núcleo.
+\end{enumerate}
+
+\textbf{Recomendación.} Con cinco intervenciones acotadas (Sección
+\ref{sec:fase5}) --- duplicar el enlace de Paraíso, dar una segunda ruta a
+Hospitalidad, al Consultorio Jurídico y a Yanuncay, y mitigar el punto más
+cargado de Balzay --- el flujo máximo de Paraíso se multiplica por diez,
+los puentes bajan un 2{,}1\,\% y la eficiencia global sube un 3{,}5\,\%,
+superando claramente a dos alternativas ingenuas de referencia (conectar
+los nodos de mayor grado, o cinco enlaces al azar).
+
+\newpage
+
+% ================================================================
+\section{Introducción}
+
+Este informe documenta el proyecto integrador del módulo de Redes
+Complejas (1217), que aplica de principio a fin la teoría de grafos, las
+medidas de redes complejas, los algoritmos de recorrido, partición y
+optimización, y la teoría de percolación sobre una red real de
+infraestructura: la red de datos de la Universidad de Cuenca.
+
+\subsection{El caso de estudio}
+
+El informe técnico institucional \emph{``Diagramas de red final''} documenta,
+mediante 34 diagramas (\emph{weathermaps} de monitoreo más el diagrama de
+interconexión MPLS), la topología de los seis campus de la Universidad
+(Central, Balzay, Yanuncay, Hospitalidad, Paraíso, y las sedes Museo y
+Centro Histórico). A partir de esos diagramas se reconstruyó un grafo
+\textbf{simple, no dirigido y conexo}: 177 nodos y 209 aristas, saneado de
+61 inconsistencias de la transcripción original (identificadores
+duplicados, aristas repetidas, un atributo que mezclaba tráfico con
+capacidad). El grafo está organizado jerárquicamente en tres capas
+(\emph{core}, agregación, acceso) más los equipos de interconexión WAN y los
+firewalls perimetrales.
+
+\subsection{Preguntas que se responden}
+
+Cada fase del proyecto (secciones \ref{sec:fase1}--\ref{sec:fase5}) resuelve
+un subconjunto de los once problemas del enunciado (P1--P11) y se apoya en
+los resultados de la fase anterior. La pregunta que amarra las cinco fases
+es la que abre el enunciado del proyecto: \emph{¿cuáles son los puntos
+críticos de la red, qué tan grave sería su falla, y qué intervenciones
+concretas --- acotadas en número y justificadas con métricas --- mejorarían
+más su robustez y su desempeño?} Las conclusiones de cada sección van
+respondiendo piezas de esa pregunta; la Sección \ref{sec:conclusiones}
+las integra.
+
+\subsection{Reproducibilidad}
+
+Todos los números de este informe se generan ejecutando, en orden,
+los cinco scripts de \code{analisis/scripts/} (documentado en
+\code{analisis/README.md}); cada script verifica automáticamente la carga
+de datos contra los valores de referencia del Anexo A del enunciado antes
+de calcular nada. Las tablas y figuras completas están en
+\code{analisis/resultados/} y \code{analisis/figuras/}.
+
+\newpage
+% ================================================================
+\section{Caracterización estructural (Fase 1)}
+\label{sec:fase1}
+
+\subsection{P1 --- Medidas fundamentales}
+
+\subsubsection{Medidas globales}
+
+\begin{table}[H]
+\centering
+\caption{Medidas globales de la red UCuenca}
+\begin{tabular}{lr}
+\toprule
+Métrica & Valor \\
+\midrule
+Nodos & 177 \\
+Aristas & 209 \\
+Densidad & 0{,}0134 \\
+Componentes conexas & 1 (tamaño 177) \\
+Grado medio / máximo / mínimo & 2{,}36 / 17 / 1 \\
+Clustering medio & 0{,}0952 \\
+Diámetro & 11 \\
+Distancia media & 5{,}83 \\
+Asortatividad por grado & $-0{,}1468$ \\
+Puntos de articulación & 47 \\
+Puentes & 141 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Con densidad 0{,}0134, la red es extremadamente dispersa: un nodo típico
+tiene 2 o 3 vecinos, muy lejos de los $\binom{176}{1}$ enlaces posibles.
+Esto es exactamente lo esperable de una red de infraestructura jerárquica
+--- no de una red social ni de una red aleatoria densa --- y explica de raíz
+por qué el clustering medio (0{,}0952) es tan bajo comparado con una red
+social típica ($C\sim0{,}3$--$0{,}6$): en una jerarquía \emph{core-agregación-
+acceso}, los vecinos de un equipo de acceso son casi siempre su switch de
+agregación y, quizás, un enlace de respaldo --- casi nunca dos vecinos que
+también son vecinos entre sí (que es lo que mide el clustering).
+
+La asortatividad negativa ($-0{,}1468$) confirma la misma lectura desde
+otro ángulo: en esta red, los nodos de alto grado (los \emph{core} y
+agregación) tienden a conectarse con nodos de bajo grado (equipos de
+acceso), no entre sí --- el patrón \emph{disortativo} típico de una
+jerarquía estrella-de-estrellas, y lo opuesto de lo que se vería en una red
+social (donde los \emph{hubs} suelen conectarse entre ellos).
+
+\subsubsection{Distribución de grado}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{p1_distribucion_grado.png}
+\caption{Distribución de grado de la red UCuenca: histograma (izq.) y
+escala log-log (der.).}
+\label{fig:distribucion_grado}
+\end{figure}
+
+Un ajuste exploratorio de ley de potencias sobre la cola ($k\geq2$, el
+percentil 75 de la distribución) da un exponente $\alpha\approx2{,}04$. Sin
+embargo, con $n=177$ la muestra es demasiado pequeña para afirmar
+\textbf{``red libre de escala''} sin una prueba formal: haría falta el
+procedimiento de Clauset, Shalizi y Newman (2009) --- bondad de ajuste por
+Kolmogorov-Smirnov y comparación por razón de verosimilitud contra
+alternativas (log-normal, exponencial) --- que no se ejecuta aquí porque el
+tamaño de muestra no lo justifica. Lo que sí es indiscutible en los datos
+es la \textbf{heterogeneidad de grado}: el grado máximo (17, en
+\code{DATCC-2A-C3}) es más de siete veces el grado medio, y esa
+heterogeneidad basta para explicar buena parte de las propiedades
+estructurales de la red (Sección \ref{sec:p2}).
+
+\subsubsection{Centralidades}
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{Top-10 por las cuatro centralidades (grado, cercanía, intermediación, vector propio)}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{clclclcl}
+\toprule
+\# & Grado & Val. & Cercanía & Val. & Intermediación & Val. & Vector propio \\
+\midrule
+1 & DATCC-2A-C3 & 17 & INTERNET-MPLS & 0{,}276 & DATCC-2A-C3 & 0{,}447 & DATCC-2A-C3 \\
+2 & DATCC-2A-C2 & 16 & DATCC-2A-C3 & 0{,}268 & CPAR-C10 & 0{,}404 & DATCC-2A-C2 \\
+3 & AGRPRI-1A-D10 & 12 & PE2-CENTRAL & 0{,}267 & ROUTER-HUAYNA-CAPAC & 0{,}366 & FORTIGATE-CENTRAL \\
+4 & BAL-AUL2-D1 & 12 & FORTIGATE-CENTRAL & 0{,}260 & INTERNET-MPLS & 0{,}366 & CC-ARQUITECTURA-D107 \\
+5 & CC-ARQUITECTURA-D107 & 10 & PE1-CENTRAL & 0{,}256 & PE2-CENTRAL & 0{,}288 & CC-MONJAS-D126 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\emph{(top-10 completo en \code{p1\_centralidades\_top10.csv})}. Solo
+\textbf{4 de los 10} nodos de mayor grado coinciden con el top-10 de
+intermediación: el grado mide cuántos vecinos DIRECTOS tiene un equipo (un
+switch de agregación con muchos puertos ocupados), mientras que la
+intermediación mide por cuántos caminos MÍNIMOS entre terceros pasa un
+nodo (los \emph{core} y los \emph{routers} de interconexión, que están en
+el único camino posible entre campus). Son roles distintos: un switch de
+agregación de alto grado (\code{BAL-AUL2-D1}) es crítico para \emph{sus}
+equipos de acceso, pero no está en el camino de nadie más; un \emph{core}
+(\code{DATCC-2A-C3}, \code{CPAR-C10}) sí.
+
+\subsubsection{Puentes y puntos de articulación}
+
+De las 209 aristas, \textbf{141 (67{,}5\,\%) son puentes} y \textbf{47 de
+los 177 nodos son puntos de articulación}. Por campus, la mayoría se
+concentra en Campus Central (113 puentes, 23 puntos de articulación) y
+Paraíso (84 puentes, 14 puntos de articulación) simplemente porque son los
+campus con más equipos; en términos relativos, la fracción de aristas que
+son puentes es muy alta en TODOS los campus, consistente con el patrón de
+``árbol con pocas redundancias'' visto en clustering y asortatividad.
+
+\subsubsection{Contraste con el informe técnico}
+
+El informe técnico (cap. 2.1 del enunciado) afirma que \textbf{Balzay y
+Paraíso} implementan ``redundancia física completa'' \emph{core}-agregación,
+mientras que Central tiene enlaces simples en esa capa. Contando en los
+datos cuántos nodos de agregación tienen dos o más enlaces hacia un nodo
+\code{core}:
+
+\begin{table}[H]
+\centering
+\caption{Redundancia \emph{core}-agregación real, por campus (P1.6)}
+\begin{tabular}{lrrr}
+\toprule
+Campus & Con redundancia ($\geq$2 enlaces) & Enlace simple & Total \\
+\midrule
+Campus Balzay & 4 & 0 & 5 \\
+Campus Central & 13 & 0 & 14 \\
+Campus Paraíso & 0 & 6 & 6 \\
+Campus Yanuncay & 0 & 0 & 1 \\
+Campus Hospitalidad & 0 & 0 & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Los datos \textbf{confirman} la redundancia de Balzay (los 5 nodos de
+agregación con datos concluyentes tienen doble enlace a
+\code{DT-0A-C12}/\code{DT-0A-C13}) y \textbf{refutan} la de Paraíso: sus 6
+nodos de agregación tienen un único enlace, todos hacia el mismo core
+(\code{CPAR-C10}) --- es agregación de puertos, no redundancia de núcleo.
+Sorprendentemente, Campus Central --- que el informe describe con enlaces
+simples --- muestra redundancia real en los 13 nodos de agregación medidos
+(doblemente conectados a \code{DATCC-2A-C2} y \code{DATCC-2A-C3}); el
+informe probablemente se refiere solo a la capa agregación-acceso, donde
+sí hay enlaces simples generalizados. Esta discrepancia con Paraíso es la
+base directa de la primera intervención de la Sección \ref{sec:fase5}.
+
+\subsection{P2 --- Modelos nulos y visualización}
+\label{sec:p2}
+
+\begin{table}[H]
+\centering
+\caption{Red real vs.\ 100 realizaciones de dos modelos nulos (media $\pm$ desv.\ estándar)}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrr}
+\toprule
+Modelo & Clustering & Dist.\ media & Diámetro & Asortatividad \\
+\midrule
+UCuenca (real) & 0{,}0952 & 5{,}830 & 11{,}0 & $-0{,}1468$ \\
+Erdős--Rényi $G(n,m)$ & 0{,}0147 $\pm$ 0{,}0089 & 5{,}584 $\pm$ 0{,}247 & 13{,}2 $\pm$ 1{,}4 & $-0{,}0112$ $\pm$ 0{,}069 \\
+Configuración (grados exactos) & 0{,}0472 $\pm$ 0{,}0151 & 4{,}168 $\pm$ 0{,}139 & 9{,}2 $\pm$ 1{,}0 & $-0{,}0290$ $\pm$ 0{,}065 \\
+Barabási--Albert ($k=1$) & 0{,}0000 & 5{,}040 & 13 & $-0{,}2335$ \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+El clustering real (0{,}0952) está a más de 5 desviaciones estándar por
+encima de Erdős--Rényi (0{,}0147), y sigue por encima incluso del modelo de
+\textbf{configuración} (0{,}0472), que sí preserva la secuencia de grados
+exacta. Conclusión: la heterogeneidad de grados por sí sola (el modelo de
+configuración) explica gran parte de la diferencia con ER, pero NO todo el
+clustering observado --- queda un componente adicional que solo puede venir
+de la topología real (los enlaces de respaldo y agregación de puertos
+crean triángulos deliberados, no accidentales). La distancia media real
+(5{,}83) es, en cambio, MÁS ALTA que ambos modelos nulos: la jerarquía
+estricta obliga a más saltos de los que la sola secuencia de grados
+predeciría.
+
+Barabási--Albert, con $n$ y $m$ comparables, da clustering exactamente
+\textbf{cero} y la asortatividad más negativa de los cuatro modelos. Tiene
+sentido: una red de infraestructura física NO crece por conexión
+preferencial (``quien ya tiene más puertos ocupados recibe el próximo
+cable''), sino que cada equipo se conecta a la posición que le corresponde
+en una jerarquía diseñada de antemano --- el mecanismo generador es
+completamente distinto, y las diferencias en la tabla lo reflejan.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{p2_red_por_campus.png}
+\caption{Red UCuenca, layout de resortes (Fruchterman-Reingold vía
+NetworkLayout.jl), coloreada por campus.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{p2_red_por_intermediacion.png}
+\caption{Red UCuenca, tamaño de nodo proporcional a la intermediación
+(betweenness). Los \emph{core} y routers de interconexión dominan
+visualmente, confirmando la tabla de centralidades.}
+\end{figure}
+
+\newpage
+% ================================================================
+\section{Recorridos y comunidades (Fase 2)}
+\label{sec:fase2}
+
+\subsection{P3 --- BFS y DFS}
+
+Se implementaron BFS (cola FIFO) y DFS (pila explícita, iterativo para no
+depender del límite de recursión de Julia) desde cero, ambos O($V+E$) sobre
+listas de adyacencia, y verificados contra \code{Graphs.jl} (mismas
+distancias / mismo conjunto de nodos visitados).
+
+\subsubsection{Perfil de profundidad}
+
+\begin{table}[H]
+\centering
+\caption{Nodos por distancia BFS desde el core de Campus Central (\code{DATCC-2A-C2})}
+\begin{tabular}{rrrrrrrrr}
+\toprule
+Distancia & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+\midrule
+Nodos & 1 & 16 & 48 & 19 & 9 & 41 & 7 & 29 (+7 a dist.\ 8)\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Si la jerarquía \emph{core(0)-agregación(1)-acceso(2)} declarada por el
+informe se cumpliera al pie de la letra, casi todos los nodos deberían
+quedar a distancia $\leq2$. Solo 65 de 177 (37\,\%) lo hacen: hay una cola
+larga hasta distancia 8, producida por los campus remotos (Paraíso,
+Yanuncay, Hospitalidad) que solo llegan al core de Central atravesando la
+nube MPLS --- varios saltos WAN adicionales que la jerarquía de 3 capas no
+contempla porque describe un solo campus, no la institución completa.
+
+Repitiendo el BFS desde \code{INTERNET-MPLS}, el perfil es más compacto
+(máximo a distancia 6, con el 55\,\% de la red a distancia 4): la nube MPLS
+es, por diseño, el punto más central de la topología inter-campus --- lo
+que ya anticipaban sus altos valores de cercanía e intermediación en P1.
+
+\subsubsection{Ciclos}
+
+El número ciclomático ($m-n+\text{componentes}=209-177+1=33$) dice que hay
+exactamente 33 aristas ``de retroceso'' fuera de cualquier árbol de
+expansión DFS --- 33 ciclos fundamentales, ninguno de los cuales puede
+incluir un puente (por definición). De las 176 aristas restantes (las del
+árbol), 141 SÍ son puentes; las otras 35 son de árbol pero quedan
+``cubiertas'' por algún ciclo que las hace prescindibles. Los 33 ciclos se
+ubican casi todos en las capas \emph{core} y agregación de Central y
+Balzay (p.~ej.\ los 13 pares \code{CC-*}--\code{DATCC-2A-C2} y los 3 pares
+Balzay--\code{DT-0A-C12}): exactamente donde P1 encontró la redundancia
+real.
+
+\subsubsection{BFS, DFS y la tarea del técnico}
+
+Un técnico que recorre físicamente los armarios de un campus no puede
+``teletransportarse'' entre ramas como sí lo hace BFS (que visita todos
+los nodos a distancia 1, después todos los de distancia 2, obligando a
+volver al core entre visitas); DFS avanza por una rama hasta el final
+antes de retroceder --- igual que caminar un pasillo completo antes de
+pasar al siguiente. El orden DFS es directamente una ruta física razonable;
+BFS multiplicaría los trayectos de ida y vuelta.
+
+\subsection{P4 --- Comunidades y modularidad}
+
+Louvain (implementado desde cero: movimiento local voraz + agregación,
+Blondel et al., 2008) encuentra \textbf{22 comunidades con
+$Q=0{,}7504$} --- una modularidad muy alta, típica de una red con capas
+jerárquicas bien separadas. En 5 semillas distintas el número de
+comunidades varía apenas entre 21 y 22 y $Q$ entre 0{,}736 y 0{,}751 (NMI
+contra esa corrida de referencia $\geq0{,}928$): el resultado es
+\textbf{estable}.
+
+\begin{table}[H]
+\centering
+\caption{Estabilidad de Louvain en 5 semillas}
+\begin{tabular}{rrrr}
+\toprule
+Semilla & Comunidades & $Q$ & NMI vs.\ corrida de referencia (semilla 1217) \\
+\midrule
+1 & 21 & 0{,}7508 & 0{,}9565 \\
+2 & 22 & 0{,}7497 & 0{,}9792 \\
+3 & 22 & 0{,}7504 & 0{,}9857 \\
+42 & 22 & 0{,}7357 & 0{,}9279 \\
+2024 & 22 & 0{,}7497 & 0{,}9744 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Comparando con la partición ``natural'' por \code{campus}:
+$\text{NMI}=0{,}584$, $\text{ARI}=0{,}190$. La matriz de confusión (Anexo,
+\code{p4\_matriz\_confusion\_comunidad\_campus.csv}) es casi
+bloque-diagonal: Louvain no mezcla campus entre sí, pero SÍ subdivide cada
+campus grande en varias comunidades (p.~ej.\ Balzay se reparte en 5
+comunidades de Louvain) --- de ahí que el NMI sea moderado y el ARI, que
+penaliza más la sobre-partición, sea bajo. \textbf{11 de 177 nodos}
+quedan en una comunidad dominada por un campus distinto al propio: son,
+casi todos, los equipos WAN/interconexión (\code{INTERNET-MPLS},
+\code{FORTIGATE-1800F-CENTRAL}, \code{PE1/PE2-CENTRAL}, los \code{ROUTER-
+CAMPUS-*}) que Louvain agrupa con Balzay --- en ingeniería de red, esto
+identifica el ``núcleo WAN'' como un bloque funcional propio, distinto de
+cualquier campus individual.
+
+$k$-means sobre las primeras $K=22$ coordenadas del espectro del
+laplaciano (reutilizando el \mbox{$k$-means} desde cero de
+\code{codigo\_referencia/kmeans/}) da $\text{NMI}=0{,}834$,
+$\text{ARI}=0{,}372$ frente a Louvain: coincidencia parcial esperable, ya
+que $k$-means agrupa por distancia euclídea en el espacio espectral
+mientras que Louvain optimiza directamente la modularidad sobre la
+topología --- son criterios relacionados pero no idénticos.
+
+\textbf{Límite de resolución.} Con $m=209$, dos comunidades solo se separan
+si la suma de sus grados internos supera aproximadamente
+$\sqrt{2m}\approx20{,}4$ (Fortunato \& Barthélemy, 2007). Las comunidades
+de Louvain van de 3 a 16 nodos (mediana 7): varias, sobre todo las de
+tamaño 3--4, están cerca de ese límite y podrían estar fusionando
+sub-laboratorios que un administrador de red --- que sí distingue por
+VLAN --- consideraría dominios separados.
+
+\newpage
+% ================================================================
+\section{Optimización en redes (Fase 3)}
+\label{sec:fase3}
+
+\subsection{P5 --- Caminos más cortos}
+
+Se implementaron Dijkstra (con un montículo binario propio) y
+Floyd-Warshall desde cero, y coinciden exactamente con Floyd-Warshall en
+20 pares al azar, para los tres modelos de peso siguientes:
+$$w_{\text{saltos}}=1, \qquad
+w_{\text{latencia}}=\alpha+\frac{\beta}{c(u,v)}, \qquad
+w_{\text{carga}}=\frac{b(u,v)}{c(u,v)}$$
+con $\alpha=0{,}05$ ms (latencia fija de propagación+conmutación por
+salto, razonable a escala de campus) y $\beta=12$ Mbit (tamaño de una
+trama Ethernet típica de 1500 B, de modo que $\beta/c$ da el tiempo de
+serialización en ms cuando $c$ está en Mbps).
+
+\subsubsection{Tiempos de ejecución}
+
+\begin{table}[H]
+\centering\small
+\caption{Dijkstra (1 fuente) vs.\ Floyd-Warshall, subredes crecientes desde el core}
+\begin{tabular}{rrrr}
+\toprule
+$n$ & Floyd-Warshall (s) & Dijkstra, 1 fuente (s) & Fuentes de equilibrio \\
+\midrule
+20 & 0{,}000009 & 0{,}000008 & 1 \\
+60 & 0{,}000194 & 0{,}0000035 & 56 \\
+100 & 0{,}00084 & 0{,}0000174 & 48 \\
+177 & 0{,}00415 & 0{,}0000183 & 227 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+``Fuentes de equilibrio'' es el número de corridas de Dijkstra que cuestan
+lo mismo que UNA corrida completa de Floyd-Warshall. Por debajo de ese
+número de fuentes que realmente interesan conviene repetir Dijkstra
+($O((V{+}E)\log V)$ por fuente); con más, conviene una sola pasada de
+Floyd-Warshall ($O(V^3)$, pero da TODOS los pares de una vez). El
+crecimiento del punto de equilibrio con $n$ (de $\sim$1 a $\sim$227) es
+justamente lo que predice la teoría.
+
+\subsubsection{Cercanía por modelo de peso}
+
+Los top-10 por cercanía con $w_{\text{saltos}}$ y $w_{\text{latencia}}$
+coinciden en 10 de 10 nodos (ambos dominados por los \emph{core}/WAN de
+Central); con $w_{\text{carga}}$ el top-10 cambia por completo (0/10 de
+coincidencia) y muestra un empate exacto de 51 aristas con tráfico 0 Mbps
+(medido o asumido): varios nodos de acceso conectados por enlaces sin
+tráfico registrado quedan a distancia 0 de su switch bajo este modelo, una
+propiedad real del modelo --mide congestión, no topología-- y no un error
+de cálculo.
+
+El par de equipos de acceso más distante bajo $w_{\text{saltos}}$ es
+\code{ENF-2B-A122} $\leftrightarrow$ \code{POST-2A-A66} (11 saltos, la ruta
+cruza Paraíso, la nube MPLS y Central); bajo $w_{\text{latencia}}$ cambia a
+\code{POST-2A-A66} $\leftrightarrow$ \code{QUIN-1A-A128} (distancia
+0{,}639, ruta que pasa por Balzay) --- el modelo de peso SÍ cambia cuál es
+el par ``más lejano'', porque penaliza los saltos de baja capacidad más
+que los de alta capacidad.
+
+\subsubsection{Pesos negativos y protocolos reales}
+
+Ningún modelo puede producir un peso negativo aquí ($w_{\text{saltos}}=1$;
+$\alpha,\beta,c>0$; $b,c\geq0$), así que Dijkstra es siempre válido, sin
+necesidad de Bellman-Ford. En la práctica, OSPF/IS-IS usan un costo
+\textbf{estático} (parecido a $w_{\text{latencia}}$ sin el término de
+tráfico), no uno que dependa del tráfico instantáneo como
+$w_{\text{carga}}$: si el peso dependiera del tráfico en tiempo real, cada
+cambio de carga dispararía un recálculo de rutas, y el tráfico que huye de
+un enlace cargado podría sobrecargar la ruta alternativa y volver ---
+oscilación de rutas (\emph{route flapping}), un problema documentado desde
+los primeros diseños de enrutamiento adaptativo.
+
+\subsection{P6 --- Flujo máximo y corte mínimo}
+
+\subsubsection{Estimación de capacidad}
+
+La capacidad nominal solo está documentada en 28 de las 209 aristas (el
+diagrama MPLS). Las 181 restantes se estiman con reglas explícitas,
+documentadas arista por arista en \code{p6\_capacidad\_estimada.csv}:
+troncales \emph{core}-agregación a 10 Gbps (regla declarada por el informe,
+cap.\ 2.1: 40 aristas), enlaces WAN/inferidos hacia la nube MPLS a
+10 Gbps por analogía con los ya documentados (7 aristas), y el resto
+(agregación-acceso y demás, 134 aristas) a 1 Gbps --- el supuesto más
+discutible del conjunto, por ser un uplink Ethernet estándar no declarado
+por el informe.
+
+\subsubsection{Flujo máximo por campus}
+
+Se modeló, para cada campus, el problema ``todo el tráfico sale hacia
+Internet'': super-fuente $\to$ equipos de acceso del campus, sumidero =
+\code{INTERNET-MPLS}. Ford-Fulkerson (DFS) y Edmonds-Karp (BFS) coinciden
+exactamente en flujo máximo; el corte mínimo se verificó a mano sumando
+las capacidades de sus aristas.
+
+\begin{table}[H]
+\centering
+\caption{Flujo máximo por campus hacia INTERNET-MPLS}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrr}
+\toprule
+Campus & Nodos de acceso & Flujo máx.\ (Mbps) & Aristas del corte & Iteraciones FF / EK \\
+\midrule
+Campus Central & 56 & 44\,000 & 7 & 44 / 44 \\
+Campus Balzay & 24 & 23\,000 & 23 & 23 / 23 \\
+Campus Yanuncay & 11 & 10\,000 & 1 & 10 / 10 \\
+Campus Hospitalidad & 4 & 4\,000 & 4 & 4 / 4 \\
+\textbf{Campus Paraíso} & \textbf{35} & \textbf{1\,000} & \textbf{1} & 1 / 1 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+El resultado es contundente: \textbf{Paraíso, con 35 equipos de acceso
+(más que Yanuncay y Hospitalidad juntos), tiene el flujo máximo más bajo
+de toda la institución}. Su corte mínimo es una única arista
+(\code{CPAR-C10}--\code{ROUTER-CAMPUS-HUAYNA-CAPAC}, 1\,000 Mbps), que
+también aparece en la lista de puentes de P1: el cuello de botella físico
+y el punto de fragilidad topológica \textbf{coinciden exactamente}. Este
+hallazgo es la base de la primera y más importante intervención de la
+Sección \ref{sec:fase5}.
+
+\subsubsection{Flujo de costo mínimo}
+
+Con una demanda fija simultánea de Balzay (11\,500 Mbps) y Central
+(22\,000 Mbps) hacia \code{INTERNET-MPLS}, y un costo de 5 (vs.\ 1) por
+usar un enlace \code{rol=respaldo}, el flujo de costo mínimo sirve el
+100\,\% de los 33\,500 Mbps solicitados con costo total 208\,500, evitando
+sistemáticamente los enlaces de respaldo salvo que no quede alternativa
+--- un objetivo distinto al de flujo máximo puro (maximizar caudal sin
+importar el costo).
+
+\subsection{P7 --- Localización de instalaciones}
+
+Formulación $p$-mediana (minimizar distancia media) y $p$-centro
+(minimizar distancia máxima), resueltas con una heurística voraz y
+exactamente con JuMP+HiGHS, usando distancia en saltos:
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{$p$-mediana y $p$-centro, heurística voraz vs.\ solución óptima (ILP)}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{rlrlr}
+\toprule
+$p$ & $p$-mediana (ILP) & Costo & $p$-centro (ILP) & Radio \\
+\midrule
+1 & INTERNET-MPLS & 638 & INTERNET-MPLS & 6 \\
+2 & CPAR-C10, DATCC-2A-C3 & 486 & DT-0A-C13, INTERNET-MPLS & 6 \\
+3 & CPAR-C10, DATCC-2A-C3, DT-0A-C13 & 388 & CB-EADMI-D6, DATCC-2A-C2, ROUTER-HUAYNA-CAPAC & 4 \\
+5 & +AGRPRI-1A-D10, INTERNET-MPLS & 318 & +CC-FILOSOFIA-A-D108, CPAR-C10 & 3 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+La heurística voraz llega al mismo óptimo que el ILP en $p=5$ (318 vs.\
+318) y se queda apenas por encima en $p=2,3$ (492 vs.\ 486; 408 vs.\ 388):
+una diferencia pequeña, esperable de un algoritmo voraz sin
+\emph{backtracking}.
+
+Ni la $p$-mediana ni el $p$-centro eligen sistemáticamente los nodos de
+mayor intermediación de P1 (\code{DATCC-2A-C3}, \code{CPAR-C10},
+\code{ROUTER-CAMPUS-HUAYNA-CAPAC}, \code{PE2-CENTRAL}): un colector de
+telemetría no necesita estar en el camino de muchos pares (alta
+intermediación), necesita estar \textbf{cerca de los equipos que
+monitorea sin quedar lejos de ninguno}. La $p$-mediana minimiza distancia
+promedio (tolera algunos equipos algo lejos); el $p$-centro minimiza el
+peor caso (garantiza un techo de latencia de sondeo para todos). Los
+nodos de mayor grado/intermediación suelen ser el \emph{core}, muy cerca
+de pocos equipos pero lejos de la mayoría de las hojas --- por eso rara
+vez coinciden con el óptimo de localización.
+
+El modelo omite, deliberadamente, restricciones de espacio en rack y
+alimentación eléctrica redundante en el sitio elegido, puertos de
+administración disponibles, seguridad física del cuarto de
+telecomunicaciones y el costo/licenciamiento del colector. Incorporarlas
+exigiría, como mínimo, restringir el conjunto de candidatos a equipos con
+espacio certificado y sumar un costo fijo de licencia por sitio ---una
+variante de ``localización con costos fijos''.
+
+\newpage
+% ================================================================
+\section{Percolación y robustez (Fase 4)}
+\label{sec:fase4}
+
+\subsection{P8 --- Percolación de nodos y enlaces}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{p8_percolacion_nodos.png}
+\caption{$S(f)$ bajo cuatro estrategias de eliminación de nodos: aleatorio
+(media $\pm$ desv.\ estándar, 100 realizaciones), grado descendente,
+intermediación descendente (estática) e intermediación recalculada.}
+\label{fig:percolacion_nodos}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Umbral de percolación $f_c$ (donde $S(f)$ cruza 0{,}5) por estrategia}
+\begin{tabular}{lrrrr}
+\toprule
+& Aleatorio & Grado & Intermediación (estática) & Intermediación (recalculada) \\
+\midrule
+Nodos & 0{,}237 & 0{,}023 & 0{,}045 & 0{,}023 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{La paradoja de la robustez se confirma con claridad}: la red
+tolera perder el 23{,}7\,\% de sus nodos al azar antes de que la
+componente gigante caiga a la mitad, pero un atacante dirigido logra lo
+mismo eliminando apenas el 2{,}3\,\% (4 nodos). Consecuencia operativa: un
+plan de \textbf{mantenimiento} puede tratar los fallos como
+aproximadamente aleatorios (tolerancia razonable); un plan de
+\textbf{respuesta a incidentes de seguridad} no puede asumir eso --- los
+nodos de mayor grado/intermediación necesitan protección
+desproporcionada (redundancia, monitoreo, control de acceso físico)
+respecto a su número.
+
+Para enlaces, atacar primero los 141 puentes de P1 baja $f_c$ de 0{,}354
+(aleatorio) a 0{,}321 --- una caída menor que para nodos, porque los
+puentes YA son, individualmente, el peor caso posible (cada uno desconecta
+algo por definición); no hay margen para que un orden ``más inteligente''
+empeore mucho más las cosas.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{p8_eficiencia_vs_percolacion.png}
+\caption{Eficiencia global relativa $E(f)/E(0)$ (líneas continuas) vs.\
+$S(f)$ de referencia (líneas punteadas).}
+\end{figure}
+
+$E(f)$ cae de forma mucho más pronunciada y temprana que $S(f)$: la
+eficiencia pondera el INVERSO de la distancia, así que un nodo que sigue
+``técnicamente conectado'' pero ahora a 8 saltos en vez de a 2 aporta casi
+nada a $E$ aunque siga contando en la componente gigante. Para el
+diagnóstico operativo esto importa: la red puede seguir ``arriba''
+(conectada) mucho después de que el servicio percibido (latencia
+efectiva) ya se haya degradado severamente.
+
+Comparando con los modelos nulos de P2 bajo fallo aleatorio: $f_c$(real)
+$=0{,}237\approx f_c$(configuración)$=0{,}232 \ll f_c$(ER)$=0{,}271$ --- la
+robustez de UCuenca ante fallos aleatorios se explica, otra vez, por su
+secuencia de grados heterogénea y no por algún patrón estructural
+adicional.
+
+\subsection{P9 --- Propagación de fallos y epidemias}
+
+\subsubsection{Cascadas de fallos (Motter-Lai)}
+
+Con carga inicial $L_i$ = intermediación no normalizada y capacidad fija
+$C_i=(1+\tau)L_i$, se simuló la falla de los 15 nodos de mayor carga sobre
+una grilla $\tau\in\{0; 0{,}05;\ldots;1{,}0\}$. \textbf{Ningún nodo
+candidato desencadena una cascada que afecte a más del 20\,\% de la red,
+ni siquiera con margen $\tau=0$}; el peor caso observado es
+\code{PE2-BALZAY}, con 8{,}5\,\% de la red afectada.
+
+Esto \textbf{no contradice} la fragilidad hallada en P8: ahí la métrica es
+\emph{conectividad} (aristas que desconectan partes de la red); aquí es
+\emph{sobrecarga} (redistribución de camino más corto). Esta red tiene poca
+redundancia, pero las rutas alternativas tras una falla son mayormente
+CORTAS y no concentran suficiente tráfico redistribuido en un tercer nodo
+como para tumbarlo en cadena --- una distinción operativa importante: la
+red es vulnerable a \emph{desconexión} pero no exhibe, bajo este modelo,
+un mecanismo fuerte de \emph{cascada por sobrecarga}.
+
+\subsubsection{SIR y umbral epidémico}
+
+Con $\langle k\rangle=2{,}362$ y $\langle k^2\rangle=12{,}689$, la
+predicción de campo medio da $\lambda_c=\langle k\rangle/\langle
+k^2\rangle=0{,}1861$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{p9_sir_umbral.png}
+\caption{Tamaño final del brote SIR vs.\ $\lambda/\lambda_c$ (media
+$\pm$ desv.\ estándar, 60 realizaciones por punto).}
+\end{figure}
+
+El tamaño medio del brote crece con $\lambda/\lambda_c$ (de 0{,}6\,\% en
+$\lambda=0{,}2\lambda_c$ a 4{,}3\,\% en $\lambda=3\lambda_c$), coherente
+--aunque con dispersión considerable, propia de un régimen todavía
+cercano al umbral-- con la predicción de campo medio.
+
+\subsubsection{Inmunización}
+
+Con un presupuesto de 11 equipos parcheados ($\sim$6\,\% de la red) y
+$\lambda=8\lambda_c$ (régimen claramente supercrítico, para que el efecto
+de la inmunización no quede enmascarado por el ruido estocástico cercano
+al umbral):
+
+\begin{table}[H]
+\centering
+\caption{Tamaño final del brote SIR según estrategia de inmunización (200 realizaciones)}
+\begin{tabular}{lrrr}
+\toprule
+Estrategia & Tamaño medio del brote & Desv.\ estándar & Reducción \\
+\midrule
+Sin inmunizar & 40{,}5\,\% & 29{,}7\,\% & --- \\
+Aleatoria (11 nodos) & 36{,}1\,\% & 26{,}3\,\% & 11{,}0\,\% \\
+Por centralidad (11 nodos) & \textbf{9{,}2\,\%} & 3{,}0\,\% & \textbf{77{,}2\,\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La inmunización dirigida por centralidad es dramáticamente más efectiva
+que la aleatoria con el mismo presupuesto: el resultado clásico de
+epidemiología en redes con grado heterogéneo (Pastor-Satorras \&
+Vespignani, 2001) se reproduce con claridad en estos datos.
+
+\subsubsection{Analogía con sistemas de energía eléctrica}
+
+En una red de transmisión, la ``carga'' de una línea es el flujo de
+potencia que transporta (por las leyes de Kirchhoff, no por caminos más
+cortos, pero igualmente concentrado en pocas líneas troncales); la
+``capacidad'' es su límite térmico/de estabilidad; la ``cascada'' es el
+mecanismo de un apagón en cascada (p.~ej.\ el apagón del noreste de
+EE.\,UU.-Canadá de 2003): al desconectarse una línea sobrecargada, su
+flujo se redistribuye instantáneamente y puede sobrecargar las líneas
+restantes. Motter \& Lai (2002) formalizan precisamente esta analogía; es
+la referencia directa del modelo de cascada usado arriba.
+
+\subsection{P10 --- Diagnóstico de puntos críticos}
+
+Índice compuesto = promedio de 4 componentes normalizados a $[0,1]$:
+intermediación, condición de punto de articulación, participación en los
+cortes mínimos de P6 y daño causado en la cascada de P9 (a
+$\tau=0{,}1$, referencia por encima de $\tau_c$ dado que P9 no encontró un
+$\tau_c$ positivo).
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{Top-10 de puntos críticos (P10)}
+\begin{tabular}{lllrcrr}
+\toprule
+Id & Campus & Capa & Interm.\ & ¿Articulación? & Cortes & Índice \\
+\midrule
+INTERNET-MPLS & Nube MPLS & wan & 0{,}818 & sí & 0 & \textbf{0{,}682} \\
+BAL-AUL2-D1 & Balzay & agregación & 0{,}248 & sí & 10 & 0{,}585 \\
+DATCC-2A-C3 & Central & core & 1{,}000 & no & 3 & 0{,}530 \\
+CPAR-C10 & Paraíso & core & 0{,}905 & sí & 1 & 0{,}524 \\
+ROUTER-HUAYNA-CAPAC & Paraíso & wan & 0{,}820 & sí & 1 & 0{,}503 \\
+BAL-CENTEC-D2 & Balzay & agregación & 0{,}126 & sí & 5 & 0{,}429 \\
+BAL-AUL1-D4 & Balzay & agregación & 0{,}101 & sí & 4 & 0{,}398 \\
+HOS-0A-D05 & Hospitalidad & agregación & 0{,}101 & sí & 4 & 0{,}398 \\
+CB-EADMI-D6 & Balzay & agregación & 0{,}150 & sí & 3 & 0{,}385 \\
+FORTIGATE-CENTRAL & Central & interconexión & 0{,}417 & no & 2 & 0{,}382 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\code{INTERNET-MPLS} encabeza el ranking por ser el único punto de salida
+de \emph{toda} la institución hacia el proveedor MPLS. Le sigue
+\code{BAL-AUL2-D1}, que protege 10 equipos de acceso de Balzay tras un
+único switch de agregación (aunque su propio enlace al \emph{core} ya es
+redundante). \code{DATCC-2A-C3} entra en el top-3 por intermediación pura
+--- pese a \textbf{no} ser punto de articulación, es el nodo por el que más
+caminos mínimos pasan. \code{CPAR-C10} y \code{ROUTER-CAMPUS-HUAYNA-CAPAC},
+el par que sostiene todo Campus Paraíso, confirman con este índice
+compuesto lo que P1 y P6 ya habían mostrado por separado.
+
+\newpage
+% ================================================================
+\section{Propuesta de rediseño (Fase 5)}
+\label{sec:fase5}
+
+\subsection{Intervenciones propuestas}
+
+Del top-10 de P10 y de \code{p6\_flujo\_maximo\_por\_campus.csv} surgen dos
+patrones que guían las cinco intervenciones (máximo permitido por el
+enunciado): (a) Campus Paraíso tiene el flujo máximo más bajo de la
+institución por un único enlace de 1 Gbps; (b) Hospitalidad y el
+Consultorio Jurídico dependen, cada uno, de un único enlace
+\code{rol=inferido} directo a \code{INTERNET-MPLS}; (c) Yanuncay depende
+también de un único enlace; (d) \code{BAL-AUL2-D1} protege 10 equipos tras
+un único switch de agregación.
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{Cinco intervenciones propuestas (P11.1)}
+\begin{tabular}{p{1.1cm}p{3.1cm}p{3.1cm}rp{4.4cm}}
+\toprule
+Tipo & Origen & Destino & Cap.\ (Mbps) & Justificación (resumida) \\
+\midrule
+Duplicar & CPAR-C10 & ROUTER-CAMPUS-HUAYNA-CAPAC & 10\,000 & Único enlace de salida de Paraíso (35 nodos); cuello de botella de flujo más severo de la institución. Se sube al estándar de 10 Gbps del resto de troncales. \\
+Nueva & HOS-0A-D05 & FORTIGATE-1800F-CENTRAL & 1\,000 & Hospitalidad depende de un único enlace inferido a MPLS (punto de articulación). Ruta alterna vía el firewall de Central. \\
+Nueva & CCJ-CJURIDICO-D4 & DATCC-2A-C2 & 1\,000 & Mismo patrón que Hospitalidad, para el Consultorio Jurídico. \\
+Nueva & ROUTER-CAMPUS-YANUNCAY & DATCC-2A-C3 & 10\,000 & Yanuncay (11 nodos) depende de un único enlace troncal; se añade una segunda ruta. \\
+Nueva & AUL2-0A-A121 & BAL-CENTEC-D2 & 1\,000 & Mitigación puntual del equipo de mayor tráfico tras \code{BAL-AUL2-D1}. No resuelve el patrón general de acceso de único \emph{homing} (132 nodos, fuera de presupuesto). \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Nota de modelado.} ``Duplicar'' un enlace en un grafo simple no
+crea una segunda ruta a nivel de nodos --- una segunda fibra entre el
+\emph{mismo par} de equipos no protege contra la falla del equipo mismo,
+solo contra el corte de una fibra concreta. Por eso, deliberadamente, esta
+intervención se modela como un aumento de \textbf{capacidad} (afecta el
+flujo, no la topología de puentes/articulación), mientras que las otras
+cuatro son aristas topológicamente nuevas (afectan todas las métricas).
+Esta distinción se refleja fielmente en los resultados de la tabla
+siguiente.
+
+\subsection{Antes / después}
+
+\begin{table}[H]
+\centering
+\caption{Red base vs.\ red con las 5 intervenciones}
+\begin{tabular}{lrrr}
+\toprule
+Métrica & Antes & Después & Variación \\
+\midrule
+Puentes & 141 & 138 & $-3$ ($-2{,}1$\,\%) \\
+Puntos de articulación & 47 & 46 & $-1$ ($-2{,}1$\,\%) \\
+Distancia media & 5{,}830 & 5{,}651 & $-3{,}1$\,\% \\
+Eficiencia global & 0{,}2082 & 0{,}2155 & $+3{,}5$\,\% \\
+Robustez (AUC percolación por grado) & 0{,}0477 & 0{,}0495 & $+3{,}7$\,\% \\
+Flujo máximo Paraíso (Mbps) & 1\,000 & \textbf{10\,000} & \textbf{+900\,\%} \\
+Flujo máximo Hospitalidad (Mbps) & 4\,000 & 4\,000 & 0\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Los puentes bajan exactamente en 3 --- una por cada arista topológicamente
+nueva que ofrece una ruta alterna (Hospitalidad, Consultorio Jurídico,
+Yanuncay) --- mientras que los puntos de articulación solo bajan en 1: dar
+una segunda ruta al \emph{campus} no siempre quita a un nodo su condición
+de punto de articulación \emph{local} (p.~ej.\ \code{HOS-0A-D05} sigue
+siendo el único paso para sus 4 equipos de acceso, aunque el campus como
+un todo ya no dependa de un único enlace externo). El flujo máximo de
+Hospitalidad no cambia porque su cuello de botella real está en la capa
+agregación-acceso interna del campus, no en su salida --- la nueva ruta
+mejora la robustez topológica sin tocar la capacidad del cuello de botella
+existente.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{p11_percolacion_antes_despues.png}
+\caption{Percolación bajo ataque por grado, red base vs.\ red con las 5 intervenciones.}
+\end{figure}
+
+\subsection{Comparación con alternativas}
+
+\begin{table}[H]
+\centering\footnotesize
+\caption{Propuesta justificada vs.\ dos alternativas ingenuas de 5 enlaces}
+\begin{tabular}{lrrrrrr}
+\toprule
+Propuesta & Puentes & Articul. & Dist.\ media & Efic.\ global & Robustez & Flujo Paraíso \\
+\midrule
+Red base & 141 & 47 & 5{,}830 & 0{,}2082 & 0{,}0477 & 1\,000 \\
+\textbf{P11 (justificada)} & 138 & 46 & 5{,}651 & 0{,}2155 & 0{,}0495 & \textbf{10\,000} \\
+Alt.\ ``mayor grado'' & 138 & 45 & 4{,}741 & 0{,}2440 & 0{,}0477 & 2\,000 \\
+Alt.\ aleatoria & 128 & 45 & 5{,}718 & 0{,}2120 & 0{,}0520 & 2\,000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La alternativa ``unir los dos nodos de mayor grado'' conecta
+sistemáticamente pares de \emph{core}/agregación que \textbf{ya} tienen
+múltiples caminos entre sí (de ahí su buena distancia media y eficiencia
+--- son atajos genéricos, no reparaciones), y solo por casualidad uno de
+sus pares (\code{CP-EADMINA1-D6}--\code{DATCC-2A-C3}) toca Paraíso,
+llevando su flujo a 2\,000 --- una quinta parte de lo que logra la
+propuesta dirigida. La alternativa aleatoria reduce más los puentes
+(128) simplemente porque, con 5 aristas puestas al azar entre 177 nodos,
+es estadísticamente más probable tocar \emph{algún} puente que con una
+elección deliberada y concentrada en solo 4 campus; y por pura
+coincidencia uno de sus pares aleatorios (\code{MEDADM-1E-A15}, un nodo
+de acceso de Paraíso) también le da a Paraíso una segunda salida
+accidental --- pero, otra vez, solo hasta 2\,000 Mbps, muy por debajo de
+los 10\,000 que logra duplicar deliberadamente el enlace correcto. Ninguna
+alternativa ingenua toca Hospitalidad. La comparación deja clara la
+ventaja de partir de un diagnóstico (P1/P6/P10) en vez de una heurística
+genérica.
+
+\subsection{Factibilidad}
+
+Las cinco intervenciones tienen complejidad de obra civil muy distinta.
+Duplicar \code{CPAR-C10}--\code{ROUTER-CAMPUS-HUAYNA-CAPAC} y
+\code{ROUTER-CAMPUS-YANUNCAY}--\code{DATCC-2A-C3} son, en esencia, upgrades
+de un enlace ya tendido físicamente (óptica/SFP y, posiblemente, contrato
+de mayor ancho de banda con el proveedor MPLS): bajo costo, alta
+factibilidad. Los nuevos enlaces hacia Hospitalidad y el Consultorio
+Jurídico requieren tender fibra nueva hacia Campus Central --- si la
+distancia física excede lo razonable para fibra propia, en la práctica se
+resolvería con un segundo circuito del proveedor en vez de un enlace
+directo (no se conoce el trazado ni la distancia real, una limitación
+explícita del modelo). La mitigación en Balzay es la de menor costo
+(cableado interno del mismo campus) pero también la de menor alcance (un
+solo equipo).
+
+\subsection{Limitaciones del estudio}
+\label{sec:limitaciones}
+
+\begin{itemize}[leftmargin=1.3em]
+  \item Las capacidades no documentadas (181 de 209 enlaces) son
+    \textbf{estimadas} por reglas heurísticas (P6.1); la magnitud del
+    beneficio de cada intervención depende de esas estimaciones, no de
+    mediciones reales.
+  \item El modelo no incorpora energía, espacio físico en rack, ni
+    licenciamiento (P7.4). Una intervención ``barata'' en el grafo puede no
+    serlo en la práctica.
+  \item La red se trata como estática: no hay series de tiempo de
+    tráfico, así que no se puede distinguir un cuello de botella
+    permanente de uno que solo aparece en horas pico.
+  \item Los resultados de percolación, cascada y SIR son promedios de
+    muchas realizaciones; una falla real concreta puede comportarse
+    distinto a la media reportada.
+  \item Este análisis no permite concluir el retorno económico de cada
+    intervención, solo su impacto \textbf{estructural} sobre las métricas
+    de red.
+\end{itemize}
+
+\newpage
+% ================================================================
+\section{Conclusiones}
+\label{sec:conclusiones}
+
+Volviendo a la pregunta que abre este informe --- \emph{¿cuáles son los
+puntos críticos, qué tan grave sería su falla, y qué intervenciones
+mejorarían más la robustez?} ---, las cinco fases convergen en un
+diagnóstico coherente:
+
+\begin{enumerate}[leftmargin=1.3em]
+  \item La red UCuenca es una jerarquía \emph{core-agregación-acceso}
+    dispersa (densidad 0{,}013), con clustering casi nulo y asortatividad
+    negativa: propiedades explicadas en gran parte por su heterogeneidad
+    de grado (P1, P2), no por algún patrón social o de crecimiento
+    preferencial.
+  \item Es robusta ante fallos aleatorios ($f_c\approx0{,}24$) pero
+    extremadamente frágil ante ataques dirigidos ($f_c\approx0{,}02$--$0{,}05$)
+    --- la paradoja de la robustez clásica de las redes de grado
+    heterogéneo (P8) --- aunque, bajo el modelo de cascada por sobrecarga
+    de Motter-Lai, ningún nodo individual desencadena un colapso mayor al
+    20\,\% (P9): la fragilidad de esta red es de \emph{conectividad}, no de
+    \emph{sobrecarga en cadena}.
+  \item El informe técnico institucional sobreestima la redundancia de
+    Campus Paraíso: los datos (P1.6, P6) muestran que depende de un único
+    enlace de 1 Gbps para todo su tráfico de salida --- el hallazgo más
+    accionable de todo el proyecto.
+  \item Un índice compuesto que combina intermediación, condición de
+    punto de articulación, participación en cortes mínimos y daño de
+    cascada (P10) identifica consistentemente los mismos puntos críticos
+    que emergieron, por separado, en cada fase anterior --- lo que da
+    confianza en el diagnóstico.
+  \item Con solo cinco intervenciones acotadas y justificadas
+    cuantitativamente (P11), el flujo máximo de Paraíso se multiplica por
+    diez y varias métricas estructurales mejoran de forma consistente,
+    superando con claridad a dos alternativas ingenuas de referencia.
+\end{enumerate}
+
+Si se fuera el administrador de esta red y se tuviera presupuesto para
+cinco enlaces, la recomendación de este informe es concreta:
+\textbf{empezar por Campus Paraíso.}
+
+\newpage
+% ================================================================
+\section*{Referencias}
+\addcontentsline{toc}{section}{Referencias}
+
+\begin{description}[leftmargin=1.5em,style=nextline]
+
+\item Blondel, V. D., Guillaume, J.-L., Lambiotte, R., \& Lefebvre, E.
+(2008). Fast unfolding of communities in large networks. \emph{Journal of
+Statistical Mechanics: Theory and Experiment}, 2008(10), P10008.
+
+\item Bondy, J. A., \& Murty, U. S. R. (1976). \emph{Graph theory with
+applications}. Macmillan.
+
+\item Clauset, A., Shalizi, C. R., \& Newman, M. E. J. (2009). Power-law
+distributions in empirical data. \emph{SIAM Review}, 51(4), 661--703.
+
+\item Deo, N. (2017). \emph{Graph theory with applications to engineering
+and computer science}. Dover Publications.
+
+\item Fortunato, S., \& Barthélemy, M. (2007). Resolution limit in
+community detection. \emph{Proceedings of the National Academy of
+Sciences}, 104(1), 36--41.
+
+\item Hubert, L., \& Arabie, P. (1985). Comparing partitions. \emph{Journal
+of Classification}, 2(1), 193--218.
+
+\item Latora, V., Nicosia, V., \& Russo, G. (2017). \emph{Complex
+networks: Principles, methods and applications}. Cambridge University
+Press.
+
+\item Motter, A. E., \& Lai, Y.-C. (2002). Cascade-based attacks on
+complex networks. \emph{Physical Review E}, 66(6), 065102.
+
+\item Newman, M. E. J. (2010). \emph{Networks: An introduction}. Oxford
+University Press.
+
+\item Pastor-Satorras, R., \& Vespignani, A. (2001). Epidemic spreading in
+scale-free networks. \emph{Physical Review Letters}, 86(14), 3200--3203.
+
+\item Universidad de Cuenca. \emph{Informe técnico: topologías y
+conexiones de red} (``Diagramas de red final''), 34 diagramas de los
+campus Central, Balzay, Yanuncay, Hospitalidad y Paraíso, y de la
+interconexión MPLS.
+
+\item West, D. B. (2001). \emph{Introduction to graph theory} (2.ª ed.).
+Prentice Hall.
+
+\end{description}
+
+\newpage
+% ================================================================
+\appendix
+\section*{Anexos}
+\addcontentsline{toc}{section}{Anexos}
+
+\subsection*{A.1 Reproducibilidad}
+
+Todos los resultados de este informe se generan ejecutando, en orden, los
+cinco scripts de \code{analisis/scripts/} sobre el entorno Julia declarado
+en \code{analisis/Project.toml}:
+
+\begin{verbatim}
+julia --project=analisis -e 'using Pkg; Pkg.instantiate()'
+julia --project=analisis analisis/scripts/fase1_p1_p2_caracterizacion.jl
+julia --project=analisis analisis/scripts/fase2_p3_p4_recorrido_particion.jl
+julia --project=analisis analisis/scripts/fase3_p5_p6_p7_optimizacion.jl
+julia --project=analisis analisis/scripts/fase4_p8_p9_p10_percolacion.jl
+julia --project=analisis analisis/scripts/fase5_p11_rediseno.jl
+\end{verbatim}
+
+Cada script verifica automáticamente la carga contra el Anexo A del
+enunciado y termina con código de salida 0 si corrió sin errores.
+
+\subsection*{A.2 Tablas completas}
+
+{\sloppy
+Las tablas resumidas en el cuerpo del informe tienen su versión completa
+en \code{analisis/resultados/}: centralidades top-10
+(\code{p1\_centralidades\_top10.csv}), puentes y puntos de articulación
+completos (\code{p1\_puentes.csv}, \code{p1\_puntos\_articulacion.csv}),
+matriz de confusión comunidad$\times$campus
+(\code{p4\_matriz\_confusion\_comunidad\_campus.csv}), capacidad estimada
+arista por arista (\code{p6\_capacidad\_estimada.csv}), cortes mínimos por
+campus (\code{p6\_cortes\_minimos\_aristas.csv}), ranking completo de
+puntos críticos (\code{p10\_ranking\_puntos\_criticos.csv}), entre otras.
+\par}
+
+\subsection*{A.3 Código de referencia reutilizado}
+
+{\sloppy
+\begin{itemize}
+  \item \code{codigo\_base/cargar\_red.jl}: carga y verificación (usado sin
+    modificar por los cinco scripts).
+  \item \code{codigo\_referencia/\allowbreak ford-fulkerson/\allowbreak
+    ford\_fulkerson.jl} y \code{codigo\_referencia/\allowbreak
+    edmonds-karp/\allowbreak edmonds\_karp.jl}: incluidos textualmente vía
+    \code{include()} en \code{fase3} y \code{fase5}, aislados en módulos
+    \code{FF}/\code{EK} porque ambos declaran un \code{struct RedFlujo} con
+    el mismo nombre.
+  \item \code{codigo\_referencia/kmeans/ejemplo1.jl} (líneas 1--149): las
+    funciones de $k$-means desde cero se copiaron a \code{fase2}, sin la
+    demostración final de ese archivo.
+\end{itemize}
+\par}
+
+\end{document}
