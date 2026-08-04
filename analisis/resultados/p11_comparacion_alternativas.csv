@@ -1,0 +1,5 @@
+propuesta,puentes,articulacion,distancia_media,eficiencia_global,robustez_auc,flujo_paraiso_mbps,flujo_hospitalidad_mbps
+Red base (sin cambios),141,47,5.83,0.2082,0.0477,1000,4000
+P11 (propuesta justificada),138,46,5.651,0.2155,0.0495,10000,4000
+Alternativa: mayor grado,138,45,4.741,0.244,0.0477,2000,4000
+Alternativa: aleatoria,128,45,5.718,0.212,0.052,2000,4000

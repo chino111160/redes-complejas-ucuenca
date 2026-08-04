@@ -1,0 +1,6 @@
+tipo,origen,destino,capacidad_mbps,justificacion
+duplicar,CPAR-C10,ROUTER-CAMPUS-HUAYNA-CAPAC,10000.0,"Único enlace de salida de todo Campus Paraíso (35 nodos de acceso); hoy 1 Gbps, el cuello de botella de flujo más severo de la institución (P6). Se sube al estándar de 10 Gbps que ya usan el resto de troncales WAN documentados."
+nueva,HOS-0A-D05,FORTIGATE-1800F-CENTRAL,1000.0,Hospitalidad depende hoy de un único enlace rol=inferido directo a INTERNET-MPLS (punto de articulación en P1). Ruta alterna vía el firewall perimetral de Central.
+nueva,CCJ-CJURIDICO-D4,DATCC-2A-C2,1000.0,Mismo patrón que Hospitalidad: el Consultorio Jurídico solo llega a la red por un enlace inferido a INTERNET-MPLS. Ruta alterna vía un core de Campus Central.
+nueva,ROUTER-CAMPUS-YANUNCAY,DATCC-2A-C3,10000.0,Yanuncay (11 nodos de acceso) depende de un único enlace (AGRPRI-1A-D10 -- ROUTER-CAMPUS-YANUNCAY) para salir de campus; se añade una segunda ruta troncal.
+nueva,AUL2-0A-A121,BAL-CENTEC-D2,1000.0,"Mitigación puntual: el equipo de mayor tráfico tras BAL-AUL2-D1 (81.71 Mbps, el switch que más nodos de acceso protege en el top-10 de P10) obtiene una ruta alterna hacia otro switch de agregación del mismo campus. No resuelve el patrón general de acceso de único homing (132 nodos en toda la red, fuera de presupuesto)."
