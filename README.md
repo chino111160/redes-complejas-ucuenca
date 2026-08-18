@@ -9,7 +9,26 @@ informe técnico de topologías y conexiones de red.
 
 > ### 📅 Entrega: 26 de agosto de 2026
 > Informe PDF + repositorio de código + diapositivas. **25 puntos.**
-> Grupos de 2 o 3 integrantes.
+> Trabajo individual (autorizado por el docente), Efrain Adolfo Alvarado Plasencia.
+
+---
+
+## Estado del proyecto: completo
+
+Los cuatro entregables de la Sección 8.1 del enunciado están listos:
+
+| Entregable | Ubicación |
+|---|---|
+| Informe técnico (PDF) | [`informe/informe.pdf`](informe/informe.pdf) — fuente en [`informe/informe.tex`](informe/informe.tex) |
+| Código reproducible | [`analisis/`](analisis/) — ver [`analisis/README.md`](analisis/README.md) para el orden de ejecución |
+| Diapositivas | [`diapositivas/Presentacion_Redes_Complejas_RedUCuenca.pptx`](diapositivas/) |
+| Repositorio de código | este mismo repositorio (privado) |
+
+El hallazgo central: **Campus Paraíso** no tiene la redundancia
+*core*-agregación que el informe técnico institucional le atribuye —
+sus 35 equipos de acceso dependen de un único enlace de 1 Gbps, el flujo
+máximo más bajo de la institución. La propuesta de rediseño (P11) lo
+multiplica por diez con una sola intervención de las cinco planteadas.
 
 ---
 
