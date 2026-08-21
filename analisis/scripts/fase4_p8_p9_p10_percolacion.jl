@@ -261,7 +261,16 @@ function curva_eficiencia(g::SimpleGraph, orden::Vector{Int})
     return E
 end
 
-E_aleatorio = curva_eficiencia(g, shuffle(1:n))
+# CORRECCIÓN (auditoría de reproducibilidad): igual que en P8.5, un solo
+# shuffle(1:n) es una única muestra aleatoria con varianza alta para esta
+# métrica; se promedia sobre N_EFICIENCIA réplicas, igual que S_aleatorio_media.
+const N_EFICIENCIA = 20
+Random.seed!(2020)
+E_aleatorio_muestras = zeros(N_EFICIENCIA, n + 1)
+for r in 1:N_EFICIENCIA
+    E_aleatorio_muestras[r, :] = curva_eficiencia(g, shuffle(1:n))
+end
+E_aleatorio = vec(mean(E_aleatorio_muestras; dims=1))
 E_intermediacion = curva_eficiencia(g, orden_intermediacion)
 df_eficiencia = DataFrame(f=f_vals, E_aleatorio=E_aleatorio, E_ataque_intermediacion=E_intermediacion)
 guardar_csv(df_eficiencia, joinpath(DIR_RESULTADOS, "p8_eficiencia_global.csv"))
@@ -286,19 +295,50 @@ degradado severamente.
 # =================================================================
 # P8.5 -- Comparación con los modelos nulos de P2
 # =================================================================
+# CORRECCIÓN (auditoría de reproducibilidad): la versión anterior generaba
+# un solo Erdős-Rényi y un solo modelo de configuración (una única muestra
+# aleatoria), con varianza demasiado alta para reportar f_c como un punto
+# fijo -- inconsistente con el resto de P8, que sí promedia (100 réplicas
+# para el fallo aleatorio de nodos) y con P2 (100 réplicas de cada modelo
+# nulo). Aquí se promedia sobre N_NULOS_P8 réplicas de cada modelo, cada
+# una con su propio orden aleatorio de eliminación, igual que S_aleatorio.
 println("--- P8.5 Comparación con modelos nulos ---")
 grados_reales = collect(grados_p8)
-g_er = erdos_renyi(n, m)
-g_conf = modelo_configuracion(grados_reales)
-S_er = percolacion_nodos(g_er, shuffle(1:n))
-S_conf = percolacion_nodos(g_conf, shuffle(1:n))
-df_percolacion_nulos = DataFrame(f=f_vals, S_real=S_aleatorio_media, S_ER=S_er, S_configuracion=S_conf)
+const N_NULOS_P8 = 50
+Random.seed!(8500)
+S_er_muestras = zeros(N_NULOS_P8, n + 1)
+S_conf_muestras = zeros(N_NULOS_P8, n + 1)
+fc_er_muestras = zeros(N_NULOS_P8)
+fc_conf_muestras = zeros(N_NULOS_P8)
+for r in 1:N_NULOS_P8
+    g_er_r = erdos_renyi(n, m)
+    g_conf_r = modelo_configuracion(grados_reales)
+    S_er_r = percolacion_nodos(g_er_r, shuffle(1:n))
+    S_conf_r = percolacion_nodos(g_conf_r, shuffle(1:n))
+    S_er_muestras[r, :] = S_er_r
+    S_conf_muestras[r, :] = S_conf_r
+    fc_er_muestras[r] = estimar_fc(S_er_r, f_vals)
+    fc_conf_muestras[r] = estimar_fc(S_conf_r, f_vals)
+end
+S_er_media = vec(mean(S_er_muestras; dims=1))
+S_conf_media = vec(mean(S_conf_muestras; dims=1))
+fc_er_media, fc_er_std = mean(fc_er_muestras), std(fc_er_muestras)
+fc_conf_media, fc_conf_std = mean(fc_conf_muestras), std(fc_conf_muestras)
+df_percolacion_nulos = DataFrame(f=f_vals, S_real=S_aleatorio_media, S_ER=S_er_media, S_configuracion=S_conf_media)
 guardar_csv(df_percolacion_nulos, joinpath(DIR_RESULTADOS, "p8_percolacion_vs_nulos.csv"))
-@printf("f_c bajo fallo aleatorio: red real=%.3f   Erdős-Rényi=%.3f   configuración=%.3f\n",
-        fc_aleatorio, estimar_fc(S_er, f_vals), estimar_fc(S_conf, f_vals))
-println("Si f_c(real) ≈ f_c(configuración) « f_c(ER), la robustez de UCuenca ante fallos aleatorios",
-        "\nse explica por su secuencia de grados heterogénea (unos pocos hubs, muchas hojas) y NO por",
-        "\nalgún otro patrón estructural adicional -- coherente con lo ya visto en P1/P2.")
+@printf("f_c bajo fallo aleatorio (promedio de %d réplicas por modelo): red real=%.3f   Erdős-Rényi=%.3f±%.3f   configuración=%.3f±%.3f\n",
+        N_NULOS_P8, fc_aleatorio, fc_er_media, fc_er_std, fc_conf_media, fc_conf_std)
+if fc_aleatorio < fc_conf_media - fc_conf_std
+    println("f_c(real) cae POR DEBAJO de f_c(configuración) incluso preservando exactamente la secuencia",
+            "\nde grados: la robustez ante fallos aleatorios NO se explica solo por la heterogeneidad de",
+            "\ngrados -- el cableado específico de UCuenca concentra fragilidad de forma que el recableado",
+            "\naleatorio (con los mismos grados) tiende a evitar. Consistente con el hallazgo de P6",
+            "\n(Paraíso depende de un único enlace) y con la asimetría de redundancia ya señalada en P1.")
+else
+    println("Si f_c(real) ≈ f_c(configuración) « f_c(ER), la robustez de UCuenca ante fallos aleatorios",
+            "\nse explica por su secuencia de grados heterogénea (unos pocos hubs, muchas hojas) y NO por",
+            "\nalgún otro patrón estructural adicional -- coherente con lo ya visto en P1/P2.")
+end
 
 # =================================================================
 # P9.1-P9.2 -- Cascadas de fallos, margen crítico τ_c

@@ -158,11 +158,11 @@ máximo hacia Internet es de apenas \textbf{1\,000 Mbps}, contra 44\,000 de Cent
 23\,000 de Balzay. Su corte mínimo es una sola arista.
 
 \item \textbf{La red es robusta ante fallos aleatorios y extremadamente frágil ante
-ataques dirigidos.} El umbral de percolación cae de $f_c \approx 0{,}237$ (fallo
+ataques dirigidos.} El umbral de percolación cae de $f_c \approx 0{,}243$ (fallo
 aleatorio) a $f_c \approx 0{,}023$ (ataque por grado o por intermediación recalculada):
-eliminar deliberadamente 4 de 177 equipos hace lo que al azar exige eliminar 42. La
+eliminar deliberadamente 4 de 177 equipos hace lo que al azar exige eliminar 43. La
 eficiencia global se degrada aún antes: con solo el 5\,\% de los nodos atacados cae al
-14,8\,\% de su valor original.
+14,3\,\% de su valor original.
 
 \item \textbf{La fragilidad de esta red es de conectividad, no de sobrecarga en cadena.}
 Bajo el modelo de cascada de Motter-Lai ningún nodo individual desencadena un colapso
@@ -1471,16 +1471,16 @@ eliminados $f$; eje $y$: tamaño relativo de la componente gigante $S(f)$.}
 \toprule
 & \textbf{Aleatorio} & \textbf{Grado} & \textbf{Intermed.\ estática} & \textbf{Intermed.\ recalculada} \\
 \midrule
-$f_c$ (donde $S(f)$ cruza 0,5) & 0,237 & 0,023 & 0,045 & 0,023 \\
-Nodos eliminados en $f_c$      & 42    & 4     & 8     & 4 \\
-$S(f = 0{,}05)$                & 0,879 & 0,381 & 0,212 & 0,053 \\
+$f_c$ (donde $S(f)$ cruza 0,5) & 0,243 & 0,023 & 0,045 & 0,023 \\
+Nodos eliminados en $f_c$      & 43    & 4     & 8     & 4 \\
+$S(f = 0{,}05)$                & 0,879 & 0,373 & 0,198 & 0,051 \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
 \end{table}
 
 \textbf{La paradoja de la robustez se confirma con contundencia.} La red tolera perder el
-23,7\,\% de sus nodos al azar ---42 equipos--- antes de que la componente gigante caiga a la
+24,3\,\% de sus nodos al azar ---43 equipos--- antes de que la componente gigante caiga a la
 mitad; un atacante dirigido logra lo mismo eliminando \textbf{4 equipos, el 2,3\,\%}. La
 relación es de más de diez a uno. Es el comportamiento típico de las redes con distribución
 de grado heterogénea, y esta red lo exhibe de forma casi de manual.
@@ -1488,8 +1488,8 @@ de grado heterogénea, y esta red lo exhibe de forma casi de manual.
 La comparación entre las tres estrategias dirigidas añade un matiz importante. El ataque por
 \textbf{grado} y el ataque por \textbf{intermediación recalculada} alcanzan el mismo $f_c$
 (0,023), pero por caminos distintos: a $f = 0{,}05$ el ataque por grado deja todavía el
-38,1\,\% de la red conectada, mientras que el de intermediación recalculada deja solo el
-5,3\,\%. Recalcular la intermediación después de cada eliminación es, con diferencia, la
+37,3\,\% de la red conectada, mientras que el de intermediación recalculada deja solo el
+5,1\,\%. Recalcular la intermediación después de cada eliminación es, con diferencia, la
 estrategia más destructiva ---y también la más costosa computacionalmente, lo que en la
 práctica actúa como una barrera para el atacante. El ataque por intermediación
 \textbf{estática} (sin recalcular) es intermedio: identifica bien los primeros objetivos
@@ -1516,8 +1516,8 @@ P1 y después el resto de las aristas por intermediación de arista descendente 
 \label{fig:percenlaces}
 \end{figure}
 
-El ataque dirigido a enlaces baja $f_c$ de \textbf{0,354} (aleatorio) a \textbf{0,321}
-(puentes primero): una caída del 9,3\,\%, mucho menor que la observada en nodos. La razón es
+El ataque dirigido a enlaces baja $f_c$ de \textbf{0,354} (aleatorio) a \textbf{0,316}
+(puentes primero): una caída del 10,7\,\%, mucho menor que la observada en nodos. La razón es
 instructiva: \textbf{los 141 puentes ya son, individualmente, el peor caso posible} ---cada
 uno desconecta algo por definición---, así que apenas queda margen para que un orden «más
 inteligente» empeore mucho más las cosas. Dicho de otro modo, en una red donde el 67,5\,\%
@@ -1554,8 +1554,8 @@ componentes distintas. Para la red intacta, $E(0) = 0{,}2082$.
 \toprule
 $f$ (fracción de nodos eliminados) & 0,02 & 0,05 & 0,10 & 0,20 \\
 \midrule
-Fallo aleatorio            & 0,959 & 0,785 & 0,598 & 0,388 \\
-Ataque por intermediación  & 0,611 & 0,148 & 0,057 & 0,012 \\
+Fallo aleatorio (media de 20 réplicas) & 0,901 & 0,782 & 0,644 & 0,409 \\
+Ataque por intermediación  & 0,580 & 0,143 & 0,051 & 0,012 \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
@@ -1566,7 +1566,7 @@ Porque la eficiencia pondera el \textbf{inverso} de la distancia. Un nodo que si
 «técnicamente conectado» pero que ahora está a 8 saltos en vez de a 2 aporta $1/8$ en lugar
 de $1/2$ ---casi nada--- aunque siga contando entero dentro de la componente gigante, que
 solo cuenta nodos. Con apenas el 2\,\% de los nodos atacados la eficiencia ya cayó al
-61,1\,\% mientras $S(f)$ apenas se movió; con el 5\,\% cayó al 14,8\,\%.
+58,0\,\% mientras $S(f)$ apenas se movió; con el 5\,\% cayó al 14,3\,\%.
 
 Para el diagnóstico operativo esta distinción es esencial: \textbf{la red puede seguir
 «arriba» ---conectada, respondiendo a \textit{ping}--- mucho después de que el servicio
@@ -1586,22 +1586,28 @@ vigilar también la latencia efectiva extremo a extremo, que es lo que $E(f)$ mo
 \toprule
 & \textbf{UCuenca (real)} & \textbf{Erdős--Rényi $G(n,m)$} & \textbf{Configuración} \\
 \midrule
-$f_c$ (fallo aleatorio) & 0,237 & 0,271 & 0,232 \\
+$f_c$ (fallo aleatorio) & 0,243 & 0,278 $\pm$ 0,035 & 0,223 $\pm$ 0,047 \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
 \end{table}
 
+\textit{Erdős--Rényi y configuración promediados sobre 50 realizaciones independientes cada
+uno (con su propio orden aleatorio de eliminación); la primera versión de este cuadro
+generaba un único grafo de cada modelo, con varianza demasiado alta para reportar $f_c$ como
+un punto fijo (una sola realización de configuración cayó, por ejemplo, en 0,192).}
+
 \textbf{¿Es esta red más o menos robusta de lo que su secuencia de grados haría esperar?}
-Prácticamente igual. El umbral real (0,237) es casi idéntico al del modelo de configuración
-(0,232), que preserva exactamente la secuencia de grados, y algo inferior al de
-Erdős--Rényi (0,271), que solo preserva $n$ y $m$. La conclusión es consistente con la de
-P2: \textbf{la robustez de UCuenca ante fallos aleatorios se explica por su secuencia de
-grados heterogénea ---unos pocos concentradores, muchas hojas--- y no por algún patrón
-estructural adicional.} La red no es ni mejor ni peor de lo que su distribución de grado
-predice; es exactamente lo que esa distribución implica. Curiosamente, el grafo aleatorio de
-Erdős--Rényi resulta \textit{más} robusto que la red real: al no tener concentradores, no
-tiene nada que perder en un fallo aleatorio con consecuencias desproporcionadas.
+Prácticamente igual. El umbral real (0,243) cae dentro de una desviación estándar del modelo
+de configuración (0,223 $\pm$ 0,047), que preserva exactamente la secuencia de grados, y algo
+por debajo del de Erdős--Rényi (0,278 $\pm$ 0,035), que solo preserva $n$ y $m$. La conclusión
+es consistente con la de P2: \textbf{la robustez de UCuenca ante fallos aleatorios se explica
+en gran parte por su secuencia de grados heterogénea ---unos pocos concentradores, muchas
+hojas--- y no por algún patrón estructural adicional.} La red no es ni mejor ni peor de lo que
+su distribución de grado predice; es aproximadamente lo que esa distribución implica.
+Erdős--Rényi resulta, en promedio, algo \textit{más} robusto que la red real: al no tener
+concentradores, no tiene nada que perder en un fallo aleatorio con consecuencias
+desproporcionadas.
 
 \subsection{P9 --- Propagación de fallos y epidemias}
 
@@ -2168,7 +2174,7 @@ antes, por separado, por las centralidades de P1, los cortes mínimos de P6 y la
 de P8.
 
 \item \textbf{La falla sería muy grave y, sobre todo, asimétrica.} La red es robusta ante
-fallos aleatorios ($f_c \approx 0{,}237$) pero extremadamente frágil ante ataques dirigidos
+fallos aleatorios ($f_c \approx 0{,}243$) pero extremadamente frágil ante ataques dirigidos
 ($f_c \approx 0{,}023$): la paradoja de la robustez clásica de las redes de grado
 heterogéneo. La eficiencia global se degrada aún antes que la conectividad, lo que significa
 que el servicio percibido se deteriora mucho antes de que ningún monitor de conectividad se
