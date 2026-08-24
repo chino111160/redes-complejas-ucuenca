@@ -1,0 +1,24 @@
+# Normalizacion de fines de linea
+# Git guarda SIEMPRE los archivos de texto con LF en el repositorio y los
+# entrega al disco con el estilo propio del sistema operativo. Evita que
+# abrir un archivo en Windows lo marque entero como modificado.
+* text=auto
+
+# Archivos de texto del proyecto (explicitos, por claridad)
+*.jl    text
+*.tex   text
+*.md    text
+*.csv   text
+*.py    text
+*.toml  text
+*.txt   text
+*.html  text
+*.graphml text
+
+# Binarios: git no debe tocarlos nunca
+*.pptx  binary
+*.docx  binary
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.gif   binary
