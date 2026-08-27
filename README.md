@@ -21,8 +21,8 @@ Los cuatro entregables de la Sección 8.1 del enunciado están listos:
 |---|---|
 | Informe técnico (PDF) | [`informe/informe.pdf`](informe/informe.pdf) — fuente en [`informe/informe.tex`](informe/informe.tex) |
 | Código reproducible | [`analisis/`](analisis/) — ver [`analisis/README.md`](analisis/README.md) para el orden de ejecución |
-| Diapositivas | [`diapositivas/Presentacion_Redes_Complejas_RedUCuenca.pptx`](diapositivas/) |
-| Repositorio de código | este mismo repositorio (privado) |
+| Diapositivas | [`diapositivas/Presentacion_Redes_Complejas_RedUCuenca.pptx`](diapositivas/Presentacion_Redes_Complejas_RedUCuenca.pptx) — 30 láminas con notas del orador |
+| Repositorio de código | este mismo repositorio (público) |
 
 El hallazgo central: **Campus Paraíso** no tiene la redundancia
 *core*-agregación que el informe técnico institucional le atribuye —
