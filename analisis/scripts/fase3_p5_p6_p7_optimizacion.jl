@@ -377,9 +377,20 @@ for campus in campus_con_acceso
 
     longs_ff = [length(p.camino) - 1 for p in hist_ff]
     longs_ek = [length(p.camino) - 1 for p in hist_ek]
+    # Propiedad de Edmonds-Karp (BFS): la longitud del camino aumentante NUNCA
+    # decrece de una iteración a la siguiente -- es la base de su cota
+    # O(V*E). Se verifica explícitamente en vez de solo asumirla.
+    @assert issorted(longs_ek) "Edmonds-Karp debería producir longitudes de camino no decrecientes -- violación de la propiedad que garantiza su cota O(V·E)"
+    # Sin `init` en minimum/maximum: hist_ff/hist_ek nunca están vacíos aquí
+    # (flujo_ff > 0 en los siete campus implica al menos una iteración), así
+    # que un `init=0` sería incorrecto (reportaría 0 como longitud mínima
+    # aunque ningún camino real tenga longitud 0) y se prefiere que un caso
+    # verdaderamente vacío falle con un error claro en vez de mentir con un 0.
     @printf("  Flujo máximo: %d Mbps   FF(DFS): %d iteraciones (long. %d-%d)   EK(BFS): %d iteraciones (long. %d-%d)\n",
-            flujo_ff, length(hist_ff), minimum(longs_ff; init=0), maximum(longs_ff; init=0),
-            length(hist_ek), minimum(longs_ek; init=0), maximum(longs_ek; init=0))
+            flujo_ff, length(hist_ff), minimum(longs_ff), maximum(longs_ff),
+            length(hist_ek), minimum(longs_ek), maximum(longs_ek))
+    @printf("  Longitudes de los caminos aumentantes -- FF(DFS): %s\n", join(longs_ff, ", "))
+    @printf("  Longitudes de los caminos aumentantes -- EK(BFS): %s (no decreciente ✓)\n", join(longs_ek, ", "))
     @printf("  Corte mínimo verificado a mano: %d aristas físicas, capacidad total = %d Mbps (= flujo máximo ✓)\n",
             length(aristas_corte), capacidad_corte)
 
@@ -392,7 +403,10 @@ for campus in campus_con_acceso
     push!(filas_flujo, (campus=campus, nodos_acceso=length(idx_acceso_campus),
                          flujo_maximo_mbps=flujo_ff, iteraciones_ff=length(hist_ff),
                          iteraciones_ek=length(hist_ek), aristas_corte=length(aristas_corte),
-                         capacidad_corte_mbps=capacidad_corte))
+                         capacidad_corte_mbps=capacidad_corte,
+                         longitud_ff_min=minimum(longs_ff), longitud_ff_max=maximum(longs_ff),
+                         longitud_ek_min=minimum(longs_ek), longitud_ek_max=maximum(longs_ek),
+                         longitudes_ff=join(longs_ff, ";"), longitudes_ek=join(longs_ek, ";")))
 end
 df_flujo = DataFrame(filas_flujo)
 guardar_csv(df_flujo, joinpath(DIR_RESULTADOS, "p6_flujo_maximo_por_campus.csv"))

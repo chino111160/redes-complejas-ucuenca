@@ -164,10 +164,14 @@ eliminar deliberadamente 4 de 177 equipos hace lo que al azar exige eliminar 43.
 eficiencia global se degrada aún antes: con solo el 5\,\% de los nodos atacados cae al
 14,3\,\% de su valor original.
 
-\item \textbf{La fragilidad de esta red es de conectividad, no de sobrecarga en cadena.}
-Bajo el modelo de cascada de Motter-Lai ningún nodo individual desencadena un colapso
-mayor al 8,5\,\% de la red, ni siquiera con margen de tolerancia $\tau = 0$. Son dos
-mecanismos de falla distintos y esta red solo exhibe uno.
+\item \textbf{La fragilidad de esta red es de conectividad, no de sobrecarga en cadena
+---aunque cuando el disparador es del núcleo, el daño en capacidad sí es severo.} Bajo el
+modelo de cascada de Motter-Lai (barrido de 13 valores de $\tau$), ningún nodo individual
+desencadena un colapso mayor al 8,5\,\% de los \textit{equipos} de la red, ni siquiera con
+margen de tolerancia $\tau = 0$. Pero medido en \textit{capacidad} (Mbps) en vez de en
+número de equipos, ocho de los quince nodos candidatos superan el 20\,\% de la red incluso
+con márgenes generosos ---porque los candidatos son, por construcción, los nodos \textit{core}
+y WAN que concentran los enlaces troncales de mayor capacidad.
 
 \item \textbf{47 puntos de articulación y 141 puentes} ---el 67,5\,\% de los enlaces---
 sostienen una red con \textit{clustering} casi nulo (0,0952) y asortatividad negativa
@@ -870,14 +874,60 @@ $k$-means espectral ($K=22$) vs.\ Louvain    & 0,834 & 0,372 \\
 \end{adjustbox}
 \end{table}
 
-La matriz de confusión comunidad $\times$ campus (Anexo, \code{p4\_matriz\_confusion\_comunidad\_campus.csv})
-es casi bloque-diagonal: \textbf{Louvain no mezcla campus entre sí}, pero \textbf{sí
-subdivide cada campus grande en varias comunidades}. Campus Central se reparte en once
-comunidades, Balzay en cuatro y Paraíso en cinco. De ahí la aparente contradicción de los
-dos índices: el NMI es moderado (0,584) porque la partición de Louvain \textit{refina} la de
-campus y comparte con ella mucha información; el ARI es bajo (0,190) porque penaliza
-específicamente la sobre-partición, y aquí la hay por construcción. Los dos índices no se
-contradicen: miden cosas distintas y ambos son correctos.
+La matriz de confusión comunidad $\times$ campus se presenta completa en la
+Tabla~\ref{tab:confusion} (fuente: \code{p4\_matriz\_confusion\_comunidad\_campus.csv}). Es
+casi bloque-diagonal: \textbf{Louvain no mezcla campus entre sí}, pero \textbf{sí subdivide
+cada campus grande en varias comunidades}. Campus Central se reparte en once comunidades,
+Balzay en cuatro y Paraíso en cinco. De ahí la aparente contradicción de los dos índices: el
+NMI es moderado (0,584) porque la partición de Louvain \textit{refina} la de campus y
+comparte con ella mucha información; el ARI es bajo (0,190) porque penaliza específicamente
+la sobre-partición, y aquí la hay por construcción. Los dos índices no se contradicen: miden
+cosas distintas y ambos son correctos.
+
+\begin{table}[H]
+\centering
+\caption{Matriz de confusión comunidad de Louvain $\times$ campus declarado (22 comunidades $\times$ 8 campus); celdas en blanco = 0 (P4.3)}
+\label{tab:confusion}
+\scriptsize
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{rcccccccc}
+\toprule
+\textbf{Com.} & \textbf{Balzay} & \textbf{Central} & \textbf{Hospit.} & \textbf{Paraíso} & \textbf{Yanuncay} & \textbf{Nube MPLS} & \textbf{C.\ Histórico} & \textbf{Museo} \\
+\midrule
+1  &    & 4  &   &   &   &   &   &   \\
+2  &    &    &   &   & 12 &   &   &   \\
+3  & 11 &    &   &   &   &   &   &   \\
+4  & 7  &    &   &   &   &   &   &   \\
+5  &    & 6  &   &   &   &   &   &   \\
+6  &    & 12 &   &   &   &   &   &   \\
+7  &    & 5  &   &   &   &   &   &   \\
+8  &    & 8  &   &   &   &   &   &   \\
+9  &    & 3  &   &   &   &   &   &   \\
+10 &    &    &   & 9 &   &   &   &   \\
+11 &    &    &   & 6 &   &   &   &   \\
+12 &    &    &   & 9 &   &   &   &   \\
+13 &    &    &   & 7 &   &   &   &   \\
+14 &    &    & 5 &   &   &   &   &   \\
+15 & 3  & 3  &   & 2 & 1 & 1 &   &   \\
+16 &    & 6  &   &   &   &   &   &   \\
+17 &    & 4  &   &   &   &   &   &   \\
+18 &    & 5  &   &   &   &   &   &   \\
+19 & 14 &    &   &   &   &   &   & 2 \\
+20 &    & 12 &   &   &   &   & 2 &   \\
+21 &    &    &   & 11 &   &   &   &   \\
+22 &    & 7  &   &   &   &   &   &   \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}
+
+La comunidad 15 es la única con dispersión real entre campus (Balzay, Central, Paraíso,
+Yanuncay y Nube MPLS a la vez) y coincide, como era de esperar, con el grupo donde se
+concentran los nodos discrepantes de la Tabla~\ref{tab:discrepantes}: son los equipos WAN e
+\textit{interconexión} de alta centralidad que Louvain agrupa por rol de tránsito compartido
+en vez de por campus declarado. Todas las demás comunidades caen íntegramente dentro de un
+único campus, lo que hace visualmente evidente el patrón «bloque-diagonal, pero
+sobre-particionado» descrito arriba.
 
 \textbf{Los nodos donde ambas particiones discrepan.} Solo \textbf{11 de 177 nodos} quedan
 en una comunidad dominada por un campus distinto al propio, y no son un conjunto arbitrario:
@@ -1230,17 +1280,17 @@ casos, como exige el teorema.
 \label{tab:flujo}
 \small
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lrrrrr}
+\begin{tabular}{lrrrrrcc}
 \toprule
-\textbf{Campus} & \textbf{Nodos de acceso} & \textbf{Flujo máx.\ (Mbps)} & \textbf{Aristas del corte} & \textbf{Cap.\ del corte} & \textbf{Iter.\ FF / EK} \\
+\textbf{Campus} & \textbf{Nodos de acceso} & \textbf{Flujo máx.\ (Mbps)} & \textbf{Aristas del corte} & \textbf{Cap.\ del corte} & \textbf{Iter.\ FF / EK} & \textbf{Long.\ caminos FF} & \textbf{Long.\ caminos EK} \\
 \midrule
-Campus Central        & 56 & 44\,000 &  7 & 44\,000 & 44 / 44 \\
-Campus Balzay         & 24 & 23\,000 & 23 & 23\,000 & 23 / 23 \\
-Sede Museo            &  1 & 11\,000 &  2 & 11\,000 &  3 / 3 \\
-Sede Centro Histórico &  1 & 11\,000 &  2 & 11\,000 &  4 / 2 \\
-Campus Yanuncay       & 11 & 10\,000 &  1 & 10\,000 & 10 / 10 \\
-Campus Hospitalidad   &  4 &  4\,000 &  4 &  4\,000 &  4 / 4 \\
-\textbf{Campus Paraíso} & \textbf{35} & \textbf{1\,000} & \textbf{1} & \textbf{1\,000} & \textbf{1 / 1} \\
+Campus Central        & 56 & 44\,000 &  7 & 44\,000 & 44 / 44 & 3--13 & 3--12 \\
+Campus Balzay         & 24 & 23\,000 & 23 & 23\,000 & 23 / 23 & 5--11 & 5--7 \\
+Sede Museo            &  1 & 11\,000 &  2 & 11\,000 &  3 / 3 & 5--8 & 5--6 \\
+Sede Centro Histórico &  1 & 11\,000 &  2 & 11\,000 &  4 / 2 & 5--10 & 4--6 \\
+Campus Yanuncay       & 11 & 10\,000 &  1 & 10\,000 & 10 / 10 & 4--4 & 4--4 \\
+Campus Hospitalidad   &  4 &  4\,000 &  4 &  4\,000 &  4 / 4 & 3--3 & 3--3 \\
+\textbf{Campus Paraíso} & \textbf{35} & \textbf{1\,000} & \textbf{1} & \textbf{1\,000} & \textbf{1 / 1} & \textbf{5--5} & \textbf{5--5} \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
@@ -1252,6 +1302,24 @@ flujo máximo ---la verificación es una aserción del \textit{script}, que abor
 caso de Paraíso puede comprobarse a mano en una línea: el corte consta de una única arista,
 \code{CPAR-C10}--\code{ROUTER-CAMPUS-HUAYNA-CAPAC}, de capacidad 1\,000~Mbps, y el flujo
 máximo es 1\,000~Mbps.
+
+\textbf{Longitudes de los caminos aumentantes.} Las dos últimas columnas reportan, para cada
+campus, el rango (mínimo--máximo, en saltos) de las longitudes de \textit{todos} los
+caminos aumentantes usados a lo largo de la ejecución ---no solo su número, que ya estaba en
+la columna de iteraciones. Dos lecturas se desprenden directamente de estos rangos. Primero,
+\textbf{Edmonds-Karp nunca usa caminos más largos que Ford-Fulkerson y casi siempre usa
+caminos más cortos o iguales}: el máximo de EK es menor o igual que el de FF en los siete
+casos (p.~ej.\ Central: 12 contra 13; Balzay: 7 contra 11), consistente con que EK busca
+explícitamente el camino \textit{más corto} disponible en cada iteración, mientras que FF
+(DFS) puede tomar rutas más largas y menos eficientes antes de agotar la red residual.
+Segundo, y más fuerte: \textbf{la secuencia completa de longitudes de EK es siempre no
+decreciente}, la propiedad que garantiza su cota $O(V\!\cdot\!E)$ (Cormen et al., 2009,
+cap.~26); el \textit{script} lo verifica con una aserción explícita
+(\code{issorted(longitudes\_ek)}) que se cumple en los siete campus. El caso de Sede Centro
+Histórico lo ilustra en una corrida de solo dos iteraciones: EK usa longitudes
+$4 \to 6$ (crece), mientras que FF, sin esa garantía, usa $10 \to 6 \to 5 \to 8$ en sus
+cuatro iteraciones ---sube y baja sin ningún patrón, y por eso necesita el doble de
+iteraciones para llegar al mismo flujo máximo.
 
 \textbf{El resultado es contundente: Paraíso, con 35 equipos de acceso ---más que Yanuncay
 y Hospitalidad juntos---, tiene el flujo máximo más bajo de toda la institución}, cuarenta y
@@ -1623,44 +1691,83 @@ continúa hasta que nadie más supera su capacidad.
 
 Se simuló la falla de los 15 nodos de mayor carga inicial (los únicos con capacidad real de
 desencadenar una cascada relevante: un nodo hoja, al caer, no redistribuye carga
-significativa hacia nadie) sobre una malla $\tau \in \{0;\, 0{,}05;\, 0{,}1;\, 0{,}15;\,
-0{,}2;\, 0{,}3;\, 0{,}4;\, 0{,}5;\, 0{,}75;\, 1{,}0\}$.
+significativa hacia nadie) sobre una malla $\tau \in \{0;\, 0{,}01;\, 0{,}02;\, 0{,}03;\,
+0{,}05;\, 0{,}1;\, 0{,}15;\, 0{,}2;\, 0{,}3;\, 0{,}4;\, 0{,}5;\, 0{,}75;\, 1{,}0\}$ ---trece
+valores en lugar de los diez originales, con resolución más fina justo por encima del piso
+del modelo ($\tau=0{,}01$/$0{,}02$/$0{,}03$) para acotar mejor un eventual umbral cercano a
+cero. No se exploran valores $\tau<0$: en este modelo $C_i=(1+\tau)L_i$, de modo que
+$\tau<0$ implicaría que un nodo arranca \textit{ya} por encima de su propia capacidad antes
+de cualquier perturbación ---un estado inicial inválido, no un «margen de tolerancia» más
+estricto--- así que $\tau=0$ sigue siendo el piso físicamente interpretable del modelo.
+
+\textbf{Dos criterios de daño, no uno.} El enunciado no fija cómo medir «cuánto daña» una
+cascada, y usar un solo criterio deja abierta la duda de si la conclusión depende de esa
+elección. Se probaron dos, deliberadamente distintos: (i) el original, \textbf{fracción de
+nodos} caídos ($|\text{caídos}|/n$); y (ii) uno alternativo, \textbf{fracción de capacidad}
+(Mbps) de la red que queda incidente a algún nodo caído, usando las mismas capacidades
+estimadas de P6. Los dos son operativamente razonables y miden cosas distintas: el primero
+importa para el número de \textit{usuarios} afectados, el segundo para el \textit{ancho de
+banda} perdido ---y, como se ve abajo, no dan la misma respuesta.
 
 \begin{table}[H]
 \centering
-\caption{Fracción máxima de la red afectada por una cascada, por margen de tolerancia $\tau$}
+\caption{Fracción máxima de la red afectada por una cascada, por margen de tolerancia $\tau$ y criterio de daño}
 \label{tab:cascada}
 \small
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lcccccccccc}
+\begin{tabular}{lccccccccccccc}
 \toprule
-$\tau$ & 0,00 & 0,05 & 0,10 & 0,15 & 0,20 & 0,30 & 0,40 & 0,50 & 0,75 & 1,00 \\
-Máx.\ afectado & 7,3\,\% & 6,8\,\% & 6,2\,\% & 6,8\,\% & 8,5\,\% & 7,9\,\% & 7,9\,\% & 6,8\,\% & 6,8\,\% & 6,2\,\% \\
+$\tau$ & 0,00 & 0,01 & 0,02 & 0,03 & 0,05 & 0,10 & 0,15 & 0,20 & 0,30 & 0,40 & 0,50 & 0,75 & 1,00 \\
+\midrule
+Máx.\ nodos afectados      & 7,3\,\%  & 7,3\,\%  & 7,3\,\%  & 7,3\,\%  & 6,8\,\%  & 6,2\,\%  & 6,8\,\%  & 8,5\,\%  & 7,9\,\%  & 7,9\,\%  & 6,8\,\%  & 6,8\,\%  & 6,2\,\%  \\
+Máx.\ capacidad afectada   & 68,3\,\% & 74,2\,\% & 74,2\,\% & 62,4\,\% & 53,2\,\% & 51,9\,\% & 51,9\,\% & 71,8\,\% & 68,3\,\% & 67,2\,\% & 55,5\,\% & 55,5\,\% & 47,3\,\% \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
 \end{table}
 
-\textbf{Determinación del margen crítico $\tau_c$.} El enunciado pide el valor de $\tau$ por
-debajo del cual la falla de un único nodo provoca una cascada que afecta a más del 20\,\% de
-la red. \textbf{Ningún nodo candidato alcanza ese umbral en ninguno de los diez valores de
-$\tau$ probados, ni siquiera con margen $\tau = 0$}, de modo que no existe un $\tau_c$
-positivo que reportar. El peor caso observado es \code{PE2-BALZAY}, que a $\tau = 0{,}2$
-arrastra al 8,5\,\% de la red (15 nodos). Le siguen \code{FORTIGATE-1800F-BALZAY} (7,3\,\%)
-y el grupo \code{DATCC-2A-C3} / \code{INTERNET-MPLS} / \code{PE2-CENTRAL} /
-\code{FORTIGATE-1800F-CENTRAL} (6,8\,\%). Reportar «$\tau_c = 0$» sería engañoso: se leería,
-al revés, como «la red es frágil incluso sin margen».
+\textbf{Criterio de nodos: confirma la conclusión original, ahora con grilla más fina.} El
+enunciado pide el valor de $\tau$ por debajo del cual la falla de un único nodo provoca una
+cascada que afecta a más del 20\,\% de la red. \textbf{Ningún nodo candidato alcanza ese
+umbral en ninguno de los trece valores de $\tau$ probados, ni siquiera con margen $\tau =
+0$}, de modo que no existe un $\tau_c$ positivo que reportar bajo este criterio. El peor caso
+observado es \code{PE2-BALZAY}, que a $\tau = 0{,}2$ arrastra al 8,5\,\% de la red (15
+nodos). Reportar «$\tau_c = 0$» sería engañoso: se leería, al revés, como «la red es frágil
+incluso sin margen».
 
-\textbf{¿Contradice esto la fragilidad hallada en P8? No: son dos mecanismos de falla
-distintos.} En P8 la métrica es \textbf{conectividad} ---qué se desconecta de qué---; aquí es
-\textbf{sobrecarga} ---qué se satura por redistribución de tráfico. Esta red tiene poca
+\textbf{Criterio de capacidad: aquí SÍ aparece un umbral, y es revelador.} Ocho de los quince
+candidatos superan el 20\,\% de capacidad afectada en algún punto de la grilla ---la mayoría
+en la mitad inferior de $\tau$, pero \code{DATCC-2A-C3} y \code{PE2-CENTRAL} lo superan
+\textit{incluso en $\tau = 1{,}0$}, el margen más generoso probado: a $\tau=1{,}0$, la
+cascada de \code{DATCC-2A-C3} solo derriba 8 nodos (4,5\,\% de la red, por debajo del 20\,\%
+del criterio de nodos) pero esos 8 nodos concentran el 47,3\,\% de la capacidad total de la
+red. La razón es mecánica y coherente con el resto del informe: los candidatos a disparador
+son, por construcción, los de mayor carga inicial ---\textit{core} y WAN---, exactamente los
+nodos que P6 estima con los enlaces troncales de 10\,Gbps. Cuando alguno de ellos cae, cae
+también gran parte de la capacidad de la red, la caiga o no en cadena un tercer nodo.
+\textbf{El criterio de capacidad no es monótono en $\tau$} (a diferencia del criterio de
+nodos, que tiende a estabilizarse): qué conjunto exacto de nodos cae en cada corrida depende
+de la redistribución específica de carga, no solo de cuántos caen, así que $\tau_c$ bajo este
+criterio se reporta como «el mayor $\tau$ de la grilla en el que aún se observó daño
+severo», no como un umbral limpio de una sola dirección.
+
+\textbf{¿Contradice esto la conclusión de nodos, o la fragilidad hallada en P8? No: son tres
+lecturas del mismo fenómeno con tres métricas distintas.} En P8 la métrica es
+\textbf{conectividad} ---qué se desconecta de qué---; con el criterio de nodos de P9 es
+\textbf{cuántos equipos} se saturan por redistribución de tráfico; con el criterio de
+capacidad es \textbf{cuánto ancho de banda} se pierde con ellos. Esta red tiene poca
 redundancia, pero las rutas alternativas que quedan tras una falla son mayormente
 \textit{cortas} y no concentran suficiente tráfico redistribuido en un tercer nodo como para
-tumbarlo en cadena. Dicho de forma directa: \textbf{esta red se rompe por desconexión, no por
-efecto dominó}. La distinción tiene consecuencias operativas concretas ---no hace falta
-sobredimensionar capacidad «por si acaso» en previsión de cascadas, pero sí hace falta
-redundancia topológica--- y es exactamente el tipo de conclusión que solo se obtiene
-ejecutando ambos análisis.
+tumbar a \textit{muchos} equipos en cadena ---eso sigue siendo cierto y el criterio de nodos
+lo confirma con una grilla más fina. Pero cuando los pocos equipos que sí caen son
+troncales, el daño en \textit{Mbps} es desproporcionado a su número. Dicho de forma directa:
+\textbf{esta red no se rompe por un efecto dominó de muchos equipos, pero si el dominó
+empieza en el núcleo, se lleva la mayor parte del ancho de banda con pocas fichas.} La
+recomendación operativa se matiza en consecuencia: no hace falta sobredimensionar capacidad
+de forma generalizada «por si acaso» en previsión de cascadas masivas, pero sí conviene
+priorizar redundancia y aislamiento de fallos específicamente en los nodos \textit{core}/WAN
+de mayor carga (los mismos del top-10 de P10), porque ahí un único punto de falla concentra
+tanto conectividad como capacidad.
 
 \subsubsection{SIR y umbral epidémico}
 
@@ -1849,11 +1956,11 @@ al menos tres de los cuatro componentes.
 
 \begin{table}[H]
 \centering
-\caption{Ficha de los cinco puntos más críticos: función en la jerarquía y consecuencia estimada de su falla}
+\caption{Ficha del top-10 de puntos críticos: función en la jerarquía y consecuencia estimada de su falla}
 \label{tab:fichas}
-\small
+\scriptsize
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{p{3.2cm}p{5.3cm}p{5.7cm}}
+\begin{tabular}{p{3.0cm}p{5.1cm}p{5.5cm}}
 \toprule
 \textbf{Equipo} & \textbf{Función en la jerarquía} & \textbf{Consecuencia estimada de su falla} \\
 \midrule
@@ -1891,6 +1998,50 @@ MPLS. \\
 Idéntica a la anterior: aislamiento de Paraíso. Los dos equipos forman una cadena en serie
 sin ninguna ruta alternativa, de modo que la fiabilidad del campus es el \textit{producto} de
 las dos fiabilidades individuales. \\
+\addlinespace
+\code{BAL-CENTEC-D2} &
+Switch de agregación de Balzay; cuelga del \textit{core} por dos \textit{uplinks} redundantes
+(\code{DT-0A-C12} principal, \code{DT-0A-C13} secundario) y protege 5 equipos de acceso
+(CEA, VLIR, tres bloques CTBLOQ). Participa en 5 cortes mínimos. &
+Aislamiento de 5 equipos de acceso de Balzay. Mismo patrón que \code{BAL-AUL2-D1} (segundo
+puesto) pero a menor escala: el \textit{uplink} al \textit{core} es redundante, el daño está
+aguas abajo. \\
+\addlinespace
+\code{BAL-AUL1-D4} &
+Switch de agregación de Balzay; dos \textit{uplinks} redundantes al \textit{core}
+(\code{DT-0A-C12}/\code{DT-0A-C13}) y protege 4 equipos de acceso de aulas. Participa en 4
+cortes mínimos. &
+Aislamiento de 4 equipos de acceso. Tercera instancia del mismo patrón estructural que
+\code{BAL-AUL2-D1} y \code{BAL-CENTEC-D2}: Balzay es redundante en el tramo \textit{core}, no
+en el tramo agregación-acceso. \\
+\addlinespace
+\code{HOS-0A-D05} &
+\textbf{Único} switch de agregación de todo Campus Hospitalidad; su único \textit{uplink} es
+un enlace \code{rol=inferido}, sin redundancia, directo a \code{INTERNET-MPLS} (no pasa por
+ningún \textit{core} intermedio). Participa en 4 cortes mínimos. &
+Doble consecuencia en un solo equipo: aísla sus 4 equipos de acceso \textbf{y}, a la vez, es
+el corte mínimo completo del campus ---la falla de este único switch desconecta Hospitalidad
+entero de la red institucional, el mismo patrón de fragilidad concentrada que Paraíso pero en
+un solo salto en vez de dos. \\
+\addlinespace
+\code{CB-EADMI-D6} &
+Switch de agregación de Balzay; protege 3 equipos de acceso directos (EA-0A-A114,
+EA-1A-A115, EA-1A-A116) y, en cadena, otro switch de agregación (\code{BAL-EADM-D3}) con su
+propio equipo dependiente. Participa en 3 cortes mínimos. &
+Aislamiento de al menos 3 equipos de acceso directos; al incluir la cadena hacia
+\code{BAL-EADM-D3}, el aislamiento real alcanza 4 equipos. Ejemplo de fragilidad en cascada
+\textit{topológica} (no la cascada por sobrecarga de P9): un punto de articulación protege a
+otro. \\
+\addlinespace
+\code{FORTIGATE-1800F-CENTRAL} &
+Firewall perimetral de Central; concentra el tráfico saliente de \code{PE1}/\code{PE2-CENTRAL}
+y lo entrega a ambos \textit{core} (\code{DATCC-2A-C2}/\code{C3}) por dos LAG de 10\,Gbps
+cada uno (20\,Gbps de los 44\,Gbps de salida de Central). Participa en 2 cortes mínimos. &
+\textbf{No} es punto de articulación: tiene un enlace HA hacia su gemelo
+\code{FORTIGATE-1800F-BALZAY} y la red no se parte. Pero ese enlace de respaldo es de solo
+1\,Gbps ---veinte veces menor que la capacidad que reemplaza---, así que aunque Central sigue
+conectado, su capacidad de salida efectiva se degrada severamente. Mismo patrón que
+\code{DATCC-2A-C3}: concentra \textit{capacidad} sin ser punto de articulación. \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
@@ -1913,6 +2064,18 @@ mismo diagnóstico, y esa convergencia es la mejor evidencia de que el diagnóst
 correcto. Nótese además la concentración por capa: \textbf{cinco de los diez puestos son
 switches de agregación}, confirmando la lectura de la Sección~\ref{sec:puentes} de que la
 fragilidad estructural de esta red no está en el núcleo sino un nivel más abajo.
+
+Los puestos 6 a 10 refuerzan dos lecturas ya presentes en el top-5, ahora con más evidencia.
+Tres de ellos (\code{BAL-CENTEC-D2}, \code{BAL-AUL1-D4}, \code{CB-EADMI-D6}) son variaciones
+del mismo patrón que \code{BAL-AUL2-D1}: switches de agregación de Balzay con \textit{uplink}
+redundante al \textit{core} pero acceso no redundante aguas abajo, lo que confirma que la
+fragilidad de ese campus es sistemática y no un caso aislado. \code{HOS-0A-D05} es el caso
+más severo del bloque: al ser el \textbf{único} switch de agregación de Hospitalidad, combina
+en un solo equipo el rol de \code{BAL-AUL2-D1} (aislar accesos) y el de
+\code{ROUTER-CAMPUS-HUAYNA-CAPAC} (aislar todo el campus). Y \code{FORTIGATE-1800F-CENTRAL}
+repite, a menor escala, el patrón de \code{DATCC-2A-C3}: no es de articulación, pero
+concentra capacidad, y su respaldo HA es veinte veces más angosto que el enlace que
+reemplaza.
 
 % ============================================================================
 \section{Propuesta de rediseño (Fase 5)}
@@ -2180,11 +2343,18 @@ heterogéneo. La eficiencia global se degrada aún antes que la conectividad, lo
 que el servicio percibido se deteriora mucho antes de que ningún monitor de conectividad se
 active.
 
-\item \textbf{La fragilidad de esta red es de conectividad, no de sobrecarga en cadena.}
-Bajo el modelo de cascada de Motter-Lai, ningún nodo individual desencadena un colapso mayor
-al 8,5\,\% de la red, ni siquiera con margen $\tau = 0$. Es una distinción operativa de
-consecuencias directas: hace falta redundancia topológica, no sobredimensionamiento de
-capacidad preventivo.
+\item \textbf{La fragilidad de esta red es de conectividad, no de sobrecarga en cadena
+---con un matiz importante en capacidad.} Bajo el modelo de cascada de Motter-Lai (evaluado
+con dos criterios de daño y 13 valores de $\tau$, incluyendo $\tau<0{,}05$), ningún nodo
+individual desencadena un colapso mayor al 8,5\,\% de los \textit{equipos} de la red, ni
+siquiera con margen $\tau = 0$. Medido en \textbf{capacidad} en vez de en equipos, la
+lectura cambia: ocho de los quince candidatos superan el 20\,\% de daño, y en \code{DATCC-2A-C3}
+y \code{PE2-CENTRAL} el daño de capacidad se mantiene por encima del 20\,\% incluso en el
+margen más generoso probado ($\tau=1{,}0$), porque son nodos \textit{core}/WAN que
+concentran enlaces troncales de 10\,Gbps. La distinción operativa se matiza en consecuencia:
+no hace falta sobredimensionar capacidad de forma generalizada «por si acaso», pero sí hace
+falta redundancia topológica ---priorizada en los nodos \textit{core}/WAN de mayor carga, que
+son los que concentran capacidad y no solo conectividad.
 
 \item \textbf{El informe técnico institucional sobreestima la redundancia de Campus
 Paraíso.} Los datos (P1.6) muestran que sus seis nodos de agregación cuelgan de un único
@@ -2269,6 +2439,9 @@ Macmillan.
 
 \item Clauset, A., Shalizi, C. R., \& Newman, M. E. J. (2009). Power-law distributions in
 empirical data. \textit{SIAM Review}, \textit{51}(4), 661--703.
+
+\item Cormen, T. H., Leiserson, C. E., Rivest, R. L., \& Stein, C. (2009). \textit{Introduction
+to algorithms} (3.\textsuperscript{a} ed.). MIT Press.
 
 \item Deo, N. (2017). \textit{Graph theory with applications to engineering and computer
 science}. Dover Publications.

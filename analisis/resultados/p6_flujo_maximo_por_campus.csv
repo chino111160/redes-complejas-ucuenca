@@ -1,8 +1,8 @@
-campus,nodos_acceso,flujo_maximo_mbps,iteraciones_ff,iteraciones_ek,aristas_corte,capacidad_corte_mbps
-Campus Balzay,24,23000,23,23,23,23000
-Campus Central,56,44000,44,44,7,44000
-Campus Hospitalidad,4,4000,4,4,4,4000
-Campus Paraiso,35,1000,1,1,1,1000
-Campus Yanuncay,11,10000,10,10,1,10000
-Sede Centro Historico,1,11000,4,2,2,11000
-Sede Museo,1,11000,3,3,2,11000
+campus,nodos_acceso,flujo_maximo_mbps,iteraciones_ff,iteraciones_ek,aristas_corte,capacidad_corte_mbps,longitud_ff_min,longitud_ff_max,longitud_ek_min,longitud_ek_max,longitudes_ff,longitudes_ek
+Campus Balzay,24,23000,23,23,23,23000,5,11,5,7,7;6;6;6;6;6;6;6;6;6;11;7;5;5;5;5;5;5;5;5;5;6;7,5;5;5;5;5;5;5;5;5;5;6;6;6;6;6;6;6;6;6;6;6;6;7
+Campus Central,56,44000,44,44,7,44000,3,13,3,12,7;6;6;6;6;6;6;6;6;6;11;7;5;5;3;3;5;5;5;5;5;5;5;5;6;6;6;6;6;6;6;6;7;7;8;8;8;8;8;8;8;8;8;13,3;3;5;5;5;5;5;5;5;5;5;5;6;6;6;6;6;6;6;6;6;6;6;6;6;6;6;6;6;6;6;6;7;8;8;8;8;8;8;8;8;8;11;12
+Campus Hospitalidad,4,4000,4,4,4,4000,3,3,3,3,3;3;3;3,3;3;3;3
+Campus Paraiso,35,1000,1,1,1,1000,5,5,5,5,5,5
+Campus Yanuncay,11,10000,10,10,1,10000,4,4,4,4,4;4;4;4;4;4;4;4;4;4,4;4;4;4;4;4;4;4;4;4
+Sede Centro Historico,1,11000,4,2,2,11000,5,10,4,6,10;6;5;8,4;6
+Sede Museo,1,11000,3,3,2,11000,5,8,5,6,5;6;8,5;5;6

@@ -387,14 +387,47 @@ end
 # candidatos mantiene la búsqueda de τ_c computacionalmente tratable.
 const N_CANDIDATOS_CASCADA = 15
 candidatos = sortperm(L0; rev=true)[1:N_CANDIDATOS_CASCADA]
-grilla_τ = [0.0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
+# Grilla de τ ampliada respecto de la versión original (que partía en 0,05):
+# se agregan 0,01/0,02/0,03 para acotar más finamente el umbral justo por
+# encima del piso del modelo. τ < 0 no se explora porque no es físicamente
+# interpretable aquí: C_i=(1+τ)L_i con τ<0 implicaría que un nodo arranca
+# YA por encima de su propia capacidad (falla en t=0 sin ninguna perturbación),
+# lo cual no es un "margen de tolerancia" sino un estado inicial inválido.
+# τ=0 (capacidad exactamente igual a la carga inicial, el caso más frágil
+# posible dentro del modelo) ya estaba cubierto y sigue siendo el piso real.
+grilla_τ = [0.0, 0.01, 0.02, 0.03, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
+
+# Criterio de daño alternativo: además de la fracción de NODOS caídos
+# (criterio original), se mide la fracción de CAPACIDAD (Mbps) de la red
+# que queda incidente a algún nodo caído -- un criterio operativo distinto,
+# consistente con que el resto del informe (P6) mide todo en Mbps. Los dos
+# criterios pueden discrepar: pocos nodos de alta capacidad caídos bastan
+# para dañar mucha capacidad, o muchos nodos de acceso de baja capacidad
+# pueden caer sin comprometer mucho ancho de banda total.
+capacidad_arista_p9, _ = estimar_capacidad(red)
+capacidad_total_red = sum(capacidad_arista_p9)
+aristas_por_nodo_p9 = [Int[] for _ in 1:n]
+for (k, (u, v)) in enumerate(zip(red.aristas.u, red.aristas.v))
+    push!(aristas_por_nodo_p9[u], k)
+    push!(aristas_por_nodo_p9[v], k)
+end
+"Fracción de la capacidad total de la red (Mbps) incidente a algún nodo del conjunto `caidos`."
+function daño_capacidad(caidos)
+    idxs_arista = Set{Int}()
+    for i in caidos, k in aristas_por_nodo_p9[i]
+        push!(idxs_arista, k)
+    end
+    return sum(capacidad_arista_p9[k] for k in idxs_arista; init=0.0) / capacidad_total_red
+end
 
 filas_cascada = NamedTuple[]
 for τ in grilla_τ
     capacidad_nodo = (1 + τ) .* L0
     for cand in candidatos
         caidos = simular_cascada(g, cand, τ, capacidad_nodo)
-        push!(filas_cascada, (τ=τ, nodo=red.ids[cand], caidos=length(caidos), fraccion_afectada=length(caidos) / n))
+        push!(filas_cascada, (τ=τ, nodo=red.ids[cand], caidos=length(caidos),
+                               fraccion_afectada=length(caidos) / n,
+                               fraccion_capacidad_afectada=daño_capacidad(caidos)))
     end
 end
 df_cascada = DataFrame(filas_cascada)
@@ -402,33 +435,53 @@ guardar_csv(df_cascada, joinpath(DIR_RESULTADOS, "p9_cascadas_barrido_tau.csv"))
 
 const UMBRAL_CASCADA_GRAVE = 0.2
 τ_c_por_nodo = combine(groupby(df_cascada, :nodo)) do sub
-    peligrosos = sub[sub.fraccion_afectada .> UMBRAL_CASCADA_GRAVE, :τ]
-    (τ_c=isempty(peligrosos) ? missing : maximum(peligrosos),
-     max_fraccion_observada=maximum(sub.fraccion_afectada))
+    peligrosos_nodos = sub[sub.fraccion_afectada .> UMBRAL_CASCADA_GRAVE, :τ]
+    peligrosos_cap = sub[sub.fraccion_capacidad_afectada .> UMBRAL_CASCADA_GRAVE, :τ]
+    (τ_c=isempty(peligrosos_nodos) ? missing : maximum(peligrosos_nodos),
+     max_fraccion_observada=maximum(sub.fraccion_afectada),
+     τ_c_capacidad=isempty(peligrosos_cap) ? missing : maximum(peligrosos_cap),
+     max_fraccion_capacidad_observada=maximum(sub.fraccion_capacidad_afectada))
 end
 sort!(τ_c_por_nodo, :max_fraccion_observada; rev=true)
 guardar_csv(τ_c_por_nodo, joinpath(DIR_RESULTADOS, "p9_tau_critico_por_nodo.csv"))
 existe_disparador = any(!ismissing, τ_c_por_nodo.τ_c)
+existe_disparador_capacidad = any(!ismissing, τ_c_por_nodo.τ_c_capacidad)
 # τ_c tiene sentido ("el margen por debajo del cual UN nodo dispara una
 # cascada grave") solo si algún candidato lo logra en la grilla probada; si
 # ninguno lo hace ni siquiera a margen cero, no hay un τ_c positivo que
 # reportar y hay que decirlo explícitamente en vez de imprimir 0.0 (que se
-# leería, al revés, como "la red es frágil incluso sin margen").
+# leería, al revés, como "la red es frágil incluso sin margen"). Se repite
+# el mismo razonamiento para el criterio alternativo de capacidad.
 τ_c_red = existe_disparador ? maximum(skipmissing(τ_c_por_nodo.τ_c)) : 0.0
+τ_c_red_capacidad = existe_disparador_capacidad ? maximum(skipmissing(τ_c_por_nodo.τ_c_capacidad)) : 0.0
 if existe_disparador
-    @printf("Margen crítico τ_c de la red (peor nodo candidato): %.2f\n", τ_c_red)
+    @printf("Margen crítico τ_c de la red (criterio nodos, peor nodo candidato): %.2f\n", τ_c_red)
 else
     peor = first(τ_c_por_nodo)
-    @printf("Ningún nodo candidato desencadena una cascada > %.0f%% de la red, ni siquiera con margen τ=0.\n",
+    @printf("Criterio NODOS: ningún nodo candidato desencadena una cascada > %.0f%% de la red, ni siquiera con margen τ=0.\n",
             100 * UMBRAL_CASCADA_GRAVE)
-    @printf("Peor caso observado en la grilla: %s alcanza %.1f%% de la red afectada (máximo entre los τ probados).\n",
+    @printf("  Peor caso observado en la grilla: %s alcanza %.1f%% de la red afectada (máximo entre los τ probados).\n",
             peor.nodo, 100 * peor.max_fraccion_observada)
+end
+if existe_disparador_capacidad
+    @printf("Margen crítico τ_c de la red (criterio capacidad Mbps, peor nodo candidato): %.2f\n", τ_c_red_capacidad)
+else
+    peor_cap = sort(τ_c_por_nodo, :max_fraccion_capacidad_observada; rev=true) |> first
+    @printf("Criterio CAPACIDAD: ningún nodo candidato desencadena una cascada que comprometa > %.0f%% de la capacidad (Mbps) de la red, ni siquiera con margen τ=0.\n",
+            100 * UMBRAL_CASCADA_GRAVE)
+    @printf("  Peor caso observado en la grilla: %s compromete %.1f%% de la capacidad de la red (máximo entre los τ probados).\n",
+            peor_cap.nodo, 100 * peor_cap.max_fraccion_capacidad_observada)
+end
+if !existe_disparador && !existe_disparador_capacidad
+    println("Los DOS criterios de daño (fracción de nodos, fracción de capacidad Mbps) coinciden: ninguno",
+            "\nencuentra un τ_c positivo en la grilla ampliada. Esto refuerza -- por una vía adicional e",
+            "\nindependiente -- que la conclusión no es un artefacto de cómo se mide el daño.")
     println("Esto NO contradice la fragilidad hallada en P8: ahí la métrica es CONECTIVIDAD (aristas que",
             "\ndesconectan partes de la red); acá es SOBRECARGA (redistribución de camino más corto). Esta red",
             "\ntiene poca redundancia, pero las rutas alternativas tras una falla son mayormente CORTAS y NO",
             "\nconcentran suficiente tráfico redistribuido en un tercer nodo como para tumbarlo en cadena.")
 end
-println("Nodos disparadores más peligrosos (mayor daño máximo observado en la grilla de τ):")
+println("Nodos disparadores más peligrosos (mayor daño máximo observado en la grilla de τ, criterio nodos):")
 println(first(τ_c_por_nodo, 5))
 
 # =================================================================
